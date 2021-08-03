@@ -6,7 +6,7 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace StrideSaber.Core.Logging
+namespace StrideSaber.Core.Logging.Enrichers
 {
 		[UsedImplicitly]
 		public sealed class StackTraceEnricher : ILogEventEnricher

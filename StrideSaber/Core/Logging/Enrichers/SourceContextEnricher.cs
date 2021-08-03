@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 
-namespace StrideSaber.Core.Logging
+namespace StrideSaber.Core.Logging.Enrichers
 {
 		/// <inheritdoc />
 		[UsedImplicitly]

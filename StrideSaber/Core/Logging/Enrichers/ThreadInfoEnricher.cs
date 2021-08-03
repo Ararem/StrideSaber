@@ -5,7 +5,7 @@ using Stride.Core.MicroThreading;
 using System.Threading;
 using ThreadPool = Stride.Core.Threading.ThreadPool;
 
-namespace StrideSaber.Core.Logging
+namespace StrideSaber.Core.Logging.Enrichers
 {
 		/// <inheritdoc />
 		/// <summary>

@@ -3,7 +3,7 @@ using Serilog.Core;
 using Serilog.Events;
 using System.Threading;
 
-namespace StrideSaber.Core.Logging
+namespace StrideSaber.Core.Logging.Enrichers
 {
 		/// <inheritdoc />
 		/// <summary>

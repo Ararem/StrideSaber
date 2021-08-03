@@ -4,7 +4,7 @@ using Serilog.Events;
 using System.Collections.Generic;
 using System.Text;
 
-namespace StrideSaber.Core.Logging
+namespace StrideSaber.Core.Logging.Enrichers
 {
 		/// <inheritdoc />
 		/// <summary>

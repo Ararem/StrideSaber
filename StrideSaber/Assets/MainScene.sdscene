@@ -24,7 +24,7 @@ Hierarchy:
                         Children: {}
                     d6e9388429e15dad98e0a24a8a4ffa5c: !ModelComponent
                         Id: c19eed75-199d-421c-a6af-17a5fe337186
-                        Model: 994dd516-e5dd-4f39-82dd-6376b07873f8:Sphere
+                        Model: 994dd516-e5dd-4f39-82dd-6376b07873f8:Shared/Models/Basic/Sphere/Sphere
                         Materials: {}
         -   Entity:
                 Id: 362b2738-2c55-4a34-8fd0-a330e94554a8

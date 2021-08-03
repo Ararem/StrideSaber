@@ -7,14 +7,12 @@ using ThreadPool = Stride.Core.Threading.ThreadPool;
 
 namespace StrideSaber.Core.Logging
 {
-	static partial class Logger
-	{
 		/// <inheritdoc />
 		/// <summary>
 		/// Enriches log events with information about the <see cref="System.Threading.Thread.CurrentThread" />
 		/// </summary>
 		[UsedImplicitly]
-		private sealed class ThreadInfoEnricher : ILogEventEnricher
+		public sealed class ThreadInfoEnricher : ILogEventEnricher
 		{
 			private const string ThreadNamePropertyName = "ThreadName";
 			private const string ThreadIdPropertyName = "ThreadId";
@@ -44,4 +42,3 @@ namespace StrideSaber.Core.Logging
 			}
 		}
 	}
-}

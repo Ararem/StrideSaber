@@ -5,8 +5,6 @@ using System.Threading;
 
 namespace StrideSaber.Core.Logging
 {
-	static partial class Logger
-	{
 		/// <inheritdoc />
 		/// <summary>
 		///  Enriches log events with a counter that counts how many log events have been logged.
@@ -16,7 +14,7 @@ namespace StrideSaber.Core.Logging
 		///  <see cref="Serilog.ILogger" />s is not supported
 		/// </remarks>
 		[UsedImplicitly]
-		private sealed class LogEventNumberEnricher : ILogEventEnricher
+		public sealed class LogEventNumberEnricher : ILogEventEnricher
 		{
 			private const string LogEventNumberPropertyName = "EventNumber";
 
@@ -30,6 +28,5 @@ namespace StrideSaber.Core.Logging
 				LogEventProperty property = propertyFactory.CreateProperty(LogEventNumberPropertyName, c);
 				logEvent.AddOrUpdateProperty(property);
 			}
-		}
 	}
 }

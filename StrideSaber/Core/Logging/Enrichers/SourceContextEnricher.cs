@@ -8,11 +8,9 @@ using System.Threading;
 
 namespace StrideSaber.Core.Logging
 {
-	static partial class Logger
-	{
 		/// <inheritdoc />
 		[UsedImplicitly]
-		private sealed class CallerContextEnricher : ILogEventEnricher
+		public sealed class CallerContextEnricher : ILogEventEnricher
 		{
 			private const string CallerContextPropertyName = "CallerContext";
 
@@ -57,7 +55,6 @@ namespace StrideSaber.Core.Logging
 								.Clear()
 								.AppendTypeDisplayName(type, false, true)
 								.ToString();
-			}
 		}
 	}
 }

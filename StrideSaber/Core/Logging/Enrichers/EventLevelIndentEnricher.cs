@@ -6,14 +6,12 @@ using System.Text;
 
 namespace StrideSaber.Core.Logging
 {
-	static partial class Logger
-	{
 		/// <inheritdoc />
 		/// <summary>
 		///  Enriches an <see cref="Serilog.Events.LogEvent" /> with an indent depending upon the <see cref="Serilog.Events.LogEventLevel" /> of the log event.
 		/// </summary>
 		[UsedImplicitly]
-		private sealed class EventLevelIndentEnricher : ILogEventEnricher
+		public sealed class EventLevelIndentEnricher : ILogEventEnricher
 		{
 			private const string EventLevelIndentPropertyName = "LevelIndent";
 
@@ -51,5 +49,4 @@ namespace StrideSaber.Core.Logging
 				return new StringBuilder(IndentString.Length * repetitions).Insert(0, IndentString, repetitions).ToString();
 			}
 		}
-	}
 }

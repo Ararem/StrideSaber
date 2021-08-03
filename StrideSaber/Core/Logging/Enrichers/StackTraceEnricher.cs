@@ -8,10 +8,8 @@ using System.Reflection;
 
 namespace StrideSaber.Core.Logging
 {
-	static partial class Logger
-	{
 		[UsedImplicitly]
-		private sealed class StackTraceEnricher : ILogEventEnricher
+		public sealed class StackTraceEnricher : ILogEventEnricher
 		{
 			private const string StackTracePropertyName = "StackTrace";
 
@@ -101,5 +99,4 @@ namespace StrideSaber.Core.Logging
 				}
 			}
 		}
-	}
 }

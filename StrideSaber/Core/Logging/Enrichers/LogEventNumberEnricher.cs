@@ -3,7 +3,7 @@ using Serilog.Core;
 using Serilog.Events;
 using System.Threading;
 
-namespace TestGame.Core.Logging
+namespace StrideSaber.Core.Logging
 {
 	static partial class Logger
 	{

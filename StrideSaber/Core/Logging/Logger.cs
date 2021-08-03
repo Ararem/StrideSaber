@@ -4,7 +4,7 @@ using Serilog.Sinks.SystemConsole.Themes;
 using Stride.Core.Diagnostics;
 using System;
 
-namespace TestGame.Core.Logging
+namespace StrideSaber.Core.Logging
 {
 	public static partial class Logger
 	{

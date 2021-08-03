@@ -4,9 +4,9 @@ using Stride.Engine;
 using System;
 using System.Reflection;
 using System.Threading;
-using Logger = TestGame.Core.Logging.Logger;
+using Logger = StrideSaber.Core.Logging.Logger;
 
-namespace TestGame.Core.Startup
+namespace StrideSaber.Core.Startup
 {
 	/// <summary>
 	/// Literally just the main function

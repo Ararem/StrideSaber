@@ -6,7 +6,7 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace TestGame.Core.Logging
+namespace StrideSaber.Core.Logging
 {
 	static partial class Logger
 	{

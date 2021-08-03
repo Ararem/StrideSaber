@@ -1,4 +1,5 @@
 using Stride.Engine;
+using StrideSaber.Core.Startup;
 
 namespace StrideSaber
 {
@@ -6,7 +7,7 @@ namespace StrideSaber
     {
 	    private static void Main(string[] args)
         {
-            TestGame.Core.Startup.StrideSaberApp.Main(args);
+            StrideSaberApp.Main(args);
         }
     }
 }

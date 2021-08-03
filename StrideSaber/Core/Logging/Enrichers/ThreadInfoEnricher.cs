@@ -5,7 +5,7 @@ using Stride.Core.MicroThreading;
 using System.Threading;
 using ThreadPool = Stride.Core.Threading.ThreadPool;
 
-namespace TestGame.Core.Logging
+namespace StrideSaber.Core.Logging
 {
 	static partial class Logger
 	{

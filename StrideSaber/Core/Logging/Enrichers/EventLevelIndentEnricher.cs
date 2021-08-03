@@ -4,7 +4,7 @@ using Serilog.Events;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TestGame.Core.Logging
+namespace StrideSaber.Core.Logging
 {
 	static partial class Logger
 	{

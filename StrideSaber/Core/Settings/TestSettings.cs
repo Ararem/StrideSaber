@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using System.Diagnostics.CodeAnalysis;
 
-namespace TestGame.Core.Settings
+namespace StrideSaber.Core.Settings
 {
 	[SuppressMessage("ReSharper", "InconsistentNaming")]
 	[UsedImplicitly]

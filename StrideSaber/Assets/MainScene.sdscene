@@ -101,8 +101,8 @@ Hierarchy:
                         Children: {}
                     e0d43e5cf791471b6977efec11ba691c: !BackgroundComponent
                         Id: 47228ec8-36b7-418a-9153-5b5a01bf57b8
-                        Texture: a17e21c0-9ff7-46e3-861a-79e2107f0d22:Skybox texture
+                        Texture: a17e21c0-9ff7-46e3-861a-79e2107f0d22:Shared/Models/Environmental/Skybox/Skybox texture
                     19f29fc281c97957c1b7932dbc354350: !LightComponent
                         Id: 73929198-99e7-4648-a9af-95986317e092
                         Type: !LightSkybox
-                            Skybox: 502ef30e-1798-41e9-a48b-c8bfc44617f0:Skybox
+                            Skybox: 502ef30e-1798-41e9-a48b-c8bfc44617f0:Shared/Models/Environmental/Skybox/Skybox

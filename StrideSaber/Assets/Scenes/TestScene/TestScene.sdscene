@@ -66,16 +66,7 @@ Hierarchy:
                         Id: d27eeb93-b36d-4029-9c68-9fa1f362706b
                         Name: null
                         Projection: Perspective
-                        Slot: 756c3ad1-4f02-49c9-a932-30922c903635
-                    20dffdae03b374ae90c7c9b7a8deaea6: !StrideSaber.BasicCameraController,StrideSaber
-                        Id: 58d70e22-3e66-4c35-88d0-20a0868ace88
-                        Gamepad: false
-                        KeyboardMovementSpeed: {X: 5.0, Y: 5.0, Z: 5.0}
-                        TouchMovementSpeed: {X: 0.7, Y: 0.7, Z: 0.3}
-                        SpeedFactor: 5.0
-                        KeyboardRotationSpeed: {X: 3.0, Y: 3.0}
-                        MouseRotationSpeed: {X: 1.0, Y: 1.0}
-                        TouchRotationSpeed: {X: 1.0, Y: 0.7}
+                        Slot: 83d9443f-d721-4937-8cff-f193eadd74f8
         -   Entity:
                 Id: 7a7fbdc2-17d7-433b-8514-d9ae0d4e9dbd
                 Name: Ground

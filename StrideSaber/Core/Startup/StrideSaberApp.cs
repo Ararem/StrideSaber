@@ -11,7 +11,7 @@ namespace TestGame.Core.Startup
 	/// <summary>
 	/// Literally just the main function
 	/// </summary>
-	internal static class Program
+	internal static class StrideSaberApp
 	{
 		private static void Test()
 		{
@@ -28,7 +28,8 @@ namespace TestGame.Core.Startup
 		/// <summary>
 		/// Read class description lol
 		/// </summary>
-		internal static void Main()
+		/// <param name="args"></param>
+		internal static void Main(string[] args)
 		{
 			try
 			{

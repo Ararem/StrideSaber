@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3dfc020d-f83f-4b2c-a8a2-f1f123cde1a2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.StrideSaber/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StrideSaber/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StrideSaber/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StrideSaber/Core/Logging/Logger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Core/Logging/Logger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber.Windows/StrideSaberApp.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber.Windows/StrideSaberAppWindows.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/Core/Startup/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Core/Startup/StrideSaberApp.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +20,8 @@
     <changedPaths>
       <option value="$PROJECT_DIR$/StrideSaber/AssemblyInfo.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Logger.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber.Windows/StrideSaberAppWindows.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Startup/StrideSaberApp.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1wByMiFeHhEqaG1JadwNMh93BK7" />

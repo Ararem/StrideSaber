@@ -1,0 +1,29 @@
+!UIPageAsset
+Id: 1941880d-001d-473f-8b44-8fac3835bf91
+SerializedVersion: {Stride: 2.1.0.1}
+Tags: []
+Design:
+    Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+Hierarchy:
+    RootParts:
+        - !Grid ref!! d650b9e9-43e9-4cb9-a871-c489f9067538
+    Parts:
+        -   UIElement: !Grid
+                Id: d650b9e9-43e9-4cb9-a871-c489f9067538
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                Children:
+                    5914a31c13d3e7ce976adb84ba99af8f: !TextBlock ref!! eb74cb9d-516d-4e8e-bd97-e71c3b52cfae
+                RowDefinitions: {}
+                ColumnDefinitions: {}
+                LayerDefinitions: {}
+        -   UIElement: !TextBlock
+                Id: eb74cb9d-516d-4e8e-bd97-e71c3b52cfae
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                Text: Pawnhub premium
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 120.0
+                TextColor: {R: 255, G: 255, B: 255, A: 255}

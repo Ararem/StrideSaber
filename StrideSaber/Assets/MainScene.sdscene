@@ -11,6 +11,7 @@ Hierarchy:
         - ref!! 83085b97-f01c-4e63-9ab9-d1e52ea5c86c
         - ref!! 7a7fbdc2-17d7-433b-8514-d9ae0d4e9dbd
         - ref!! 1c7f29b0-8fdc-45f7-acea-598cc26a0bd5
+        - ref!! c5ea7315-ad80-4285-8906-b71b7fa98b9b
     Parts:
         -   Entity:
                 Id: 1c7f29b0-8fdc-45f7-acea-598cc26a0bd5
@@ -106,3 +107,19 @@ Hierarchy:
                         Id: 73929198-99e7-4648-a9af-95986317e092
                         Type: !LightSkybox
                             Skybox: 502ef30e-1798-41e9-a48b-c8bfc44617f0:Shared/Models/Environmental/Skybox/Skybox
+        -   Entity:
+                Id: c5ea7315-ad80-4285-8906-b71b7fa98b9b
+                Name: UI
+                Components:
+                    febf5fc1ca5d9ed9c091236ec585f95c: !TransformComponent
+                        Id: e142dbea-73cb-4ebc-bd4a-737573f8b5a3
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    ca060a9b923673e46f36c8f7638eaafa: !UIComponent
+                        Id: de6304f9-cc80-4ab1-954f-8121e8aed489
+                        Page: 1941880d-001d-473f-8b44-8fac3835bf91:Test
+                        Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+                        Size: {X: 1.28, Y: 0.72, Z: 1.0}
+                        RenderGroup: Group31

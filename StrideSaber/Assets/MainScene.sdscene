@@ -87,7 +87,7 @@ Hierarchy:
                         Children: {}
                     3423a21ea409abb71d728cb3b7be9b6d: !ModelComponent
                         Id: ab8f0b26-21a5-430d-8e7a-bdb7fa7542c7
-                        Model: b60f0b9e-19a2-48c1-9c67-7c859deffb0c:Ground
+                        Model: b60f0b9e-19a2-48c1-9c67-7c859deffb0c:Shared/Models/Basic/Ground/Ground
                         Materials: {}
         -   Entity:
                 Id: 83085b97-f01c-4e63-9ab9-d1e52ea5c86c

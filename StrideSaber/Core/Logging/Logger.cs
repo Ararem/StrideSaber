@@ -49,7 +49,6 @@ namespace TestGame.Core.Logging
 #endif
 				Log.Logger = config
 						.WriteTo.Console(outputTemplate: template, applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Code)
-						.WriteTo.Debug(outputTemplate: template)
 						.CreateLogger();
 
 				//Hook our logger up to stride's system

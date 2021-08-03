@@ -1,6 +1,9 @@
 using JetBrains.Annotations;
+using Microsoft.Extensions.ObjectPool;
 using Serilog.Core;
 using Serilog.Events;
+using StrideSaber.Core.ObjectPools;
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Text;
@@ -42,7 +45,7 @@ namespace StrideSaber.Core.Logging.Enrichers
 			[NotNull]
 			private static string GenerateIndentString(int repetitions)
 			{
-				Objectpo
+				StringBuilderPool.Instance.
 				// Easier to read but less efficient
 				// return string.Concat(Enumerable.Repeat(IndentString, repetitions));
 

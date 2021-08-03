@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3dfc020d-f83f-4b2c-a8a2-f1f123cde1a2" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/StrideSaber/Core/ObjectPools/StringBuilderPool.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/GenerateStaticInstanceMembersAttribute.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/StaticInstanceMembersGenerator.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/TargetInstanceMemeberAttribute.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StrideSaber/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StrideSaber/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StrideSaber.sln" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber.sln" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/EventLevelIndentEnricher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/EventLevelIndentEnricher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,10 +30,36 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0127112E-A0DE-4B4B-AE87-42F3626AB806/0a/8ca5384b/DefaultObjectPool`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0127112E-A0DE-4B4B-AE87-42F3626AB806/fb/a514256c/IPooledObjectPolicy`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/F9B8E42D-2375-47AD-B220-D96C226DC673/77/2d2c66ea/GameSystem.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0127112E-A0DE-4B4B-AE87-42F3626AB806/98/80f62353/StringBuilderPooledObjectPolicy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/3835D8DB-9605-4281-9A39-48042D735C03/08/790da801/DynamicNavigationMeshSystem.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/IL/0127112E-A0DE-4B4B-AE87-42F3626AB806/ac/70f7f74c/02000005.il" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/124E5565-CF5C-4A41-87C8-AB3E14EECFB1/8d/56b82a45/GameBase.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/F9B8E42D-2375-47AD-B220-D96C226DC673/77/2d2c66ea/GameSystem.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Rowan/Documents/Projects/Stride3D/StrideSaber/StrideSaber/Core/Logging/Enrichers/EventLevelIndentEnricher.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0127112E-A0DE-4B4B-AE87-42F3626AB806/73/b1ea7339/ObjectPoolProviderExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0127112E-A0DE-4B4B-AE87-42F3626AB806/35/4e6205a3/ObjectPoolProvider.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -48,10 +76,20 @@
       <option value="$PROJECT_DIR$/StrideSaber/Core/Settings/GameSettings.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/EventLevelIndentEnricher.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/ObjectPools/StringBuilderPool.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Singletons/SingletonSourceGenerator.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Singletons/GenerateStaticInstanceMembers.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Singletons/StaticInstanceMembersGenerator.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Singletons/GenerateStaticInstanceMembersAttribute.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/GenerateStaticInstanceMembersAttribute.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/TargetInstanceMemeberAttribute.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/StaticInstanceMembersGenerator.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1wByMiFeHhEqaG1JadwNMh93BK7" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -61,7 +99,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="settings.editor.selected.configurable" value="http.proxy" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Console Colors" />
   </component>
   <component name="RunManager">
     <configuration name="StrideSaber.Windows" type="DotNetProject" factoryName=".NET Project">

@@ -1,32 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net5.0</TargetFrameworks>
-    <Nullable>enable</Nullable>
-    <Configurations>Debug</Configurations>
-    <Platforms>AnyCPU</Platforms>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<Configurations>Debug</Configurations>
+		<Platforms>AnyCPU</Platforms>
+	</PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DefineConstants>TRACE, DEBUG</DefineConstants>
-    <DebugType>full</DebugType>
-    <DocumentationFile>bin\Debug\StrideSaber.xml</DocumentationFile>
-    <WarningLevel>5</WarningLevel>
-  </PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+		<DefineConstants>TRACE, DEBUG</DefineConstants>
+		<DebugType>full</DebugType>
+		<DocumentationFile>bin\Debug\StrideSaber.xml</DocumentationFile>
+		<WarningLevel>5</WarningLevel>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Ben.Demystifier" Version="0.4.1" />
-    <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
-    <PackageReference Include="Serilog" Version="2.10.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
-    <PackageReference Include="Stride.Engine" Version="4.1.0.1459-beta" />
+	<ItemGroup>
+		<PackageReference Include="Ben.Demystifier" Version="0.4.1" />
+		<PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
+		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="5.0.8" />
+		<PackageReference Include="Serilog" Version="2.10.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
+		<PackageReference Include="Stride.Engine" Version="4.1.0.1459-beta" />
 
-    <PackageReference Include="Stride.Video" Version="4.1.0.1459-beta" />
-    <PackageReference Include="Stride.Physics" Version="4.1.0.1459-beta" />
-    <PackageReference Include="Stride.Navigation" Version="4.1.0.1459-beta" />
-    <PackageReference Include="Stride.Particles" Version="4.1.0.1459-beta" />
-    <PackageReference Include="Stride.UI" Version="4.1.0.1459-beta" />
+		<PackageReference Include="Stride.Video" Version="4.1.0.1459-beta" />
+		<PackageReference Include="Stride.Physics" Version="4.1.0.1459-beta" />
+		<PackageReference Include="Stride.Navigation" Version="4.1.0.1459-beta" />
+		<PackageReference Include="Stride.Particles" Version="4.1.0.1459-beta" />
+		<PackageReference Include="Stride.UI" Version="4.1.0.1459-beta" />
 
-    <PackageReference Include="Stride.Core.Assets.CompilerApp" Version="4.1.0.1459-beta" IncludeAssets="build;buildTransitive" />
-  </ItemGroup>
+		<PackageReference Include="Stride.Core.Assets.CompilerApp" Version="4.1.0.1459-beta" IncludeAssets="build;buildTransitive" />
+	</ItemGroup>
 </Project>

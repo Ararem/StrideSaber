@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3dfc020d-f83f-4b2c-a8a2-f1f123cde1a2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.StrideSaber/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StrideSaber/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber.sln" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/Core/Settings/GameSettings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Core/Settings/GameSettings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/Core/Startup/StrideSaberApp.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Core/Startup/StrideSaberApp.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,10 +18,24 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/3835D8DB-9605-4281-9A39-48042D735C03/08/790da801/DynamicNavigationMeshSystem.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/124E5565-CF5C-4A41-87C8-AB3E14EECFB1/8d/56b82a45/GameBase.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/F9B8E42D-2375-47AD-B220-D96C226DC673/77/2d2c66ea/GameSystem.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
       <option value="$PROJECT_DIR$/StrideSaber/AssemblyInfo.cs" />
-      <option value="$PROJECT_DIR$/StrideSaber/Core/Startup/StrideSaberApp.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/LogEventNumberEnricher.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/SourceContextEnricher.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/StackTraceEnricher.cs" />
@@ -28,6 +45,8 @@
       <option value="$PROJECT_DIR$/StrideSaber/BasicCameraController.cs" />
       <option value="$PROJECT_DIR$/StrideSaber.Windows/StrideSaberAppWindows.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Logger.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Startup/StrideSaberApp.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Settings/GameSettings.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1wByMiFeHhEqaG1JadwNMh93BK7" />

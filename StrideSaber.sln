@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 16
 VisualStudioVersion = 16.0.0.0
@@ -8,13 +8,4 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrideSaber", "StrideSaber\StrideSaber.csproj", "{E22335E1-8027-4C3F-85B7-527E07F2A45D}"
 EndProject
 Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E22335E1-8027-4C3F-85B7-527E07F2A45D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E22335E1-8027-4C3F-85B7-527E07F2A45D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28BE8A0F-869A-4293-82C4-7EC87045D262}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28BE8A0F-869A-4293-82C4-7EC87045D262}.Debug|Any CPU.Build.0 = Debug|Any CPU
-	EndGlobalSection
 EndGlobal

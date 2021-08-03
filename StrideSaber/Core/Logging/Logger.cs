@@ -7,7 +7,7 @@ using System;
 
 namespace StrideSaber.Core.Logging
 {
-	public static partial class Logger
+	public static class Logger
 	{
 		private const LogEventLevel MinimumLogEventLevel = LogEventLevel.Verbose;
 

@@ -1,4 +1,3 @@
-using Stride.Engine;
 using StrideSaber.Core.Startup;
 
 namespace StrideSaber

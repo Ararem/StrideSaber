@@ -7,14 +7,26 @@ using System;
 
 namespace StrideSaber.Core.Logging
 {
+	/// <summary>
+	/// The static class that controls logging for the app
+	/// </summary>
 	public static class Logger
 	{
+		/// <summary>
+		/// The minimum level of <see cref="LogEvent"/>s that will be logged
+		/// </summary>
 		private const LogEventLevel MinimumLogEventLevel = LogEventLevel.Verbose;
 
 		// ReSharper disable once UnusedMember.Local
+		/// <summary>
+		///	A message template that prints lots of information to help with debugging
+		/// </summary>
 		private const string DebugTemplate =
 				"[{Timestamp:HH:mm:ss}#{EventNumber} {Level:t3}] [{ThreadName} #{ThreadId} ({ThreadType})]	[{CallerContext}]: 	{Message:lj}{NewLine}{Exception}{StackTrace}{NewLine}{NewLine}";
 
+		/// <summary>
+		/// A message template that prints simple information
+		/// </summary>
 		private const string SimpleTemplate =
 				"[{Timestamp:HH:mm:ss} {Level:t3}] [{ThreadName} #{ThreadId} ({ThreadType})] [{CallerContext}]:	{LevelIndent}{Message:lj}{NewLine}{Exception}";
 
@@ -22,7 +34,12 @@ namespace StrideSaber.Core.Logging
 		/// Here so I can guarantee thread-safety when init-ing/shutting down
 		/// </summary>
 		private static readonly object Lock = new();
+
+		/// <summary>
+		/// Stores if the logger has been initialized yet
+		/// </summary>
 		private static bool initialized = false;
+
 		/// <summary>
 		/// Initializes the logger
 		/// </summary>

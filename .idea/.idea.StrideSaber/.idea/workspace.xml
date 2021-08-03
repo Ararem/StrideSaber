@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3dfc020d-f83f-4b2c-a8a2-f1f123cde1a2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/StrideSaber.Windows/StrideSaberApp.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber.Windows/StrideSaberAppWindows.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StrideSaber/Core/Startup/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Core/Startup/StrideSaberApp.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,9 +18,16 @@
   <component name="IdeDocumentHistory">
     <changedPaths>
       <option value="$PROJECT_DIR$/StrideSaber/AssemblyInfo.cs" />
-      <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Logger.cs" />
-      <option value="$PROJECT_DIR$/StrideSaber.Windows/StrideSaberAppWindows.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Startup/StrideSaberApp.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/LogEventNumberEnricher.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/SourceContextEnricher.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/StackTraceEnricher.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/ThreadInfoEnricher.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/DemystifiedExceptionsEnricher.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/EventLevelIndentEnricher.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/BasicCameraController.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber.Windows/StrideSaberAppWindows.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Logger.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1wByMiFeHhEqaG1JadwNMh93BK7" />

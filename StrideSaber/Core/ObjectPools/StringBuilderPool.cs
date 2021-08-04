@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.Extensions.ObjectPool;
+using System;
 using System.Text;
 
 namespace StrideSaber.Core.ObjectPools
@@ -19,6 +20,7 @@ namespace StrideSaber.Core.ObjectPools
 		/// <summary>
 		/// The current singleton instance of a <see cref="StringBuilderPool"/>
 		/// </summary>
+#warning STATIC INSTANCE TIME
 		public static readonly StringBuilderPool Instance = new();
 
 		/// <inheritdoc />

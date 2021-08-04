@@ -5,12 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3dfc020d-f83f-4b2c-a8a2-f1f123cde1a2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/StrideSaber/Core/ObjectPools/StringBuilderPool.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/GenerateStaticInstanceMembersAttribute.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/StaticInstanceMembersGenerator.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/TargetInstanceMemeberAttribute.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StrideSaber/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StrideSaber/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber.sln" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber.sln" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/EventLevelIndentEnricher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/EventLevelIndentEnricher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/Core/ObjectPools/StringBuilderPool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Core/ObjectPools/StringBuilderPool.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/StaticInstanceMembersGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/StaticInstanceMembersGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,6 +46,7 @@
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/124E5565-CF5C-4A41-87C8-AB3E14EECFB1/8d/56b82a45/GameBase.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/70A42F2F-E043-452D-AA8F-7B4D1F67B171/e8/0e63ad57/GeneratorInitializationContext.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
@@ -75,15 +76,17 @@
       <option value="$PROJECT_DIR$/StrideSaber/Core/Startup/StrideSaberApp.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Settings/GameSettings.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" />
-      <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/EventLevelIndentEnricher.cs" />
-      <option value="$PROJECT_DIR$/StrideSaber/Core/ObjectPools/StringBuilderPool.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Singletons/SingletonSourceGenerator.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Singletons/GenerateStaticInstanceMembers.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Singletons/StaticInstanceMembersGenerator.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Singletons/GenerateStaticInstanceMembersAttribute.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/GenerateStaticInstanceMembersAttribute.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/TargetInstanceMemeberAttribute.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/Class1.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StrideSaber.SourceGenerators.csproj" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/StaticInstanceMembersGenerator.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/EventLevelIndentEnricher.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/ObjectPools/StringBuilderPool.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1wByMiFeHhEqaG1JadwNMh93BK7" />
@@ -96,6 +99,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -147,6 +151,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
 </project>

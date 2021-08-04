@@ -45,13 +45,16 @@ namespace StrideSaber.Core.Logging.Enrichers
 			[NotNull]
 			private static string GenerateIndentString(int repetitions)
 			{
-				StringBuilderPool.Instance.
-				// Easier to read but less efficient
-				// return string.Concat(Enumerable.Repeat(IndentString, repetitions));
+				//Get a builder from the pool and make sure it's big enough
+				StringBuilder sb = StringBuilderPool.Instance.Get();
+				sb.EnsureCapacity(IndentString.Length * repetitions);
+				//Just repeat the string and return it
+				string s = sb.Insert(0, IndentString, repetitions).ToString();
+				StringBuilderPool.Instance.Return(sb);
+				return s;
 
-				//Very efficient as we only have 1 exactly sized allocation
-				//TODO: Pool all stringbuilder uses
-				return new StringBuilder(IndentString.Length * repetitions).Insert(0, IndentString, repetitions).ToString();
+				// Easier to read but waay less efficient
+				// return string.Concat(Enumerable.Repeat(IndentString, repetitions));
 			}
 		}
 }

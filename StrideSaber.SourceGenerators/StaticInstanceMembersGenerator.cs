@@ -3,15 +3,15 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
-namespace StrideSaber.Core.SourceGenerators
+namespace StrideSaber.SourceGenerators
 {
+	/// <inheritdoc />
 	[Generator]
 	public sealed class StaticInstanceMembersGenerator : ISourceGenerator
 	{
-		private static readonly DiagnosticDescriptor warn;
-
 		/// <inheritdoc />
 		public void Initialize(GeneratorInitializationContext ctx)
 		{
@@ -24,6 +24,17 @@ namespace StrideSaber.Core.SourceGenerators
 		{
 			//Write the log entries
 			ctx.AddSource("Logs", SourceText.From($@"/*{ Environment.NewLine + string.Join(Environment.NewLine, Log) + Environment.NewLine}*/", Encoding.UTF8));
+			ctx.ReportDiagnostic(Diagnostic.Create(
+							new DiagnosticDescriptor("MYXMLGEN001",
+									"Couldn't parse XML file",
+									"Couldn't parse XML file '{0}'.",
+									"MyXmlGenerator",
+									DiagnosticSeverity.Error,
+									true),
+							Location.None
+			));
+			File.WriteAllText(@"C:\Users\Rowan\Desktop\SourceGen.log", $"====={DateTime.Now}=====\n");
+			File.AppendAllLines(@"C:\Users\Rowan\Desktop\SourceGen.log", Log);
 		}
 
 		/// <summary>

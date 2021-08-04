@@ -4,6 +4,7 @@ using Stride.Core.Mathematics;
 using Stride.Engine;
 using Stride.Input;
 // ReSharper disable All
+#pragma warning disable
 
 namespace StrideSaber
 {

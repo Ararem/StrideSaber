@@ -1,10 +1,7 @@
 using JetBrains.Annotations;
-using Microsoft.Extensions.ObjectPool;
 using Serilog.Core;
 using Serilog.Events;
 using StrideSaber.Core.ObjectPools;
-using System;
-using System.Buffers;
 using System.Collections.Generic;
 using System.Text;
 

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Nullable>enable</Nullable>
+		<Configurations>Debug</Configurations>
+		<Platforms>AnyCPU</Platforms>
+		<LangVersion>9</LangVersion>
+		<TargetFramework>netstandard2.0</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+		<DefineConstants>TRACE, DEBUG</DefineConstants>
+		<DebugType>full</DebugType>
+		<WarningLevel>5</WarningLevel>
+		<DocumentationFile>bin\Debug\StrideSaber.SourceGenerators.xml</DocumentationFile>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
+	</ItemGroup>
+</Project>

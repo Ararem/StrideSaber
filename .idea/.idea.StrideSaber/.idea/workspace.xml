@@ -4,12 +4,17 @@
     <projectFile>StrideSaber.Windows/StrideSaber.Windows.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3dfc020d-f83f-4b2c-a8a2-f1f123cde1a2" name="Default Changelist" comment="">
+    <list default="true" id="3dfc020d-f83f-4b2c-a8a2-f1f123cde1a2" name="Default Changelist" comment="I did something">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StrideSaber/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StrideSaber/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StrideSaber.sln" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber.Windows/StrideSaber.Windows.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber.Windows/StrideSaber.Windows.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/BasicCameraController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/BasicCameraController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/DemystifiedExceptionsEnricher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/DemystifiedExceptionsEnricher.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/EventLevelIndentEnricher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/EventLevelIndentEnricher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/StackTraceEnricher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/StackTraceEnricher.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StrideSaber/Core/ObjectPools/StringBuilderPool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Core/ObjectPools/StringBuilderPool.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/StaticInstanceMembersGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/StaticInstanceMembersGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/GenerateStaticInstanceMembersAttribute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber.SourceGenerators/GenerateStaticInstanceMembersAttribute.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/StaticInstanceMembersGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceMembersGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/TargetInstanceMemeberAttribute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber.SourceGenerators/TargetInstanceMemeberAttribute.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -54,6 +59,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0127112E-A0DE-4B4B-AE87-42F3626AB806/73/b1ea7339/ObjectPoolProviderExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0127112E-A0DE-4B4B-AE87-42F3626AB806/35/4e6205a3/ObjectPoolProvider.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceMembersGenerator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
@@ -67,15 +73,11 @@
       <option value="$PROJECT_DIR$/StrideSaber/AssemblyInfo.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/LogEventNumberEnricher.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/SourceContextEnricher.cs" />
-      <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/StackTraceEnricher.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/ThreadInfoEnricher.cs" />
-      <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/DemystifiedExceptionsEnricher.cs" />
-      <option value="$PROJECT_DIR$/StrideSaber/BasicCameraController.cs" />
       <option value="$PROJECT_DIR$/StrideSaber.Windows/StrideSaberAppWindows.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Logger.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Startup/StrideSaberApp.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Settings/GameSettings.cs" />
-      <option value="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Singletons/SingletonSourceGenerator.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Singletons/GenerateStaticInstanceMembers.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Singletons/StaticInstanceMembersGenerator.cs" />
@@ -83,10 +85,18 @@
       <option value="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/GenerateStaticInstanceMembersAttribute.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/TargetInstanceMemeberAttribute.cs" />
       <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/Class1.cs" />
-      <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StrideSaber.SourceGenerators.csproj" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/SourceGenerators/StaticInstanceMembersGenerator.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/SourceGenerators/StaticInstanceMembersGenerator.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/BasicCameraController.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/DemystifiedExceptionsEnricher.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/EventLevelIndentEnricher.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/StackTraceEnricher.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Core/ObjectPools/StringBuilderPool.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/GenerateStaticInstanceMembersAttribute.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceMembersGenerator.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber.Windows/StrideSaber.Windows.csproj" />
+      <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StrideSaber.SourceGenerators.csproj" />
+      <option value="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1wByMiFeHhEqaG1JadwNMh93BK7" />
@@ -100,10 +110,11 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="Rider.SolutionAnalysis.ShowIgnored" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Console Colors" />
+    <property name="settings.editor.selected.configurable" value="http.proxy" />
   </component>
   <component name="RunManager">
     <configuration name="StrideSaber.Windows" type="DotNetProject" factoryName=".NET Project">
@@ -135,6 +146,14 @@
       <updated>1627946231322</updated>
       <workItem from="1627946254874" duration="611000" />
     </task>
+    <task id="LOCAL-00001" summary="I did something">
+      <created>1628043196620</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1628043196620</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="UnityProjectConfiguration" hasMinimizedUI="null" />
@@ -153,5 +172,7 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="I did something" />
+    <option name="LAST_COMMIT_MESSAGE" value="I did something" />
   </component>
 </project>

@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-using Microsoft.Extensions.ObjectPool;
-using System;
+﻿using Microsoft.Extensions.ObjectPool;
 using System.Text;
 
 namespace StrideSaber.Core.ObjectPools

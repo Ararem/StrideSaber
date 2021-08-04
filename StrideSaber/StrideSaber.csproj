@@ -32,6 +32,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\StrideSaber.SourceGenerators\StrideSaber.SourceGenerators.csproj" />
+	  <ProjectReference Include="..\StrideSaber.SourceGenerators\StrideSaber.SourceGenerators.csproj" OutputItemType="Analyzer"/>
 	</ItemGroup>
 </Project>

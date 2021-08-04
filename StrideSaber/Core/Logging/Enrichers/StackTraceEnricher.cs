@@ -8,6 +8,9 @@ using System.Reflection;
 
 namespace StrideSaber.Core.Logging.Enrichers
 {
+		/// <summary>
+		/// Adds a <see cref="StackTrace"/> property to all <see cref="LogEvent"/>s
+		/// </summary>
 		[UsedImplicitly]
 		public sealed class StackTraceEnricher : ILogEventEnricher
 		{

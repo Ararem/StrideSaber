@@ -22,19 +22,21 @@ namespace StrideSaber.SourceGenerators
 		/// <inheritdoc />
 		public void Execute(GeneratorExecutionContext ctx)
 		{
-			//Write the log entries
+			// //Write the log entries
 			ctx.AddSource("Logs", SourceText.From($@"/*{ Environment.NewLine + string.Join(Environment.NewLine, Log) + Environment.NewLine}*/", Encoding.UTF8));
-			ctx.ReportDiagnostic(Diagnostic.Create(
-							new DiagnosticDescriptor("MYXMLGEN001",
-									"Couldn't parse XML file",
-									"Couldn't parse XML file '{0}'.",
-									"MyXmlGenerator",
-									DiagnosticSeverity.Error,
-									true),
-							Location.None
-			));
-			File.WriteAllText(@"C:\Users\Rowan\Desktop\SourceGen.log", $"====={DateTime.Now}=====\n");
-			File.AppendAllLines(@"C:\Users\Rowan\Desktop\SourceGen.log", Log);
+
+			// ctx.ReportDiagnostic(Diagnostic.Create(
+			// 				new DiagnosticDescriptor("ID69420",
+			// 						"TITLE",
+			// 						"Message Format",
+			// 						"MyTestCategory",
+			// 						DiagnosticSeverity.Warning,
+			// 						true),
+			// 				Location.None
+			// ));
+
+			// File.WriteAllText(@"C:\Users\Rowan\Desktop\SourceGen.log", $"====={DateTime.Now}=====\n");
+			// File.AppendAllLines(@"C:\Users\Rowan\Desktop\SourceGen.log", Log);
 		}
 
 		/// <summary>

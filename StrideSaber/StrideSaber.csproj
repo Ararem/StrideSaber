@@ -15,24 +15,24 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Ben.Demystifier" Version="0.4.1"/>
-		<PackageReference Include="JetBrains.Annotations" Version="2021.2.0"/>
-		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="5.0.8"/>
-		<PackageReference Include="Serilog" Version="2.10.0"/>
-		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.0"/>
-		<PackageReference Include="Stride.Engine" Version="4.1.0.1459-beta"/>
+		<PackageReference Include="Ben.Demystifier" Version="0.4.1" />
+		<PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
+		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="5.0.8" />
+		<PackageReference Include="Serilog" Version="2.10.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
+		<PackageReference Include="Stride.Engine" Version="4.1.0.1459-beta" />
 
-		<PackageReference Include="Stride.Video" Version="4.1.0.1459-beta"/>
-		<PackageReference Include="Stride.Physics" Version="4.1.0.1459-beta"/>
-		<PackageReference Include="Stride.Navigation" Version="4.1.0.1459-beta"/>
-		<PackageReference Include="Stride.Particles" Version="4.1.0.1459-beta"/>
-		<PackageReference Include="Stride.UI" Version="4.1.0.1459-beta"/>
+		<PackageReference Include="Stride.Video" Version="4.1.0.1459-beta" />
+		<PackageReference Include="Stride.Physics" Version="4.1.0.1459-beta" />
+		<PackageReference Include="Stride.Navigation" Version="4.1.0.1459-beta" />
+		<PackageReference Include="Stride.Particles" Version="4.1.0.1459-beta" />
+		<PackageReference Include="Stride.UI" Version="4.1.0.1459-beta" />
 
-		<PackageReference Include="Stride.Core.Assets.CompilerApp" Version="4.1.0.1459-beta" IncludeAssets="build;buildTransitive"/>
+		<PackageReference Include="Stride.Core.Assets.CompilerApp" Version="4.1.0.1459-beta" IncludeAssets="build;buildTransitive" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\StrideSaber.SourceGenerators\StrideSaber.SourceGenerators.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer"/>
+		<ProjectReference Include="..\StrideSaber.SourceGenerators\StrideSaber.SourceGenerators.csproj" ReferenceOutputAssembly="true" OutputItemType="Analyzer" />
 	</ItemGroup>
 
 	<!-- This lets us write the analyzer logs to file -->
@@ -45,6 +45,13 @@
 		<!-- Don't include the output from a previous source generator execution into future runs; the */** trick here ensures that there's
 		at least one subdirectory, which is our key that it's coming from a source generator as opposed to something that is coming from
 		some other tool. -->
-		<Compile Remove="$(CompilerGeneratedFilesOutputPath)/*/**/*.cs"/>
+		<Compile Remove="$(CompilerGeneratedFilesOutputPath)/*/**/*.cs" />
+		<None Include="CompilerGenerated\StrideSaber.SourceGenerators\StrideSaber.SourceGenerators.StaticInstanceMembersGenerator\Logs.cs" />
+		<Compile Remove="CompilerGenerated\**" />
+		<None Remove="CompilerGenerated\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Remove="CompilerGenerated\**" />
 	</ItemGroup>
 </Project>

@@ -27,15 +27,14 @@ namespace StrideSaber.SourceGenerators
 			//From my understanding, the syntax reciever is the "scan" phase that finds stuff to work on,
 			//and the "execute" is where we actually do the work
 
-			Log("Path is:");
-			Log(Path.GetFullPath("./"));
-
 			//Here we write to our log file
-			ctx.AddSource("Logs", SourceText.From($@"/*
-{string.Join("\n", _log)}
-*/", Encoding.UTF8));
-			File.WriteAllText(@"C:\Users\Rowan\Desktop\SourceGen.log", $"===== {DateTime.Now} =====\n");
-			File.AppendAllLines(@"C:\Users\Rowan\Desktop\SourceGen.log", _log);
+			lock (_log)
+			{
+				StringBuilder sb = new($"===== {DateTime.Now} ====={Environment.NewLine}");
+				for (int i = 0; i < _log.Count; i++) sb.AppendLine(_log[i]);
+				_log.Clear();
+				ctx.AddSource("SourceGenLog", SourceText.From($"/*{Environment.NewLine}{string.Join("\n\r", sb.ToString())}{Environment.NewLine}*/", Encoding.UTF8));
+			}
 		}
 
 		/// <summary>
@@ -44,8 +43,11 @@ namespace StrideSaber.SourceGenerators
 		// ReSharper disable once InconsistentNaming
 		private static readonly List<string> _log = new();
 
-		// ReSharper disable once ArrangeMethodOrOperatorBody
-		private static void Log(string s) => _log.Add(s);
+		private static void Log(string s)
+		{
+			lock (_log)
+				_log.Add(s);
+		}
 
 		/// <inheritdoc />
 		private sealed class SyntaxReceiver : ISyntaxReceiver
@@ -60,9 +62,12 @@ namespace StrideSaber.SourceGenerators
 					case ClassDeclarationSyntax cds:
 					{
 						Log($"Found class {cds.Identifier}");
-						Log($"Modifiers are:\n'{cds.Modifiers.ToString()}'");
-						// Log($"Modifiers (full) are:\n\"{cds.Modifiers.ToFullString()}\"");
-
+						var attributes = cds.AttributeLists //The lists of all the attribute declaration lists: {[Attribute_1], [Attribute_2]}
+								.Select(attributeLists => attributeLists.Attributes) //The separate attributes: {Attribute_1, Attribute_2}
+								.SelectMany(syntaxList => syntaxList) //?? Idk what this is now lol
+								.Select(a => a.Name);
+						Log($"Attributes are {string.Join(", ", attributes)}");
+						Log($"Modifiers are: '{cds.Modifiers.ToString()}'");
 						Log("");
 						break;
 					}

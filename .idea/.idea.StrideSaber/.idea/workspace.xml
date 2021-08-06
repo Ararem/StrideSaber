@@ -8,8 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3dfc020d-f83f-4b2c-a8a2-f1f123cde1a2" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/StrideSaber/Testing/StaticInstanceMemberGenTesting.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StrideSaber/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StrideSaber/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceMembersGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceMembersGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber.SourceGenerators/StrideSaber.SourceGenerators.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber.SourceGenerators/StrideSaber.SourceGenerators.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj.DotSettings" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,20 +33,22 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0127112E-A0DE-4B4B-AE87-42F3626AB806/0a/8ca5384b/DefaultObjectPool`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0744BE4A-4556-4FE2-B179-94608316EA7F/61/1f63fea7/StringBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0127112E-A0DE-4B4B-AE87-42F3626AB806/fb/a514256c/IPooledObjectPolicy`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0127112E-A0DE-4B4B-AE87-42F3626AB806/73/b1ea7339/ObjectPoolProviderExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0127112E-A0DE-4B4B-AE87-42F3626AB806/35/4e6205a3/ObjectPoolProvider.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/60D960A3-CCF6-4C79-9CFD-696573C13683/37/5038b8c1/SourceText.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceMembersGenerator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/F9B8E42D-2375-47AD-B220-D96C226DC673/77/2d2c66ea/GameSystem.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/60D960A3-CCF6-4C79-9CFD-696573C13683/25/386b757f/GeneratorExecutionContext.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0127112E-A0DE-4B4B-AE87-42F3626AB806/98/80f62353/StringBuilderPooledObjectPolicy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/3835D8DB-9605-4281-9A39-48042D735C03/08/790da801/DynamicNavigationMeshSystem.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/IL/0127112E-A0DE-4B4B-AE87-42F3626AB806/ac/70f7f74c/02000005.il" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/114A28BA-45D8-432A-880C-DF21286A0394/ce/c36916c0/PooledStringBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/124E5565-CF5C-4A41-87C8-AB3E14EECFB1/8d/56b82a45/GameBase.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/60D960A3-CCF6-4C79-9CFD-696573C13683/17/53348f27/AdditionalSourcesCollection.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/StrideSaber/Core/Startup/StrideSaberApp.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/70A42F2F-E043-452D-AA8F-7B4D1F67B171/e8/0e63ad57/GeneratorInitializationContext.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/StrideSaber/Core/Logging/Enrichers/EventLevelIndentEnricher.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
@@ -72,10 +78,11 @@
       <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/GenerateStaticInstanceMembersAttribute.cs" />
       <option value="$PROJECT_DIR$/StrideSaber.Windows/StrideSaber.Windows.csproj" />
       <option value="$USER_HOME$/AppData/Roaming/NuGet/NuGet.Config" />
-      <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StrideSaber.SourceGenerators.csproj" />
-      <option value="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" />
       <option value="$USER_HOME$/Desktop/SourceGen.log" />
+      <option value="$PROJECT_DIR$/StrideSaber/StrideSaber.csproj" />
+      <option value="$PROJECT_DIR$/StrideSaber/Testing/StaticInstanceMemberGenTesting.cs" />
       <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceMembersGenerator.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StrideSaber.SourceGenerators.csproj" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1wByMiFeHhEqaG1JadwNMh93BK7" />
@@ -90,12 +97,11 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="NewWatcherDialog.advanced.open" value="true" />
-    <property name="Rider.SolutionAnalysis.ShowIgnored" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.openapi.externalSystem.service.settings.ExternalSystemGroupConfigurable" value="ALL" />
-    <property name="settings.editor.selected.configurable" value="RiderCodeInspectionGeneratedSettingsId" />
+    <property name="settings.editor.selected.configurable" value="SolutionBuilderGeneralOptionsPageId" />
   </component>
   <component name="RunManager">
     <configuration name="StrideSaber.Windows" type="DotNetProject" factoryName=".NET Project">
@@ -126,7 +132,9 @@
       <option name="presentableId" value="Default" />
       <updated>1627946231322</updated>
       <workItem from="1627946254874" duration="611000" />
-      <workItem from="1628206627349" duration="3961000" />
+      <workItem from="1628206627349" duration="8057000" />
+      <workItem from="1628218768670" duration="1067000" />
+      <workItem from="1628222738953" duration="324000" />
     </task>
     <task id="LOCAL-00001" summary="I did something">
       <created>1628043196620</created>

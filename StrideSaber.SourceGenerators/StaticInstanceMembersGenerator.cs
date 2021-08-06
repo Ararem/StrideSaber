@@ -1,10 +1,9 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace StrideSaber.SourceGenerators
 {
@@ -22,41 +21,44 @@ namespace StrideSaber.SourceGenerators
 		/// <inheritdoc />
 		public void Execute(GeneratorExecutionContext ctx)
 		{
-			// //Write the log entries
-			ctx.AddSource("Logs", SourceText.From($@"/*{ Environment.NewLine + string.Join(Environment.NewLine, Log) + Environment.NewLine}*/", Encoding.UTF8));
+			//From my understanding, the syntax reciever is the "scan" phase that finds stuff to work on,
+			//and the "execute" is where we actually do the work
 
-			// ctx.ReportDiagnostic(Diagnostic.Create(
-			// 				new DiagnosticDescriptor("ID69420",
-			// 						"TITLE",
-			// 						"Message Format",
-			// 						"MyTestCategory",
-			// 						DiagnosticSeverity.Warning,
-			// 						true),
-			// 				Location.None
-			// ));
-
-			// File.WriteAllText(@"C:\Users\Rowan\Desktop\SourceGen.log", $"====={DateTime.Now}=====\n");
-			// File.AppendAllLines(@"C:\Users\Rowan\Desktop\SourceGen.log", Log);
+			File.WriteAllText(@"C:\Users\Rowan\Desktop\SourceGen.log", $"====={DateTime.Now}=====\n");
+			File.AppendAllLines(@"C:\Users\Rowan\Desktop\SourceGen.log", _log);
 		}
 
 		/// <summary>
 		/// Stores messages we need to log later
 		/// </summary>
-		private static readonly List<string> Log = new();
+		// ReSharper disable once InconsistentNaming
+		private static readonly List<string> _log = new();
+
+		// ReSharper disable once ArrangeMethodOrOperatorBody
+		private static void Log(string s) => _log.Add(s);
 
 		/// <inheritdoc />
 		private sealed class SyntaxReceiver : ISyntaxReceiver
 		{
 			/// <inheritdoc />
-			public void OnVisitSyntaxNode(SyntaxNode node)
+			public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
 			{
-				try
+				switch (syntaxNode)
 				{
-					if (node is ClassDeclarationSyntax cds) Log.Add($"Found a class named {cds.Identifier.ValueText}");
-				}
-				catch (Exception ex)
-				{
-					Log.Add("Error parsing syntax: " + ex);
+					//Check if we're declaring a class, record or struct
+					//Essentially anything that has static and instance methods
+					case ClassDeclarationSyntax cds:
+					{
+						Log($"Found class {cds.Identifier}");
+
+						Log(cds.Modifiers.Any(SyntaxKind.StaticKeyword) ? "Class is static" : "Class is not static");
+
+						break;
+					}
+					case RecordDeclarationSyntax rds:
+						break;
+					case StructDeclarationSyntax sds:
+						break;
 				}
 			}
 		}

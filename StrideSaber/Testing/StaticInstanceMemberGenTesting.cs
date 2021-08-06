@@ -10,6 +10,6 @@ namespace StrideSaber.Testing
 	[GenerateStaticInstanceMembers]
 	public class StaticInstanceMemberGenTesting
 	{
-		
+
 	}
 }

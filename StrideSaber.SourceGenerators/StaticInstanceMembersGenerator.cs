@@ -1,10 +1,10 @@
 ﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.IO;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -19,6 +19,10 @@ namespace StrideSaber.SourceGenerators
 		{
 			// Register a factory that can create our custom syntax receiver
 			ctx.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
+			//This is awesome by the way!!!
+#if DEBUG
+			if (!Debugger.IsAttached) Debugger.Launch();
+#endif
 		}
 
 		/// <inheritdoc />
@@ -43,10 +47,14 @@ namespace StrideSaber.SourceGenerators
 		// ReSharper disable once InconsistentNaming
 		private static readonly List<string> _log = new();
 
+		private readonly List<ClassDeclarationSyntax> ToProcess = new();
+
 		private static void Log(string s)
 		{
 			lock (_log)
+			{
 				_log.Add(s);
+			}
 		}
 
 		/// <inheritdoc />

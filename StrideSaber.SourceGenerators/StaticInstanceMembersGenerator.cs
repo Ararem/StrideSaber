@@ -1,9 +1,12 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace StrideSaber.SourceGenerators
 {
@@ -24,7 +27,14 @@ namespace StrideSaber.SourceGenerators
 			//From my understanding, the syntax reciever is the "scan" phase that finds stuff to work on,
 			//and the "execute" is where we actually do the work
 
-			File.WriteAllText(@"C:\Users\Rowan\Desktop\SourceGen.log", $"====={DateTime.Now}=====\n");
+			Log("Path is:");
+			Log(Path.GetFullPath("./"));
+
+			//Here we write to our log file
+			ctx.AddSource("Logs", SourceText.From($@"/*
+{string.Join("\n", _log)}
+*/", Encoding.UTF8));
+			File.WriteAllText(@"C:\Users\Rowan\Desktop\SourceGen.log", $"===== {DateTime.Now} =====\n");
 			File.AppendAllLines(@"C:\Users\Rowan\Desktop\SourceGen.log", _log);
 		}
 
@@ -50,9 +60,10 @@ namespace StrideSaber.SourceGenerators
 					case ClassDeclarationSyntax cds:
 					{
 						Log($"Found class {cds.Identifier}");
+						Log($"Modifiers are:\n'{cds.Modifiers.ToString()}'");
+						// Log($"Modifiers (full) are:\n\"{cds.Modifiers.ToFullString()}\"");
 
-						Log(cds.Modifiers.Any(SyntaxKind.StaticKeyword) ? "Class is static" : "Class is not static");
-
+						Log("");
 						break;
 					}
 					case RecordDeclarationSyntax rds:

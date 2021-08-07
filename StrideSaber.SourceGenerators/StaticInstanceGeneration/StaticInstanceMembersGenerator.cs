@@ -31,15 +31,25 @@ namespace StrideSaber.SourceGenerators
 		// ReSharper disable InconsistentNaming
 
 		//SIMG stands for "Static Instance Member Generator
-		private static readonly DiagnosticDescriptor GenMembers_InvalidParentNode = new DiagnosticDescriptor(
-				"SIMG01",
-				"Invalid Parent Node",
-				"Invalid parent node for attribute {0}",
-				"Usage",
-				DiagnosticSeverity.Error,
-				true,
-				"The attribute is attached to a parent node that is not valid, e.g. an assembly is being targeted by the " + nameof(GenerateStaticInstanceMembersAttribute) + ". To fix this, target a valid node instead, such as a class or struct (for the " + nameof(GenerateStaticInstanceMembersAttribute) + "."
-		);
+		private static readonly DiagnosticDescriptor GenMembers_InvalidParentNode = new(
+						"SIMG01",
+						"Invalid Parent Node",
+						"Invalid parent node for attribute {0}",
+						"Usage",
+						DiagnosticSeverity.Error,
+						true,
+						"The attribute is attached to a parent node that is not valid, e.g. an assembly is being targeted by the " + nameof(GenerateStaticInstanceMembersAttribute) + ". To fix this, target a valid node instead, such as a class or struct (for the " + nameof(GenerateStaticInstanceMembersAttribute) + "."
+				);
+
+		private static readonly DiagnosticDescriptor GenMembers_TooManyFieldTargets = new(
+						"SIMG02",
+						"Too many target declarations",
+						"Too many fields declared as target instance member",
+						"Usage",
+						DiagnosticSeverity.Warning,
+						true,
+						"There are too many fields in a multi-variable initializer expression that has the attribute " + nameof(TargetInstanceMemberAttribute) + ". Try splitting it into a single variable declaration with, and only mark one field. The selected variable is undefined, but will likely be the first variable declared (this is undefined, do not presume it will always be true)."
+				);
 
 		// ReSharper restore InconsistentNaming
 
@@ -75,13 +85,12 @@ namespace StrideSaber.SourceGenerators
 
 				Log($"Type {typeDeclaration.Identifier} has valid {nameof(GenerateStaticInstanceMembersAttribute)}");
 
-				//Now see if we can find a child member to use as our target
-				MemberDeclarationSyntax targetInstanceMember;
+				//Now see if we can find a child field to use as our target
+				SyntaxToken? targetInstanceMember;
 				//Pull out any members that have the TargetInstanceMember attribute
-
-				var targets =
+				var targetTokens =
 						//First check that the member declaration is either a field or a property
-						typeDeclaration.Members.Where(m => m.IsKind(SyntaxKind.FieldDeclaration) || m.IsKind(SyntaxKind.PropertyDeclaration))
+						typeDeclaration.Members.OfType<FieldDeclarationSyntax>()
 								//And check that the attributes it has match our target attribute
 								.Where(m =>
 										//Go through the lists (groups) of attributes
@@ -90,27 +99,50 @@ namespace StrideSaber.SourceGenerators
 												l => l.Attributes.Any(a => GetAttributeName(a) is "TargetInstanceMemberAttribute" or "TargetInstanceMember")
 										)
 								)
+								//Now we extract the SyntaxToken (aka the identifier/variable name) from the fields
+								.SelectMany(f => f.Declaration.Variables)
+								.Select(v => v.Identifier)
 								.ToArray();
-				switch (targets.Length)
+				switch (targetTokens.Length)
 				{
 					case 0:
-						Log($"No members marked as target");
+						Log("No members marked as target");
+						targetInstanceMember = null;
 						break;
+					//Like explained in the `default` section, fields can actually have several fields declared in one section
+					//So we skip to special handling if there's more than one
+					case 1 when targetTokens[0] is {Declaration: {Variables: {Count: >1}}}:
+						goto default;
 					case 1:
-						Log($"Member {targets[0]} is target member");
+						Log($"Member {targetTokens[0]} is target member");
+						targetInstanceMember = targetTokens[0].Declaration.Variables[0].Identifier;
 						break;
 					default:
 					{
-						Log($"Too many target members ({targets.Length})");
-						for (int i = 0; i < targets.Length; i++)
+						Log($"Too many target members ({targetTokens.Length}):");
+
+						for (int i = 0; i < targetTokens.Length; i++)
 						{
-							MemberDeclarationSyntax memberDeclarationSyntax = targets[i];
-							Log($"Member {i + 1}: {targets[0]}");
+							FieldDeclarationSyntax? field = targetTokens[i];
+							//You can declare multiple vars in a single line
+							//E.g.`int x,y,z`
+							var vars = field.Declaration.Variables;
+							//Only 1 declared, which is good
+							if (vars.Count == 1)
+							{
+								targetInstanceMember = vars[0].Identifier;
+							}
+							else
+							{
+							}
+
+							Log($"Member {i + 1}: {(targetTokens[i] as PropertyDeclarationSyntax)?.Declaration}");
 						}
 
 						break;
 					}
 				}
+
 				Log(Environment.NewLine);
 			}
 

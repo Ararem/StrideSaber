@@ -8,8 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3dfc020d-f83f-4b2c-a8a2-f1f123cde1a2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.StrideSaber/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StrideSaber/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceGeneration/StaticInstanceMembersGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceGeneration/StaticInstanceMembersGenerator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StrideSaber/Testing/StaticInstanceMemberGenTesting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Testing/StaticInstanceMemberGenTesting.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,6 +82,7 @@
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/IL/0127112E-A0DE-4B4B-AE87-42F3626AB806/ac/70f7f74c/02000005.il" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9C2EB1FD-370B-4C31-A981-729C5E257F1B/ae/c70e408d/MemberDeclarationSyntax.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://StaticInstanceMembersGenerator.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://StaticInstanceMembersGenerator.cs" root0="SKIP_HIGHLIGHTING" />
@@ -145,8 +146,9 @@
       <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceMembersGenerator.cs" />
       <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceGeneration/DiagnosticId.cs" />
       <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceGeneration/GenerateStaticInstanceMembersAttribute.cs" />
-      <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceGeneration/StaticInstanceMembersGenerator.cs" />
       <option value="$PROJECT_DIR$/StrideSaber/Testing/StaticInstanceMemberGenTesting.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceGeneration/TargetInstanceMemeberAttribute.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceGeneration/StaticInstanceMembersGenerator.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1wByMiFeHhEqaG1JadwNMh93BK7" />
@@ -165,7 +167,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.openapi.externalSystem.service.settings.ExternalSystemGroupConfigurable" value="ALL" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.folding" />
+    <property name="settings.editor.selected.configurable" value="SymbolServersPageId" />
   </component>
   <component name="RunManager">
     <configuration name="StrideSaber.Windows" type="DotNetProject" factoryName=".NET Project">
@@ -238,10 +240,10 @@
           <line>69</line>
           <properties documentPath="C:\Users\Rowan\Documents\Projects\Stride3D\StrideSaber\StrideSaber.SourceGenerators\StaticInstanceMembersGenerator.cs" initialLine="40" containingFunctionPresentation="method 'Execute'">
             <startOffsets>
-              <option value="4575" />
+              <option value="6062" />
             </startOffsets>
             <endOffsets>
-              <option value="4728" />
+              <option value="6215" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="1" />

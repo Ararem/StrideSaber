@@ -84,12 +84,33 @@ namespace StrideSaber.SourceGenerators
 						typeDeclaration.Members.Where(m => m.IsKind(SyntaxKind.FieldDeclaration) || m.IsKind(SyntaxKind.PropertyDeclaration))
 								//And check that the attributes it has match our target attribute
 								.Where(m =>
-										//Pull out all the attributes from the lists so we get one big list
-										m.AttributeLists.SelectMany(l => l.Attributes)
-										.Any(a => GetAttributeName(a) is "TargetInstanceMemberAttribute" or "TargetInstanceMember"
+										//Go through the lists (groups) of attributes
+										m.AttributeLists.Any(
+												//And see if any of the attributes in that group have a matching name
+												l => l.Attributes.Any(a => GetAttributeName(a) is "TargetInstanceMemberAttribute" or "TargetInstanceMember")
 										)
 								)
 								.ToArray();
+				switch (targets.Length)
+				{
+					case 0:
+						Log($"No members marked as target");
+						break;
+					case 1:
+						Log($"Member {targets[0]} is target member");
+						break;
+					default:
+					{
+						Log($"Too many target members ({targets.Length})");
+						for (int i = 0; i < targets.Length; i++)
+						{
+							MemberDeclarationSyntax memberDeclarationSyntax = targets[i];
+							Log($"Member {i + 1}: {targets[0]}");
+						}
+
+						break;
+					}
+				}
 				Log(Environment.NewLine);
 			}
 

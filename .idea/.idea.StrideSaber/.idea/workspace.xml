@@ -9,6 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3dfc020d-f83f-4b2c-a8a2-f1f123cde1a2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceGeneration/StaticInstanceMembersGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceGeneration/StaticInstanceMembersGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StrideSaber/Testing/StaticInstanceMemberGenTesting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StrideSaber/Testing/StaticInstanceMemberGenTesting.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,8 +145,8 @@
       <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceMembersGenerator.cs" />
       <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceGeneration/DiagnosticId.cs" />
       <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceGeneration/GenerateStaticInstanceMembersAttribute.cs" />
-      <option value="$PROJECT_DIR$/StrideSaber/Testing/StaticInstanceMemberGenTesting.cs" />
       <option value="$PROJECT_DIR$/StrideSaber.SourceGenerators/StaticInstanceGeneration/StaticInstanceMembersGenerator.cs" />
+      <option value="$PROJECT_DIR$/StrideSaber/Testing/StaticInstanceMemberGenTesting.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1wByMiFeHhEqaG1JadwNMh93BK7" />
@@ -237,10 +238,10 @@
           <line>69</line>
           <properties documentPath="C:\Users\Rowan\Documents\Projects\Stride3D\StrideSaber\StrideSaber.SourceGenerators\StaticInstanceMembersGenerator.cs" initialLine="40" containingFunctionPresentation="method 'Execute'">
             <startOffsets>
-              <option value="4047" />
+              <option value="4575" />
             </startOffsets>
             <endOffsets>
-              <option value="4200" />
+              <option value="4728" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="1" />

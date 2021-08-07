@@ -8,7 +8,7 @@ namespace StrideSaber.SourceGenerators
 	/// </summary>
 	/// <remarks>
 	/// Essentially makes all static versions of instance members be called on this object instead</remarks>
-	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+	[AttributeUsage(AttributeTargets.Field)]
 	public sealed class TargetInstanceMemberAttribute : Attribute
 	{
 	}

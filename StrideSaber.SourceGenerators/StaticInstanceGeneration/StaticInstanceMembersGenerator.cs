@@ -21,9 +21,9 @@ namespace StrideSaber.SourceGenerators
 			// Register a factory that can create our custom syntax receiver
 			ctx.RegisterForSyntaxNotifications(() => new SyntaxReceiver(this));
 			//This is awesome by the way!!!
-// #if DEBUG
+			// #if DEBUG
 			// if (!Debugger.IsAttached) Debugger.Launch();
-// #endif
+			// #endif
 		}
 
 	#region Diagnostic Descriptions
@@ -64,6 +64,7 @@ namespace StrideSaber.SourceGenerators
 					context.ReportDiagnostic(Diagnostic.Create(GenMembers_InvalidParentNode, Location.Create(attribute.SyntaxTree, attribute.Span), attribute.Name));
 					continue;
 				}
+
 				//Can't do that for interfaces (yet)
 				if (attribute.Parent?.Parent is InterfaceDeclarationSyntax interfaceDeclaration)
 				{
@@ -71,14 +72,24 @@ namespace StrideSaber.SourceGenerators
 					context.ReportDiagnostic(Diagnostic.Create(GenMembers_InvalidParentNode, Location.Create(attribute.SyntaxTree, attribute.Span), attribute.Name));
 					continue;
 				}
+
 				Log($"Type {typeDeclaration.Identifier} has valid {nameof(GenerateStaticInstanceMembersAttribute)}");
 
 				//Now see if we can find a child member to use as our target
 				MemberDeclarationSyntax targetInstanceMember;
-				
-				//
-				// Log($"Found type {classDeclaration.Identifier}");
-				//Everything is dandy, let's continue
+				//Pull out any members that have the TargetInstanceMember attribute
+
+				var targets =
+						//First check that the member declaration is either a field or a property
+						typeDeclaration.Members.Where(m => m.IsKind(SyntaxKind.FieldDeclaration) || m.IsKind(SyntaxKind.PropertyDeclaration))
+								//And check that the attributes it has match our target attribute
+								.Where(m =>
+										//Pull out all the attributes from the lists so we get one big list
+										m.AttributeLists.SelectMany(l => l.Attributes)
+										.Any(a => GetAttributeName(a) is "TargetInstanceMemberAttribute" or "TargetInstanceMember"
+										)
+								)
+								.ToArray();
 				Log(Environment.NewLine);
 			}
 
@@ -115,29 +126,6 @@ namespace StrideSaber.SourceGenerators
 
 	#endregion
 
-		/// <inheritdoc />
-		private sealed class SyntaxReceiver : ISyntaxReceiver
-		{
-			internal SyntaxReceiver(StaticInstanceMembersGenerator parentGenerator)
-			{
-				this.parentGenerator = parentGenerator;
-			}
-
-			private readonly StaticInstanceMembersGenerator parentGenerator;
-
-			/// <inheritdoc />
-			public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
-			{
-				//Ensure it's declaring an attribute
-				if (syntaxNode is not AttributeSyntax attribute) return;
-				string? name = GetAttributeName(attribute);
-				//Quit if the name doesn't match
-				if (name is not ("GenerateStaticInstanceMembersAttribute" or "GenerateStaticInstanceMembers")) return;
-				//Add it to the list to process later
-				parentGenerator.foundAttributes.Add(attribute);
-			}
-		}
-
 		/// <summary>
 		/// Gets the type name from an <see cref="AttributeSyntax"/>
 		/// </summary>
@@ -163,6 +151,29 @@ namespace StrideSaber.SourceGenerators
 					default:
 						return null;
 				}
+		}
+
+		/// <inheritdoc />
+		private sealed class SyntaxReceiver : ISyntaxReceiver
+		{
+			internal SyntaxReceiver(StaticInstanceMembersGenerator parentGenerator)
+			{
+				this.parentGenerator = parentGenerator;
+			}
+
+			private readonly StaticInstanceMembersGenerator parentGenerator;
+
+			/// <inheritdoc />
+			public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
+			{
+				//Ensure it's declaring an attribute
+				if (syntaxNode is not AttributeSyntax attribute) return;
+				string? name = GetAttributeName(attribute);
+				//Quit if the name doesn't match
+				if (name is not ("GenerateStaticInstanceMembersAttribute" or "GenerateStaticInstanceMembers")) return;
+				//Add it to the list to process later
+				parentGenerator.foundAttributes.Add(attribute);
+			}
 		}
 	}
 }

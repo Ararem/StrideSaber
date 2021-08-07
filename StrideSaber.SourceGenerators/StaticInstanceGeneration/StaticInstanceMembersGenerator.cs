@@ -21,9 +21,9 @@ namespace StrideSaber.SourceGenerators
 			// Register a factory that can create our custom syntax receiver
 			ctx.RegisterForSyntaxNotifications(() => new SyntaxReceiver(this));
 			//This is awesome by the way!!!
-#if DEBUG
-			if (!Debugger.IsAttached) Debugger.Launch();
-#endif
+// #if DEBUG
+			// if (!Debugger.IsAttached) Debugger.Launch();
+// #endif
 		}
 
 	#region Diagnostic Descriptions
@@ -31,21 +31,22 @@ namespace StrideSaber.SourceGenerators
 		// ReSharper disable InconsistentNaming
 
 		//SIMG stands for "Static Instance Member Generator
-		private static readonly DiagnosticDescriptor GenMembers_InvalidParenNode = new DiagnosticDescriptor(
+		private static readonly DiagnosticDescriptor GenMembers_InvalidParentNode = new DiagnosticDescriptor(
 				"SIMG01",
 				"Invalid Parent Node",
 				"Invalid parent node for attribute {0}",
 				"Usage",
 				DiagnosticSeverity.Error,
 				true,
-				"The attribute is attached to a parent node that is not valid, e.g. an assembly is being targeted by the " + nameof(GenerateStaticInstanceMembersAttribute) + ". To fix this, target a valid node instead, such as a class or struct."
-		)
+				"The attribute is attached to a parent node that is not valid, e.g. an assembly is being targeted by the " + nameof(GenerateStaticInstanceMembersAttribute) + ". To fix this, target a valid node instead, such as a class or struct (for the " + nameof(GenerateStaticInstanceMembersAttribute) + "."
+		);
 
 		// ReSharper restore InconsistentNaming
+
 	#endregion
 
 		/// <inheritdoc />
-		public void Execute(GeneratorExecutionContext ctx)
+		public void Execute(GeneratorExecutionContext context)
 		{
 			//From my understanding, the syntax reciever is the "scan" phase that finds stuff to work on,
 			//and the "execute" is where we actually do the work
@@ -55,16 +56,30 @@ namespace StrideSaber.SourceGenerators
 				//Here we check it's attached to a class declaration
 				// "attribute.Parent" is "AttributeListSyntax"
 				// "attribute.Parent.Parent" is a C# fragment the attribute is applied to
-				if (attribute.Parent?.Parent is not ClassDeclarationSyntax classDeclaration)
+				if (attribute.Parent?.Parent is not TypeDeclarationSyntax typeDeclaration)
 				{
 					//I'm guessing this might happen on assembly-level attributes
-					Log($"Attribute was attached to invalid node: {attribute.Parent?.Parent ?? attribute.Parent}");
+					SyntaxNode? invalidParentNode = attribute.Parent?.Parent ?? attribute.Parent;
+					Log($"Attribute {attribute.Name} was attached to invalid node: {invalidParentNode}");
+					context.ReportDiagnostic(Diagnostic.Create(GenMembers_InvalidParentNode, Location.Create(attribute.SyntaxTree, attribute.Span), attribute.Name));
 					continue;
 				}
+				//Can't do that for interfaces (yet)
+				if (attribute.Parent?.Parent is InterfaceDeclarationSyntax interfaceDeclaration)
+				{
+					Log($"Attribute {attribute.Name} was attached to interface node: {interfaceDeclaration.Identifier}");
+					context.ReportDiagnostic(Diagnostic.Create(GenMembers_InvalidParentNode, Location.Create(attribute.SyntaxTree, attribute.Span), attribute.Name));
+					continue;
+				}
+				Log($"Type {typeDeclaration.Identifier} has valid {nameof(GenerateStaticInstanceMembersAttribute)}");
+
+				//Now see if we can find a child member to use as our target
+				MemberDeclarationSyntax targetInstanceMember;
+				
 				//
-				Log($"Found type {classDeclaration.Identifier}");
+				// Log($"Found type {classDeclaration.Identifier}");
 				//Everything is dandy, let's continue
-				ParentGenerator.foundAttributes.Add(classDeclaration);
+				Log(Environment.NewLine);
 			}
 
 			//Here we write to our log file
@@ -73,7 +88,7 @@ namespace StrideSaber.SourceGenerators
 				StringBuilder sb = new($"===== {DateTime.Now} ====={Environment.NewLine}");
 				for (int i = 0; i < _log.Count; i++) sb.AppendLine(_log[i]);
 				_log.Clear();
-				ctx.AddSource("SourceGenLog", SourceText.From($"/*{Environment.NewLine}{string.Join("\n\r", sb.ToString())}{Environment.NewLine}*/", Encoding.UTF8));
+				context.AddSource("SourceGenLog", SourceText.From($"/*{Environment.NewLine}{string.Join("\n\r", sb.ToString())}{Environment.NewLine}*/", Encoding.UTF8));
 			}
 		}
 

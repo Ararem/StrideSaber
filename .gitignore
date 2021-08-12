@@ -13,3 +13,4 @@ _ReSharper*
 obj/
 Cache/
 */CompilerGenerated/*
+.idea/.idea.StrideSaber/.idea/workspace.xml

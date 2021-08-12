@@ -31,7 +31,7 @@ namespace StrideSaber.SourceGenerators
 		// ReSharper disable InconsistentNaming
 
 		//SIMG stands for "Static Instance Member Generator
-		private static readonly DiagnosticDescriptor GenMembers_InvalidParentNode = new(
+		private static readonly DiagnosticDescriptor InvalidParentNode = new(
 						"SIMG01",
 						"Invalid Parent Node",
 						"Invalid parent node for attribute {0}",
@@ -41,7 +41,7 @@ namespace StrideSaber.SourceGenerators
 						"The attribute is attached to a parent node that is not valid, e.g. an assembly is being targeted by the " + nameof(GenerateStaticInstanceMembersAttribute) + ". To fix this, target a valid node instead, such as a class or struct (for the " + nameof(GenerateStaticInstanceMembersAttribute) + "."
 				);
 
-		private static readonly DiagnosticDescriptor GenMembers_TooManyFieldTargets = new(
+		private static readonly DiagnosticDescriptor TooManyFieldTargets = new(
 						"SIMG02",
 						"Too many target declarations",
 						"Too many fields declared as target instance member",
@@ -49,6 +49,15 @@ namespace StrideSaber.SourceGenerators
 						DiagnosticSeverity.Warning,
 						true,
 						"There are too many fields in a multi-variable initializer expression that has the attribute " + nameof(TargetInstanceMemberAttribute) + ". Try splitting it into a single variable declaration with, and only mark one field. The selected variable is undefined, but will likely be the first variable declared (this is undefined, do not presume it will always be true)."
+				);
+
+		private static readonly DiagnosticDescriptor ClassIsStatic = new(
+				"SIMG03",
+				"Class cannot be static",
+				"The target class must not be static",
+				"Usage",
+				DiagnosticSeverity.Error,
+				true
 				);
 
 		// ReSharper restore InconsistentNaming
@@ -61,6 +70,8 @@ namespace StrideSaber.SourceGenerators
 			//From my understanding, the syntax reciever is the "scan" phase that finds stuff to work on,
 			//and the "execute" is where we actually do the work
 
+			StringBuilder sb = new(4096);
+			//Loop over all the attributes we found
 			foreach (AttributeSyntax attribute in foundAttributes)
 			{
 				//Here we check it's attached to a class declaration
@@ -70,16 +81,24 @@ namespace StrideSaber.SourceGenerators
 				{
 					//I'm guessing this might happen on assembly-level attributes
 					SyntaxNode? invalidParentNode = attribute.Parent?.Parent ?? attribute.Parent;
-					Log($"Attribute {attribute.Name} was attached to invalid node: {invalidParentNode}");
-					context.ReportDiagnostic(Diagnostic.Create(GenMembers_InvalidParentNode, Location.Create(attribute.SyntaxTree, attribute.Span), attribute.Name));
+					Log($"Attribute was attached to invalid node: {invalidParentNode}");
+					context.ReportDiagnostic(Diagnostic.Create(InvalidParentNode, Location.Create(attribute.SyntaxTree, attribute.Span), attribute.Name));
 					continue;
 				}
 
 				//Can't do that for interfaces (yet)
 				if (attribute.Parent?.Parent is InterfaceDeclarationSyntax interfaceDeclaration)
 				{
-					Log($"Attribute {attribute.Name} was attached to interface node: {interfaceDeclaration.Identifier}");
-					context.ReportDiagnostic(Diagnostic.Create(GenMembers_InvalidParentNode, Location.Create(attribute.SyntaxTree, attribute.Span), attribute.Name));
+					Log($"Attribute was attached to interface node: {interfaceDeclaration.Identifier}");
+					context.ReportDiagnostic(Diagnostic.Create(InvalidParentNode, Location.Create(attribute.SyntaxTree, attribute.Span), attribute.Name));
+					continue;
+				}
+
+				//Gotta be an instance class...
+				if (typeDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword))
+				{
+					Log($"Class {typeDeclaration.Identifier} was static");
+					context.ReportDiagnostic(Diagnostic.Create(ClassIsStatic, Location.Create(typeDeclaration.SyntaxTree, typeDeclaration.Span)));
 					continue;
 				}
 
@@ -103,56 +122,56 @@ namespace StrideSaber.SourceGenerators
 								.SelectMany(f => f.Declaration.Variables)
 								.Select(v => v.Identifier)
 								.ToArray();
+
 				switch (targetTokens.Length)
 				{
 					case 0:
 						Log("No members marked as target");
 						targetInstanceMember = null;
 						break;
-					//Like explained in the `default` section, fields can actually have several fields declared in one section
-					//So we skip to special handling if there's more than one
-					case 1 when targetTokens[0] is {Declaration: {Variables: {Count: >1}}}:
-						goto default;
 					case 1:
-						Log($"Member {targetTokens[0]} is target member");
-						targetInstanceMember = targetTokens[0].Declaration.Variables[0].Identifier;
+						targetInstanceMember = targetTokens[0];
+						Log($"Single member marked as target");
 						break;
 					default:
 					{
 						Log($"Too many target members ({targetTokens.Length}):");
-
 						for (int i = 0; i < targetTokens.Length; i++)
 						{
-							FieldDeclarationSyntax? field = targetTokens[i];
-							//You can declare multiple vars in a single line
-							//E.g.`int x,y,z`
-							var vars = field.Declaration.Variables;
-							//Only 1 declared, which is good
-							if (vars.Count == 1)
-							{
-								targetInstanceMember = vars[0].Identifier;
-							}
-							else
-							{
-							}
-
-							Log($"Member {i + 1}: {(targetTokens[i] as PropertyDeclarationSyntax)?.Declaration}");
+							Log($"Member {i + 1} = {targetTokens[i]}");
+							context.ReportDiagnostic(Diagnostic.Create(TooManyFieldTargets, Location.Create(targetTokens[i].SyntaxTree, targetTokens[i].Span)));
 						}
 
+						//Here this is undefined behaviour as we shouldn't really have more than one field, but try and make it compile
+						targetInstanceMember = targetTokens[0];
 						break;
 					}
 				}
+				string modifiers = typeDeclaration.Modifiers.ToString();
+				string typeType = typeDeclaration.Kind() switch //Lmao i love this name
+				{
+						SyntaxKind.ClassDeclaration => "class",
+						SyntaxKind.RecordDeclaration => "record",
+						SyntaxKind.StructDeclaration => "struct",
+				};
+				string identifier = typeDeclaration.Identifier.ToString();
 
+				if()
+				//Now we generate the members we need
+				sb.AppendLine($@"{modifiers} {typeType} {identifier}
+{{
+");
+				
 				Log(Environment.NewLine);
 			}
 
 			//Here we write to our log file
 			lock (_log)
 			{
-				StringBuilder sb = new($"===== {DateTime.Now} ====={Environment.NewLine}");
-				for (int i = 0; i < _log.Count; i++) sb.AppendLine(_log[i]);
+				StringBuilder logBuilder = new($"===== {DateTime.Now} ====={Environment.NewLine}");
+				for (int i = 0; i < _log.Count; i++) logBuilder.AppendLine(_log[i]);
 				_log.Clear();
-				context.AddSource("SourceGenLog", SourceText.From($"/*{Environment.NewLine}{string.Join("\n\r", sb.ToString())}{Environment.NewLine}*/", Encoding.UTF8));
+				context.AddSource("SourceGenLog", SourceText.From($"/*{Environment.NewLine}{logBuilder}{Environment.NewLine}*/", Encoding.UTF8));
 			}
 		}
 
@@ -207,7 +226,7 @@ namespace StrideSaber.SourceGenerators
 		}
 
 		/// <inheritdoc />
-		private sealed class SyntaxReceiver : ISyntaxReceiver
+		private sealed class SyntaxReceiver : ISyntaxContextReceiver
 		{
 			internal SyntaxReceiver(StaticInstanceMembersGenerator parentGenerator)
 			{
@@ -226,6 +245,12 @@ namespace StrideSaber.SourceGenerators
 				if (name is not ("GenerateStaticInstanceMembersAttribute" or "GenerateStaticInstanceMembers")) return;
 				//Add it to the list to process later
 				parentGenerator.foundAttributes.Add(attribute);
+			}
+
+			/// <inheritdoc />
+			public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
+			{
+				
 			}
 		}
 	}

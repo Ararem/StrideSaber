@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StrideSaber.SourceGenerators
+namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 {
 	/// <inheritdoc />
 	/// <summary>

@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Text;
 
 namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
@@ -33,7 +34,9 @@ namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 
 			//Create a StringBuilder to reuse
 			StringBuilder sb = new(16384);
-			foreach (var type in receiver!.Types) ProcessType(type, context, sb);
+			INamedTypeSymbol targetAttributeSymbol = context.Compilation.GetTypeByMetadataName(typeof(GenerateStaticInstanceMembersAttribute).AssemblyQualifiedName!)!;
+			Log($"Target Attribute Symbol is {targetAttributeSymbol}");
+			foreach (var type in receiver!.Types) ProcessType(type, context, sb, targetAttributeSymbol);
 
 			//Here we write to our log file
 			lock (_log)
@@ -51,41 +54,68 @@ namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 		/// <param name="toProcess"></param>
 		/// <param name="context"></param>
 		/// <param name="sb"></param>
-		private static void ProcessType(TypeToProcess toProcess, GeneratorExecutionContext context, in StringBuilder sb)
+		/// <param name="targetAttributeSymbol"></param>
+		private static void ProcessType(TypeToProcess toProcess, GeneratorExecutionContext context, in StringBuilder sb, INamedTypeSymbol targetAttributeSymbol)
 		{
 			INamedTypeSymbol type = toProcess.Type;
+			Log($"\nProcessing type {type}");
 
 		#region Type Validation
 
 			//Ensure the class is top-level (not a nested class)
-			if (!type.ContainingSymbol.Equals(type.ContainingNamespace, SymbolEqualityComparer.Default))
+			if (!SymbolEqualityComparer.Default.Equals(type.ContainingSymbol, type.ContainingNamespace))
 			{
-				ReportDiag(ClassMustBeTopLevel);
+				Log($"Type is not top level (Nested in {type.ContainingSymbol})");
+				ReportDiag(ClassMustBeTopLevel, type);
 				return;
 			}
 
 			//Also check for static-ness
 			if (type.IsStatic)
 			{
-				ReportDiag(ClassIsStatic);
+				Log("Type is static");
+				ReportDiag(ClassIsStatic, type);
 				return;
 			}
 
+			//Loop over all the members declared in the class
 			var members = type.GetMembers();
+			ISymbol? targetMember = null;
+			Log("Scanning class members");
 			foreach (ISymbol member in members)
 			{
-				var attributes = member.GetAttributes();
-				var 
+				//If the member is not a field or property we skip it
+				if(member is not IFieldSymbol or IPropertySymbol) continue;
+
+				//Now look at all the attributes on that field/property
+				foreach (AttributeData? a in  member.GetAttributes())
+				{
+					//We check if the attribute is the same as our attribute we use to mark our target members
+					if (SymbolEqualityComparer.Default.Equals(a.AttributeClass, targetAttributeSymbol))
+					{
+						//Now we have to make sure we only have at most 1 instance member
+						if (targetMember is null)
+						{
+							targetMember = member;
+							Log($"Target member found ({targetMember})");
+						}
+						else
+						{
+							Log($"Target member duplicate found ({member})");
+							ReportDiag(TooManyFieldTargets, member);
+						}
+					}
+				}
 			}
 
 		#endregion
 
 			sb.Clear();
 
-			void ReportDiag(DiagnosticDescriptor desc)
+			void ReportDiag(DiagnosticDescriptor desc, ISymbol target)
 			{
 				//Gotta loop through all the locations the class was declared (partial classes)
-				foreach (var loc in type.Locations)
+				foreach (var loc in target.Locations)
 					context.ReportDiagnostic(Diagnostic.Create(desc, loc));
 			}
 		}

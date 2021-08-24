@@ -85,26 +85,27 @@ namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 			foreach (ISymbol member in members)
 			{
 				//If the member is not a field or property we skip it
-				if(member is not IFieldSymbol or IPropertySymbol) continue;
+				if (member is not IFieldSymbol or IPropertySymbol) continue;
 
-				//Now look at all the attributes on that field/property
-				foreach (AttributeData? a in  member.GetAttributes())
+				//Now check if we have a target attribute on that field/property
+				bool isTarget = member.GetAttributes().Any(
+						//We check if the attribute is the same as our attribute we use to mark our target members
+						a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, targetAttributeSymbol)
+				);
+				//Member isn't a target, skip
+				if (!isTarget) continue;
+
+				//Member is marked as target
+				//Now we have to make sure we only have at most 1 instance member
+				if (targetMember is null)
 				{
-					//We check if the attribute is the same as our attribute we use to mark our target members
-					if (SymbolEqualityComparer.Default.Equals(a.AttributeClass, targetAttributeSymbol))
-					{
-						//Now we have to make sure we only have at most 1 instance member
-						if (targetMember is null)
-						{
-							targetMember = member;
-							Log($"Target member found ({targetMember})");
-						}
-						else
-						{
-							Log($"Target member duplicate found ({member})");
-							ReportDiag(TooManyFieldTargets, member);
-						}
-					}
+					targetMember = member;
+					Log($"Target member found ({targetMember})");
+				}
+				else
+				{
+					Log($"Target member duplicate found ({member})");
+					ReportDiag(TooManyFieldTargets, member);
 				}
 			}
 
@@ -143,6 +144,7 @@ namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 		}
 
 	#region Diagnostic Descriptions
+
 		// ReSharper disable StringLiteralTypo
 
 		//SIMG stands for "Static Instance Member Generator
@@ -175,6 +177,7 @@ namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 				);
 
 		// ReSharper restore StringLiteralTypo
+
 	#endregion
 
 	#region Logging, ignore this

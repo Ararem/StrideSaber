@@ -4,9 +4,11 @@ using StrideSaber.SourceGenerators.StaticInstanceGeneration;
 
 namespace StrideSaber.Testing
 {
-	[GenerateStaticInstanceMembers]
-	public class StaticInstGenClass
+	[GenerateStaticInstanceMembers("Static")]
+	public partial class StaticInstGenClass
 	{
-
+		public int IntProperty { get; set; }
+		public int IntField;
+		public void Method(){}
 	}
 }

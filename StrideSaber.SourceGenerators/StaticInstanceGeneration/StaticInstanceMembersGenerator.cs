@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using static StrideSaber.SourceGenerators.Helper.DocumentationHelper;
 
 namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 {
@@ -98,7 +99,7 @@ namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 namespace {newTypeNamespace}
 {{
 	//Source type is {(type.ContainingNamespace.IsGlobalNamespace ? "global::" : type.ContainingNamespace + ".")}{type.Name}
-	///<inheritdoc cref=""{type.GetDocumentationCommentId()}""/>
+	///{Inheritdoc(type)}
 	public partial class {newTypeName}
 	{{");
 			Log($"\t\tGenerating target instance as '{instanceName}'");
@@ -111,6 +112,7 @@ namespace {newTypeNamespace}
 
 			//Now we generate a static version of each instance member
 			//Only generate public instance members
+			//TODO: Handle non-public members
 			var members = type.GetMembers().Where(m => !m.IsStatic && (m.DeclaredAccessibility == Accessibility.Public)).ToArray();
 			Log($"\t\tGenerating members (Count={members.Length})");
 			foreach (var member in members)
@@ -118,9 +120,10 @@ namespace {newTypeNamespace}
 				switch (member)
 				{
 					case IFieldSymbol field:
-						Log($"Generating field {field.Name}");
+						Log($"\t\tGenerating field {field.Name}");
 						sb.Append($@"
-		{field.GetDocumentationCommentXml()}
+
+		///{Inheritdoc(field)}
 		public static {field.Type.ContainingNamespace}.{field.Type.Name} {field.Name}
 		{{
 			get => {instanceName}.{field.Name};
@@ -130,9 +133,10 @@ namespace {newTypeNamespace}
 
 					//Todo: Get, init, etc
 					case IPropertySymbol prop:
-						Log($"Generating property {prop.Name}");
+						Log($"\t\tGenerating property {prop.Name}");
 						sb.Append($@"
-		{prop.GetDocumentationCommentXml()}
+
+		///{Inheritdoc(prop)}
 		public static {prop.Type.ContainingNamespace}.{prop.Type.Name} {prop.Name}
 		{{
 			get => {instanceName}.{prop.Name};
@@ -140,8 +144,9 @@ namespace {newTypeNamespace}
 		}}");
 						break;
 
-					//Todo, generics, async, etc
+					//Todo, generics, async, other method kinds, etc
 					case IMethodSymbol {MethodKind: MethodKind.Ordinary} method:
+						Log($"\t\tGenerating method {method}");
 						//Build the return type strings
 						string returnType = "";
 						if (method.IsAsync) returnType += "async ";
@@ -165,7 +170,7 @@ namespace {newTypeNamespace}
 								for (int i = 0; i < constraints.Length; i++)
 								{
 									ITypeSymbol constraint = constraints[i];
-									genericArgConstraints += $"where {param} : {constraint}";
+									genericArgConstraints += $" where {param} : {constraint}";
 									if (i != constraints.Length - 1) genericArgConstraints += ", ";
 								}
 							}
@@ -186,8 +191,9 @@ namespace {newTypeNamespace}
 						}
 
 						sb.Append($@"
-		{method.GetDocumentationCommentXml()}
-		public static {returnType} {method.Name}{genericArgs}({methodDecArgs}) {genericArgConstraints} => {(method.IsAsync ? "await " : "")}{instanceName}.{method.Name}{genericArgs}({methodCallArgs});");
+
+		///{Inheritdoc(method)}
+		public static {returnType} {method.Name}{genericArgs}({methodDecArgs}){genericArgConstraints} => {(method.IsAsync ? "await " : "")}{instanceName}.{method.Name}{genericArgs}({methodCallArgs});");
 						break;
 				}
 			}

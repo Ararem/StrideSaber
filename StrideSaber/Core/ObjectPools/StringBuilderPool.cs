@@ -18,11 +18,22 @@ namespace StrideSaber.Core.ObjectPools
 		/// <summary>
 		/// The current singleton instance of a <see cref="StringBuilderPool"/>
 		/// </summary>
-#warning STATIC INSTANCE TIME
-		public static readonly StringBuilderPool Instance = new();
+		private static readonly StringBuilderPool Instance = new();
+
+		/// <inheritdoc cref="DefaultObjectPool{T}.Get"/>
+		public static StringBuilder GetPooled()
+		{
+			return Instance.Get();
+		}
+
+		/// <inheritdoc cref="DefaultObjectPool{T}.Return"/>
+		public static void ReturnPooled(StringBuilder obj)
+		{
+			Instance.Return(obj);
+		}
 
 		/// <inheritdoc />
-		public StringBuilderPool() : base(Policy) //Just pass in the policy, nothing more to do
+		private StringBuilderPool() : base(Policy) //Just pass in the policy, nothing more to do
 		{
 		}
 	}

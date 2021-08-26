@@ -13,5 +13,6 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.10.0" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="5.0.8" />
 	</ItemGroup>
 </Project>

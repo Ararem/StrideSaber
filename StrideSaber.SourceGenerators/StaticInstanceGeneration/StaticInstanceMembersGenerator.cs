@@ -21,7 +21,7 @@ namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 			ctx.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
 			//This is awesome by the way!!!
 			// #if DEBUG
-			if (!Debugger.IsAttached) Debugger.Launch();
+			// if (!Debugger.IsAttached) Debugger.Launch();
 			// #endif
 		}
 
@@ -34,11 +34,9 @@ namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 
 			//Create a StringBuilder to reuse
 			StringBuilder sb = new(16384);
-			INamedTypeSymbol targetAttributeSymbol = context.Compilation.GetTypeByMetadataName(typeof(TargetInstanceMemberAttribute).FullName!)!;
 			INamedTypeSymbol genMembersAttributeSymbol = context.Compilation.GetTypeByMetadataName(typeof(GenerateStaticInstanceMembersAttribute).FullName!)!;
-			Log($"Target Attribute Symbol is {targetAttributeSymbol}");
 			Log($"GenMembers Attribute Symbol is {genMembersAttributeSymbol}");
-			foreach (var type in receiver!.Types) ProcessType(type, context, sb, genMembersAttributeSymbol, targetAttributeSymbol!);
+			foreach (var type in receiver!.Types) ProcessType(type, context, sb, genMembersAttributeSymbol);
 
 			//Here we write to our log file
 			lock (_log)
@@ -56,8 +54,7 @@ namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 		/// <param name="toProcess"></param>
 		/// <param name="context"></param>
 		/// <param name="sb"></param>
-		/// <param name="targetAttributeSymbol"></param>
-		private static void ProcessType(TypeToProcess toProcess, GeneratorExecutionContext context, in StringBuilder sb, INamedTypeSymbol genMembersAttributeSymbol, INamedTypeSymbol targetAttributeSymbol)
+		private static void ProcessType(TypeToProcess toProcess, GeneratorExecutionContext context, in StringBuilder sb, INamedTypeSymbol genMembersAttributeSymbol)
 		{
 			INamedTypeSymbol type = toProcess.Type;
 			sb.Clear();
@@ -65,9 +62,10 @@ namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 
 			//Check if it is actually something we should generate
 			//So if we don't have any attributes that match our 'generate members on this' attribute we return
-			if (!type.GetAttributes().Any(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, genMembersAttributeSymbol)))
+			AttributeData? genAttribute = type.GetAttributes().FirstOrDefault(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, genMembersAttributeSymbol));
+			if (genAttribute is null)
 			{
-				Log($"Class not marked for generation, skipping");
+				Log("Class not marked for generation, skipping");
 				return;
 			}
 
@@ -89,73 +87,21 @@ namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 				return;
 			}
 
-			//Loop over all the members declared in the class
-			var members = type.GetMembers();
-			ISymbol? targetMember = null;
-			Log($"\tScanning {members.Length} class members");
-			foreach (ISymbol member in members)
-			{
-				Log($"\tMember {member}:");
-				//If the member is not a field or property we skip it
-				if (member is not IFieldSymbol or IPropertySymbol)
-				{
-					Log($"\tMember is not field or property ({member.Kind})");
-					continue;
-				}
-
-				//Now check if we have a target attribute on that field/property
-				bool isTarget = member.GetAttributes().Any(
-						//We check if the attribute is the same as our attribute we use to mark our target members
-						a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, targetAttributeSymbol)
-				);
-				//Member isn't a target, skip
-				if (!isTarget)
-				{
-					Log("\tMember not marked as target");
-					continue;
-				}
-
-				//Have to validate it's static or else we can't access it
-				if (!member.IsStatic)
-				{
-					Log("Member is not static, ignoring and warning");
-					ReportDiag(TargetMustBeStatic, member);
-					continue;
-				}
-
-				//Same thing for visibility
-				if (member.DeclaredAccessibility is not Accessibility.Internal or Accessibility.Public or Accessibility.ProtectedOrInternal)
-				{
-					Log("Member is not static, ignoring and warning");
-					ReportDiag(TargetMustBeStatic, member);
-					continue;
-				}
-
-				//Member is marked as target
-				//Now we have to make sure we only have at most 1 instance member
-				if (targetMember is null)
-				{
-					Log($"Target member found ({member})");
-					targetMember = member;
-				}
-				else
-				{
-					Log($"Target member duplicate found ({member})");
-					ReportDiag(TooManyFieldTargets, member);
-				}
-			}
-
-			Log("\tFinished scanning members");
-			Log("\tGenerating members");
+			Log("\tPreparing to generate static class version");
+			string newTypeNamespace = genAttribute.ConstructorArguments[0].Value!.ToString() ?? $"{type.ContainingNamespace}.Generated";
+			string newTypeName = genAttribute.ConstructorArguments[1].Value!.ToString() ?? $"Static_{type.Name}";
+			string instanceName = genAttribute.ConstructorArguments[2].Value!.ToString() ?? "__instance";
+			Log("\tGenerating class");
 			//TODO: Handle if it's in the global namespace
 			sb.Append($@"
-//Auto generated by a roslyn source generator 
-namespace {type.ContainingNamespace}
+//Auto generated by a roslyn source generator
+namespace {newTypeNamespace}
 {{
-	partial class {type.Name}
+	//Source type is {(type.ContainingNamespace.IsGlobalNamespace ? "global::" : type.ContainingNamespace + ".")}{type.Name}
+	///<inheritdoc cref=""{type.GetDocumentationCommentId()}""/>
+	public partial class {newTypeName}
 	{{");
-			const string instanceName = "__instance";
-			Log($"\t\tTarget instance not found, generating as '{instanceName}'");
+			Log($"\t\tGenerating target instance as '{instanceName}'");
 			sb.Append($@"
 		/// <summary>
 		///  A roslyn source-generator generated instance that will be used as the target for static instance members
@@ -165,11 +111,14 @@ namespace {type.ContainingNamespace}
 
 			//Now we generate a static version of each instance member
 			//Only generate public instance members
-			foreach (var member in type.GetMembers().Where(m => !m.IsStatic && (m.DeclaredAccessibility == Accessibility.Public)))
+			var members = type.GetMembers().Where(m => !m.IsStatic && (m.DeclaredAccessibility == Accessibility.Public)).ToArray();
+			Log($"\t\tGenerating members (Count={members.Length})");
+			foreach (var member in members)
 			{
 				switch (member)
 				{
 					case IFieldSymbol field:
+						Log($"Generating field {field.Name}");
 						sb.Append($@"
 		{field.GetDocumentationCommentXml()}
 		public static {field.Type.ContainingNamespace}.{field.Type.Name} {field.Name}
@@ -179,7 +128,9 @@ namespace {type.ContainingNamespace}
 		}}");
 						break;
 
+					//Todo: Get, init, etc
 					case IPropertySymbol prop:
+						Log($"Generating property {prop.Name}");
 						sb.Append($@"
 		{prop.GetDocumentationCommentXml()}
 		public static {prop.Type.ContainingNamespace}.{prop.Type.Name} {prop.Name}
@@ -188,26 +139,43 @@ namespace {type.ContainingNamespace}
 			set => {instanceName}.{prop.Name} = value;
 		}}");
 						break;
+
+					//Todo, generics, async, etc
 					case IMethodSymbol {MethodKind: MethodKind.Ordinary} method:
 						//Build the return type strings
 						string returnType = "";
-						if (method.IsAsync) returnType += "async";
-						if (method.ReturnsByRefReadonly) returnType += "ref readonly";
-						else if (method.ReturnsByRef) returnType += "ref";
-						returnType += $"{method.ReturnType.ContainingNamespace}.{method.ReturnType}";
-						if (method.ReturnsVoid) returnType = "void";
+						if (method.IsAsync) returnType += "async ";
+						if (method.ReturnsByRefReadonly) returnType += "ref readonly ";
+						else if (method.ReturnsByRef) returnType += "ref ";
+						returnType += method.ReturnType;
+
 						//Now build the parameters
 						//methodCallArgs is when we actually call the method: `foo(x,y,z)`
 						//methodDecArgs is when we declare the method: `foo(int x, int z, bar z)`
+						//TODO: Perhaps use `string.Join()`
+						//TODO: Nullable stuff
 						string methodCallArgs = "", methodDecArgs = "";
+						string genericArgs = "", genericArgConstraints = "";
+						if (method.IsGenericMethod)
+						{
+							genericArgs = $"<{string.Join(", ", method.TypeParameters.Select(t => t.Name))}>";
+							foreach (ITypeParameterSymbol param in method.TypeParameters)
+							{
+								var constraints = param.ConstraintTypes;
+								for (int i = 0; i < constraints.Length; i++)
+								{
+									ITypeSymbol constraint = constraints[i];
+									genericArgConstraints += $"where {param} : {constraint}";
+									if (i != constraints.Length - 1) genericArgConstraints += ", ";
+								}
+							}
+						}
 						for (int i = 0; i < method.Parameters.Length; i++)
 						{
 							IParameterSymbol param = method.Parameters[i];
 							//Append the types and names of the parameters
 							methodCallArgs += param.Name;
-							if (!param.Type.ContainingNamespace.IsGlobalNamespace)
-								methodDecArgs += param.Type.ContainingNamespace + ".";
-							methodDecArgs += param.Type.Name;
+							methodDecArgs += $"{param.Type} {param.Name}";
 
 							//Only add commas on iterations that aren't the last
 							if (i != method.Parameters.Length - 1)
@@ -219,16 +187,16 @@ namespace {type.ContainingNamespace}
 
 						sb.Append($@"
 		{method.GetDocumentationCommentXml()}
-		public static {returnType} {method.Name}({methodDecArgs}) => {instanceName}.{method.Name}({methodCallArgs});");
+		public static {returnType} {method.Name}{genericArgs}({methodDecArgs}) {genericArgConstraints} => {(method.IsAsync ? "await " : "")}{instanceName}.{method.Name}{genericArgs}({methodCallArgs});");
 						break;
 				}
 			}
 
-			sb.Append($@"
-	}} //Class
-}} //Namespace
+			sb.Append(@"
+	} //Class
+} //Namespace
 ");
-			context.AddSource(type.Name, sb.ToString());
+			context.AddSource($"{type.Name}__{newTypeName}", sb.ToString());
 
 			void ReportDiag(DiagnosticDescriptor desc, ISymbol target)
 			{
@@ -274,29 +242,10 @@ namespace {type.ContainingNamespace}
 						true
 				);
 
-		private static readonly DiagnosticDescriptor TooManyFieldTargets = new(
-						"SIMG02",
-						"Too many target declarations",
-						"Too many fields declared as target instance member",
-						"Usage",
-						DiagnosticSeverity.Warning,
-						true,
-						"There are too many fields in a multi-variable initializer expression that has the attribute " + nameof(TargetInstanceMemberAttribute) + ". Try splitting it into a single variable declaration with, and only mark one field. The selected variable is undefined, but will likely be the first variable declared (this is undefined, do not presume it will always be true)."
-				);
-
 		private static readonly DiagnosticDescriptor ClassIsStatic = new(
-						"SIMG03",
+						"SIMG02",
 						"Class cannot be static",
 						"The target class must not be static",
-						"Usage",
-						DiagnosticSeverity.Error,
-						true
-				);
-
-		private static readonly DiagnosticDescriptor TargetMustBeStatic = new(
-						"SIMG04",
-						"Target must be static",
-						"The target instance member must be static",
 						"Usage",
 						DiagnosticSeverity.Error,
 						true

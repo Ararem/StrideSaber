@@ -11,13 +11,29 @@ namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 	public class GenerateStaticInstanceMembersAttribute : Attribute
 	{
 		/// <summary>
+		/// The namespace the generated type will be placed in.
+		/// </summary>
+		public readonly string GeneratedTypeNamespace;
+
+		/// <summary>
 		/// The name of the type that should be generated
 		/// </summary>
-		public string GeneratedTypeName { get; init; }
+		public readonly string GeneratedTypeName;
 
-		public GenerateStaticInstanceMembersAttribute(string generatedTypeName)
+		/// <summary>
+		/// The name of the variable that will be used as the instance
+		/// </summary>
+		public readonly string GeneratedInstanceName;
+
+		/// <summary>The constructor for a <see cref="GenerateStaticInstanceMembersAttribute"/></summary>
+		/// <param name="generatedTypeNamespace">The namespace the generated type will be placed in</param>
+		/// <param name="generatedTypeName" >The name of the type that should be generated</param>
+		///  <param name="generatedInstanceName">The name of the variable that will be used as the instance</param>
+		public GenerateStaticInstanceMembersAttribute(string generatedTypeNamespace, string generatedTypeName, string generatedInstanceName)
 		{
 			GeneratedTypeName = generatedTypeName;
+			GeneratedInstanceName = generatedInstanceName;
+			GeneratedTypeNamespace = generatedTypeNamespace;
 		}
 	}
 }

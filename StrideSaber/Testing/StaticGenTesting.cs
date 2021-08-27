@@ -15,16 +15,17 @@ namespace StrideSaber.Testing
 	{
 		// public int IntProperty { get; set; }
 		// public int IntField;
-		// public void OrdinaryVoidMethod(){}
-		//
-		// public async void AsyncVoidMethod(){}
-		// public async Task AsyncTaskMethod(){}
+		// public Random RandomField;
+		public void OrdinaryVoidMethod(){}
+		
+		public async void AsyncVoidMethod(){}
+		public async Task AsyncTaskMethod(){}
 
 		// public T1 Asd<T1, T2>() where T1 : class, new() where T2 : notnull => new T1();
-		
-		public T Test<T>(T t)
-		{
-			return t;
-		}
+		//
+		// public T Test<T>(T t)
+		// {
+		// 	return t;
+		// }
 	}
 }

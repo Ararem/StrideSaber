@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using StrideSaber.SourceGenerators.Helper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -115,7 +114,7 @@ namespace {newTypeNamespace}
 			//Only generate public instance members
 			//TODO: Handle non-public members
 			var members = type.GetMembers().Where(m => !m.IsStatic && (m.DeclaredAccessibility == Accessibility.Public)).ToArray();
-			Log($"\t\tGenerating members (Count={members.Length})");
+			Log($"\t\tFound {members.Length} members");
 			foreach (var member in members)
 			{
 				switch (member)
@@ -167,18 +166,19 @@ namespace {newTypeNamespace}
 							foreach (ITypeParameterSymbol param in method.TypeParameters)
 							{
 								//If it has no constraints we skip this
-								if (!param.HasConstructorConstraint && !param.HasNotNullConstraint && !param.HasReferenceTypeConstraint && !param.HasUnmanagedTypeConstraint && !param.HasValueTypeConstraint && param.ConstraintTypes.Length == 0) return;
+								if (!param.HasConstructorConstraint && !param.HasNotNullConstraint && !param.HasReferenceTypeConstraint && !param.HasUnmanagedTypeConstraint && !param.HasValueTypeConstraint && (param.ConstraintTypes.Length == 0)) break;
 
 								List<string> constraints = new();
-								//Other constraints, such as new, notnull, etc come before type constraints
+								//Special constraints, such as new, notnull, etc come before type constraints
 								if (param.HasReferenceTypeConstraint) constraints.Add("class");
 								else if (param.HasUnmanagedTypeConstraint) constraints.Add("unmanaged");
 								else if (param.HasValueTypeConstraint) constraints.Add("struct");
 								else if (param.HasNotNullConstraint) constraints.Add("notnull");
+								//Add all the `where T inherits from this class` constraints
 								constraints.AddRange( param.ConstraintTypes.Select(t => $"{t}"));
+								//The new constraint has to come last
 								if (param.HasConstructorConstraint) constraints.Add("new()");
 								genericArgConstraints += $" where {param} : {string.Join(", ", constraints)}";
-								//Add all the `where T inherits from this class` constraints
 							}
 						}
 						string methodCallArgs = string.Join(", ", method.Parameters.Select(p => p.Name));
@@ -188,6 +188,15 @@ namespace {newTypeNamespace}
 
 		///{Inheritdoc(method)}
 		public static {returnType} {method.Name}{genericArgs}({methodDecArgs}){genericArgConstraints} => {(method.IsAsync ? "await " : "")}{instanceName}.{method.Name}{genericArgs}({methodCallArgs});");
+						break;
+
+					//Handle cases we don't handle
+					case IMethodSymbol {MethodKind: MethodKind.PropertyGet or MethodKind.PropertySet} method:
+						Log($"\t\tSkipping property get/set method {method}");
+						break;
+
+					default:
+						Log($"\t\tSkipping incompatible {member.Kind.ToString().ToLowerInvariant()} {member}");
 						break;
 				}
 			}

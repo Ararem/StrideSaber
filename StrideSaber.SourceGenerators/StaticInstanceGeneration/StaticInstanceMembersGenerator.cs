@@ -4,11 +4,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using static StrideSaber.SourceGenerators.Helper.DocumentationHelper;
-using static StrideSaber.SourceGenerators.Helper.NameHelper;
 
 namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 {
@@ -23,7 +21,7 @@ namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 			ctx.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
 			//This is awesome by the way!!!
 			// #if DEBUG
-			if (!Debugger.IsAttached) Debugger.Launch();
+			// if (!Debugger.IsAttached) Debugger.Launch();
 			// #endif
 		}
 
@@ -124,7 +122,7 @@ namespace {newTypeNamespace}
 						sb.Append($@"
 
 		///{Inheritdoc(field)}
-		public static {TypeAndName(field)}
+		public static {field.Type} {field.Name}
 		{{
 			get => {instanceName}.{field.Name};
 			set => {instanceName}.{field.Name} = value;
@@ -137,7 +135,7 @@ namespace {newTypeNamespace}
 						sb.Append($@"
 
 		///{Inheritdoc(prop)}
-		public static {TypeAndName(prop)}
+		public static {prop.Type} {prop.Name}
 		{{
 			get => {instanceName}.{prop.Name};
 			set => {instanceName}.{prop.Name} = value;
@@ -157,7 +155,6 @@ namespace {newTypeNamespace}
 						//Now build the parameters
 						//methodCallArgs is when we actually call the method: `foo(x,y,z)`
 						//methodDecArgs is when we declare the method: `foo(int x, int z, bar z)`
-						//TODO: Perhaps use `string.Join()`
 						//TODO: Nullable stuff
 						string genericArgs = "", genericArgConstraints = "";
 						if (method.IsGenericMethod)
@@ -178,16 +175,17 @@ namespace {newTypeNamespace}
 								constraints.AddRange( param.ConstraintTypes.Select(t => $"{t}"));
 								//The new constraint has to come last
 								if (param.HasConstructorConstraint) constraints.Add("new()");
-								genericArgConstraints += $" where {param} : {string.Join(", ", constraints)}";
+								genericArgConstraints += $"\n\t\t\twhere {param} : {string.Join(", ", constraints)}";
 							}
 						}
 						string methodCallArgs = string.Join(", ", method.Parameters.Select(p => p.Name));
-						string methodDecArgs = string.Join(", ", method.Parameters.Select(TypeAndName));
+						string methodDecArgs = string.Join(", ", method.Parameters.Select(obj => $"{obj.Type} {obj.Name}"));
 
 						sb.Append($@"
 
 		///{Inheritdoc(method)}
-		public static {returnType} {method.Name}{genericArgs}({methodDecArgs}){genericArgConstraints} => {(method.IsAsync ? "await " : "")}{instanceName}.{method.Name}{genericArgs}({methodCallArgs});");
+		public static {returnType} {method.Name}{genericArgs}({methodDecArgs}){genericArgConstraints}
+			=> {(method.IsAsync ? "await " : "")}{instanceName}.{method.Name}{genericArgs}({methodCallArgs});");
 						break;
 
 					//Handle cases we don't handle

@@ -75,11 +75,22 @@ namespace StrideSaber.Testing
 				where T1 : class, IEnumerable<T1>, new() where T2 : unmanaged, IEquatable<IEnumerable<Dictionary<int, string>>> 
 			=> new T1();
 
-		public TBase VeryComplexInheritance<TBase, TInherited>(TBase @base, TInherited inherited) where TInherited : class, TBase, IEnumerable<TBase>, IComparable<TInherited>, IEnumerable
+		public TBase VeryComplexInheritance<TBase, TInherited>(TBase _base, TInherited inherited) where TInherited : class, TBase, IEnumerable<TBase>, IComparable<TInherited>, IEnumerable
 				where TBase : notnull, Delegate
 		{
-			return @base;
+			return _base;
 		}
+
+	#endregion
+
+	#region Weird fields and properties
+
+		public readonly int ReadonlyField = 0;
+		public int GetOnly { get; }
+		public int SetOnly { set {} }
+		public int InitOnly {init {}}
+		
+		public int GetInit { get; init; }
 
 	#endregion
 	}

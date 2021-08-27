@@ -161,7 +161,6 @@ namespace {newTypeNamespace}
 						//methodDecArgs is when we declare the method: `foo(int x, int z, bar z)`
 						//TODO: Perhaps use `string.Join()`
 						//TODO: Nullable stuff
-						string methodCallArgs = "", methodDecArgs = "";
 						string genericArgs = "", genericArgConstraints = "";
 						if (method.IsGenericMethod)
 						{
@@ -177,20 +176,8 @@ namespace {newTypeNamespace}
 								}
 							}
 						}
-						for (int i = 0; i < method.Parameters.Length; i++)
-						{
-							IParameterSymbol param = method.Parameters[i];
-							//Append the types and names of the parameters
-							methodCallArgs += param.Name;
-							methodDecArgs += $"{param.Type} {param.Name}";
-
-							//Only add commas on iterations that aren't the last
-							if (i != method.Parameters.Length - 1)
-							{
-								methodCallArgs += ", ";
-								methodDecArgs += ", ";
-							}
-						}
+						string methodCallArgs = string.Join(", ", method.Parameters.Select(p => p.Name));
+						string methodDecArgs = string.Join(", ", method.Parameters.Select(TypeAndName));
 
 						sb.Append($@"
 

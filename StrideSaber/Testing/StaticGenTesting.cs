@@ -21,8 +21,8 @@ namespace StrideSaber.Testing
 		public async void AsyncVoidMethod(){}
 		public async Task AsyncTaskMethod(){}
 
-		// public T1 Asd<T1, T2>() where T1 : class, new() where T2 : notnull => new T1();
-		//
+		public T1 Asd<T1, T2>(T2 t2) where T1 : class, new() where T2 : notnull => new T1();
+		
 		// public T Test<T>(T t)
 		// {
 		// 	return t;

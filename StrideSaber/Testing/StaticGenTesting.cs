@@ -71,8 +71,9 @@ namespace StrideSaber.Testing
 
 		public T Simple<T>(T t) => t;
 		public T OneComplexParameter<T>(T t) where T : class, IEnumerable, new() => new T();
+
 		public T1 ComplexParams<T1, T2>(T2 t2)
-				where T1 : class, IEnumerable<T1>, new() where T2 : unmanaged, IEquatable<IEnumerable<Dictionary<int, string>>> 
+				where T1 : class, IEnumerable<T1>, new() where T2 : unmanaged, IEquatable<IEnumerable<Dictionary<int, string>>>
 			=> new T1();
 
 		public TBase VeryComplexInheritance<TBase, TInherited>(TBase _base, TInherited inherited) where TInherited : class, TBase, IEnumerable<TBase>, IComparable<TInherited>, IEnumerable
@@ -87,10 +88,24 @@ namespace StrideSaber.Testing
 
 		public readonly int ReadonlyField = 0;
 		public int GetOnly { get; }
-		public int SetOnly { set {} }
-		public int InitOnly {init {}}
-		
+
+		public int SetOnly
+		{
+			set { }
+		}
+
+		public int InitOnly
+		{
+			init { }
+		}
+
 		public int GetInit { get; init; }
+
+		public int this[int index]
+		{
+			get { return index; }
+			set { }
+		}
 
 	#endregion
 	}

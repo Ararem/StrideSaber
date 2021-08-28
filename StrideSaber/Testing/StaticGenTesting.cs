@@ -13,7 +13,7 @@ namespace StrideSaber.Testing
 	///  Test XML docs lol
 	/// </summary>
 	[GenerateStaticInstanceMembers("StrideSaber.Testing.Generated", "Static", "Instance")]
-	public class StaticInstGenClass
+	public class StaticInstGenClass<T>
 	{
 	#region Simple stuff
 

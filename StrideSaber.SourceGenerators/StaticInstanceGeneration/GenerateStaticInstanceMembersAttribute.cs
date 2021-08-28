@@ -6,6 +6,7 @@ namespace StrideSaber.SourceGenerators.StaticInstanceGeneration
 	/// <summary>
 	/// Marks a class or struct so that any instance members (properties, fields or methods) will also be duplicated into static members, which will call their counterparts on the targeted instance
 	/// </summary>
+	/// <remarks>The generated class will be partial, so you can add custom code yourself if needed</remarks>
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 	[PublicAPI]
 	public class GenerateStaticInstanceMembersAttribute : Attribute

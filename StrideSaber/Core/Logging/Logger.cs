@@ -85,9 +85,7 @@ namespace StrideSaber.Core.Logging
 		private static void GlobalLogger_OnGlobalMessageLogged(ILogMessage msg)
 		{
 			//Convert it to serilog enum
-#pragma warning disable 8509
 			LogEventLevel level = msg.Type switch
-#pragma warning restore 8509
 			{
 					LogMessageType.Debug => LogEventLevel.Debug,
 					LogMessageType.Verbose => LogEventLevel.Verbose,
@@ -95,6 +93,7 @@ namespace StrideSaber.Core.Logging
 					LogMessageType.Warning => LogEventLevel.Warning,
 					LogMessageType.Error => LogEventLevel.Error,
 					LogMessageType.Fatal => LogEventLevel.Fatal,
+					_ => throw new Exception("How the fuck did we get here?")
 			};
 			Log.ForContext("CallerContext", "S3D::" + msg.Module) //We change the caller context property so we know it's from stride
 					.Write(level, ExceptionInfoToNormal(msg.ExceptionInfo), "{Message}", msg.Text);

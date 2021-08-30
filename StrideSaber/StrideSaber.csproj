@@ -31,10 +31,6 @@
 		<PackageReference Include="Stride.Core.Assets.CompilerApp" Version="4.1.0.1459-beta" IncludeAssets="build;buildTransitive" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\StrideSaber.SourceGenerators\StrideSaber.SourceGenerators.csproj" ReferenceOutputAssembly="true" OutputItemType="Analyzer" />
-	</ItemGroup>
-
 	<!-- This lets us write the analyzer logs to file -->
 	<PropertyGroup>
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>

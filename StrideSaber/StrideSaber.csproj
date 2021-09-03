@@ -50,4 +50,8 @@
 	<ItemGroup>
 	  <EmbeddedResource Remove="CompilerGenerated\**" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\C#\LibEternal\LibEternal\LibEternal\LibEternal.csproj" />
+	</ItemGroup>
 </Project>

@@ -42,6 +42,7 @@ namespace StrideSaber.Core.Startup
 		/// Read class description lol
 		/// </summary>
 		/// <param name="args"></param>
+		// ReSharper disable once UnusedParameter.Global
 		internal static void Main(string[] args)
 		{
 			try

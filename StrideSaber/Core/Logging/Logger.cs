@@ -2,7 +2,7 @@
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using Stride.Core.Diagnostics;
-using StrideSaber.Core.Logging.Enrichers;
+using LibEternal.Logging.Enrichers;
 using System;
 
 namespace StrideSaber.Core.Logging

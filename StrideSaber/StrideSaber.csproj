@@ -52,6 +52,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\C#\LibEternal\LibEternal\LibEternal\LibEternal.csproj" />
+	  <Reference Include="LibEternal, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+	    <HintPath>..\..\..\C#\LibEternal\LibEternal\LibEternal\bin\Debug\net5.0\LibEternal.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
+
+	<PropertyGroup>
+		<PreBuildEvent>msbuild C:\Users\Rowan\Documents\Projects\C#\LibEternal\LibEternal\LibEternal.sln</PreBuildEvent>
+	</PropertyGroup>
 </Project>

@@ -2,6 +2,7 @@
 using Serilog;
 using Stride.Core.Diagnostics;
 using Stride.Engine;
+using StrideSaber.Events;
 using System;
 using System.Reflection;
 using System.Threading;
@@ -24,21 +25,6 @@ namespace StrideSaber.Core.Startup
 		public static Game CurrentGame { get; private set; } = null!;
 
 		/// <summary>
-		/// Just here for testing
-		/// </summary>
-		private static void Test()
-		{
-			Log.Fatal("Fatal");
-			Log.Error("Error");
-			Log.Warning("Warning");
-			Log.Information("Information");
-			Log.Debug("Debug");
-			Log.Verbose("Verbose");
-			Console.WriteLine("Console Direct");
-			GlobalLogger.GetLogger("Program").Info("GlobalLogger", CallerInfo.Get());
-		}
-
-		/// <summary>
 		/// Read class description lol
 		/// </summary>
 		/// <param name="args"></param>
@@ -56,8 +42,11 @@ namespace StrideSaber.Core.Startup
 				typeof(GlobalLogger).GetField(nameof(GlobalLogger.GlobalMessageLogged), BindingFlags.Static | BindingFlags.NonPublic)!.SetValue(null, null);
 				Logger.Init();
 
+				EventManager.Init();
+
 				//Set up some game variables
 				//I can't call game.Window before the game is started because it's null, but I can't call it after because it blocks, so do it with an event
+				//TODO: Use event manager stuff
 				Game.GameStarted += (sender, _) => (sender as Game)!.Window.AllowUserResizing = true;
 				//Rename the main thread
 				Thread.CurrentThread.Name = "Main Thread";
@@ -66,8 +55,6 @@ namespace StrideSaber.Core.Startup
 				//Set up an unhanded exception handler
 				game.UnhandledException += (s, e) => OnUnhandledException(s, (Exception) e.ExceptionObject, e.IsTerminating);
 				AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(s, (Exception) e.ExceptionObject, e.IsTerminating);
-
-				Test();
 
 				//Now we run the game
 				game.Run();

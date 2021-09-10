@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 
 namespace StrideSaber.Modding
@@ -9,6 +8,12 @@ namespace StrideSaber.Modding
 	/// </summary>
 	public static class AssemblyManager
 	{
+		/// <summary>
+		/// Gets a <see cref="IList{T}"/> of all the 'external' assemblies (those that are above the inheritance level of this project)
+		/// </summary>
+		/// <remarks>
+		///	For example, this might return the StrideSaber project and any currently loaded mods, but not any System libraries
+		/// </remarks>
 		public static IList<Assembly> GetAllExternalAssemblies()
 		{
 			//TODO: Actually make this scan or something

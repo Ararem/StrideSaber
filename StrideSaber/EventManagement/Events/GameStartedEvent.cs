@@ -4,6 +4,9 @@ using System;
 
 namespace StrideSaber.EventManagement.Events
 {
+	/// <summary>
+	/// An <see cref="Event"/> for when the game is started (when it actually starts <see cref="Stride.Engine.Game.Run">running</see>)
+	/// </summary>
 	public sealed class GameStartedEvent : Event
 	{
 		internal GameStartedEvent(Game game)

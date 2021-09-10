@@ -49,10 +49,8 @@ namespace StrideSaber.Startup
 				EventManager.Init();
 				EventManager.FireEvent(new GameLoadEvent(CurrentGame));
 
-				//Set up some game variables
-				//I can't call game.Window before the game is started because it's null, but I can't call it after because it blocks, so do it with an event
-				//TODO: Use event manager stuff
-				Game.GameStarted += (sender, eventArgs) => EventManager.FireEvent(new GameStartedEvent((Game)sender!));
+				//By the way, even though this isn't in the docs, the sender is the `Game` instance, and eventArgs will always be null
+				Game.GameStarted += (sender, _) => EventManager.FireEvent(new GameStartedEvent((Game)sender!));
 
 				using Game game = CurrentGame = new Game();
 				game.WindowMinimumUpdateRate.SetMaxFrequency(30 /*fps*/); //Throttle the

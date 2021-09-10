@@ -1,7 +1,6 @@
 ﻿using ConcurrentCollections;
 using Serilog;
 using Serilog.Context;
-using Serilog.Events;
 using Stride.Core.Extensions;
 using StrideSaber.Modding;
 using System;
@@ -20,7 +19,7 @@ namespace StrideSaber.EventManagement
 		/// <summary>
 		/// The map of methods to their events. Use a <see cref="Type"/> (that inherits from <see cref="Event"/>) as the key to access all methods subscribed to that type of event.
 		/// </summary>
-		private static readonly ConcurrentDictionary<Type, ConcurrentHashSet<Action>> EventMethods = new();
+		private static readonly ConcurrentDictionary<Type, ConcurrentHashSet<Action<Event>>> EventMethods = new();
 
 		internal static void Init()
 		{
@@ -81,12 +80,10 @@ namespace StrideSaber.EventManagement
 						methodScanCount++;
 						var attributes = method.GetCustomAttributes<EventMethodAttribute>().ToArray();
 						if (attributes.Length == 0)
-						{
-							//Yeah no I'm not logging this
-							//This single line gives me 4-minute startup times and several gig memory allocations
-							//Log.Verbose("Method {Method} is not marked as event method", method);
+								//Yeah no I'm not logging this
+								//This single line gives me 4-minute startup times and several gig memory allocations
+								//Log.Verbose("Method {Method} is not marked as event method", method);
 							continue;
-						}
 
 						if (method.IsStatic == false)
 						{
@@ -95,6 +92,7 @@ namespace StrideSaber.EventManagement
 							continue; //Skip to the next method
 						}
 
+						//TODO: Handle non-void methods by wrapping them into a wrapper function
 						if (method.ReturnType != typeof(void))
 						{
 							Log.Verbose("Method {$Method} is non-void", method);
@@ -102,16 +100,25 @@ namespace StrideSaber.EventManagement
 							continue;
 						}
 
-						if (method.GetParameters().Length != 0)
+						var methodParams = method.GetParameters();
+						if (methodParams.Length != 1)
 						{
-							Log.Verbose("Method {$Method} requires parameters", method);
+							Log.Verbose("Method {$Method} has invalid parameter count ({ParameterCount})", method, methodParams.Length);
+							invalidMethodsCount++;
+							continue;
+						}
+
+						ParameterInfo parameter = methodParams[0];
+						if (parameter.ParameterType != typeof(Event))
+						{
+							Log.Verbose("Method {$Method} has incorrect parameter type ({Type})", method, parameter.ParameterType);
 							invalidMethodsCount++;
 							continue;
 						}
 
 						var eventTypes = attributes.Select(a => a.EventType).ToArray();
 						Log.Verbose("Method {$Method} has {Count} event target attributes", method, attributes.Length);
-						Action action = method.CreateDelegate<Action>();
+						var action = method.CreateDelegate<Action<Event>>();
 						//True/false if at least one of the event attributes on the method was valid
 						//Only reason it's needed is because otherwise the tracking numbers are funky and don't match what actually happens
 						bool success = false;
@@ -145,28 +152,31 @@ namespace StrideSaber.EventManagement
 			Log.Debug("Total: {TypeCount:n0} event types, {MethodCount:n0} methods", EventMethods.Count, EventMethods.Values.Sum(s => s.Count));
 		}
 
-		private static void AddMethod(Type eventType, Action action)
+		private static void AddMethod(Type eventType, Action<Event> action)
 		{
 			Log.Verbose("Adding method {Method} for event {Event}", action, eventType);
 			//I don't know how to explain this, but I'll try
 			//Here, we ensure that the dictionary has a set for us to store actions in.
 			//If the event type already has a set to store in, that's what is returned, otherwise we make a new one.
 			//I'm passing in a delegate instead of instantiating a new set so that we only allocate memory if we actually need it
-			var set = EventMethods.GetOrAdd(eventType, _ => new ConcurrentHashSet<Action>());
+			var set = EventMethods.GetOrAdd(eventType, _ => new ConcurrentHashSet<Action<Event>>());
 			//Now add the action into the bag
 			set.Add(action);
 		}
 
-		//TODO:Pass in the event into the method when we call it
-		//Cause otherwise it's pretty shit lol
+		//TODO:Pass in the event into the method when we call it cause otherwise it's pretty shit lol
+		/// <summary>
+		/// Fires (invokes) an <see cref="Event"/> of type <typeparamref name="T"/>
+		/// </summary>
+		/// <param name="evt">The <see cref="Event"/> to fire</param>
 		public static void FireEvent<T>(T evt) where T : Event
 		{
 			EventMethods.TryGetValue(typeof(T), out var methods);
 			//TODO: Yeah how thread-safe is this?
 			if (evt.FiringLogLevel is not null) Log.Write(evt.FiringLogLevel.Value, "Firing event {EventId} for {Count} subscribers: {Event}", evt.Id, methods?.Count ?? 0, evt);
 			if (methods != null)
-				foreach (Action m in methods)
-					m.Invoke();
+				foreach (Action<Event> m in methods)
+					m.Invoke(evt);
 		}
 	}
 }

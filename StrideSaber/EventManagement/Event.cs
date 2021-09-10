@@ -1,7 +1,8 @@
 ﻿using JetBrains.Annotations;
 using Serilog.Events;
+using StrideSaber.EventManagement.Events;
 
-namespace StrideSaber.Events
+namespace StrideSaber.EventManagement
 {
 	/// <summary>
 	/// An abstract class that encapsulates event information for the <see cref="EventManager"/>.

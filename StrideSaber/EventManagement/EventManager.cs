@@ -1,6 +1,7 @@
 ﻿using ConcurrentCollections;
 using Serilog;
 using Serilog.Context;
+using Serilog.Events;
 using Stride.Core.Extensions;
 using StrideSaber.Modding;
 using System;
@@ -9,7 +10,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
-namespace StrideSaber.Events
+namespace StrideSaber.EventManagement
 {
 	/// <summary>
 	/// A manager class that manages all <see cref="Event">events</see> for the program
@@ -110,32 +111,38 @@ namespace StrideSaber.Events
 
 						var eventTypes = attributes.Select(a => a.EventType).ToArray();
 						Log.Verbose("Method {Method} has {Count} event target attributes", method, attributes.Length);
-						actualMethodsCount++;
 						Action action = method.CreateDelegate<Action>();
+						//True/false if at least one of the event attributes on the method was valid
+						//Only reason it's needed is because otherwise the tracking numbers are funky and don't match what actually happens
+						bool success = false;
 						foreach (Type eventType in eventTypes)
-						{
-							if (type.IsAssignableTo(typeof(Event)))
+							if (eventType.IsAssignableTo(typeof(Event)))
 							{
 								AddMethod(eventType, action);
+								success = true;
 								duplicateMethodsCount++;
 							}
 							else
 							{
-								Log.Warning("Invalid event type ({Type}) for method (Does not inherit from Event)", eventType);
+								Log.Warning("Invalid event type ({Type}) for method {Method} (Does not inherit from {EventBaseType})", eventType, method, typeof(Event));
 								invalidMethodsCount++;
 							}
-						}
+
+						if (success)
+							actualMethodsCount++;
 					}
+
 					typeScanCount++;
 				}
+
 				assemblyScanCount++;
 			}
 
 			sw.Stop();
 			Log.Debug("Indexed event methods in {Elapsed:g}", sw.Elapsed);
 			Log.Debug("Scanned {AssembliesCount:n0} assemblies, {TypesCount:n0} types, {MethodsCount:n0} methods", assemblyScanCount, typeScanCount, methodScanCount);
-			Log.Debug("Total method count: {ActualMethodsCount} (distinct) subscribed, {DuplicateMethodsCount} (duplicate) subscribed, {InvalidMethodsCount} invalid", actualMethodsCount, duplicateMethodsCount, invalidMethodsCount);
-			Log.Debug("Total: {TypeCount} event types, {MethodCount} methods", EventMethods.Count, EventMethods.Values.Sum(s => s.Count));
+			Log.Debug("Total method count: {ActualMethodsCount:n0} (distinct) subscribed, {DuplicateMethodsCount:n0} (duplicate) subscribed, {InvalidMethodsCount:n0} invalid", actualMethodsCount, duplicateMethodsCount, invalidMethodsCount);
+			Log.Debug("Total: {TypeCount:n0} event types, {MethodCount:n0} methods", EventMethods.Count, EventMethods.Values.Sum(s => s.Count));
 		}
 
 		private static void AddMethod(Type eventType, Action action)
@@ -150,9 +157,16 @@ namespace StrideSaber.Events
 			set.Add(action);
 		}
 
+		//TODO:Pass in the event into the method when we call it
+		//Cause otherwise it's pretty shit lol
 		public static void FireEvent<T>(T evt) where T : Event
 		{
-			if (evt.FiringLogLevel is { } level) Log.Write(level, "Fired event {EventId}: {Event}", evt.Id, evt);
+			EventMethods.TryGetValue(typeof(T), out var methods);
+			//TODO: Yeah how thread-safe is this?
+			if (evt.FiringLogLevel is not null) Log.Write(evt.FiringLogLevel.Value, "Firing event {EventId} for {Count} subscribers: {Event}", evt.Id, methods?.Count ?? 0, evt);
+			if (methods != null)
+				foreach (Action m in methods)
+					m.Invoke();
 		}
 	}
 }

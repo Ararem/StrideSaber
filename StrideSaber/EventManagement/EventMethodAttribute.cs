@@ -1,12 +1,14 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 
-namespace StrideSaber.Events
+namespace StrideSaber.EventManagement
 {
 	/// <summary>
 	/// An <see cref="Attribute"/> used to mark a method as an event method.
 	/// This allows the method to be automatically called whenever a given <see cref="Event"/> is called. This attribute can be used multiple times per-method to subscribe it to multiple methods
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
+	[MeansImplicitUse]
 	public sealed class EventMethodAttribute : Attribute
 	{
 		// See the attribute guidelines at

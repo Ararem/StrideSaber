@@ -1,11 +1,11 @@
-﻿using Serilog;
+﻿using LibEternal.Logging.Enrichers;
+using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using Stride.Core.Diagnostics;
-using LibEternal.Logging.Enrichers;
 using System;
 
-namespace StrideSaber.Core.Logging
+namespace StrideSaber.Logging
 {
 	/// <summary>
 	/// The static class that controls logging for the app
@@ -15,20 +15,20 @@ namespace StrideSaber.Core.Logging
 		/// <summary>
 		/// The minimum level of <see cref="LogEvent">LogEvents</see> that will be logged
 		/// </summary>
-		private const LogEventLevel MinimumLogEventLevel = LogEventLevel.Verbose;
+		private const LogEventLevel MinimumLogEventLevel = LogEventLevel.Debug;
 
 		// ReSharper disable once UnusedMember.Local
 		/// <summary>
 		///	A message template that prints lots of information to help with debugging
 		/// </summary>
 		private const string DebugTemplate =
-				"[{Timestamp:HH:mm:ss} #{EventNumber} {Level:t3}] [{ThreadName} #{ThreadId} ({ThreadType})]	[{CallerContext}]: 	{Message:lj}{NewLine}{Exception}{StackTrace}{NewLine}{NewLine}";
+				"[{Timestamp:HH:mm:ss} #{EventNumber} {Level:t3}]	[{ThreadName} #{ThreadId} ({ThreadType})]	[{CallerContext}]:	{Message:lj}{NewLine}{Exception}{StackTrace}{NewLine}{NewLine}";
 
 		/// <summary>
 		/// A message template that prints simple information
 		/// </summary>
 		private const string SimpleTemplate =
-				"[{Timestamp:HH:mm:ss} #{EventNumber}] [{ThreadName} #{ThreadId}] [{CallerContext}/{Level:t3}]:	{LevelIndent}{Message:lj}{NewLine}{Exception}";
+				"[{Timestamp:HH:mm:ss} #{EventNumber}]	[{ThreadName} #{ThreadId}]	[{CallerContext}/{Level:t3}]:	{LevelIndent}{Message:lj}{NewLine}{Exception}";
 
 		/// <summary>
 		/// Here so I can guarantee thread-safety when init-ing/shutting down

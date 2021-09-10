@@ -1,9 +1,8 @@
 ﻿using Serilog.Events;
 using Stride.Engine;
 using System;
-using System.Diagnostics.CodeAnalysis;
 
-namespace StrideSaber.Events
+namespace StrideSaber.EventManagement.Events
 {
 	/// <summary>
 	/// An <see cref="Event"/> that marks when the game is first loaded

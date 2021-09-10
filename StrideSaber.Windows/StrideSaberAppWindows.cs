@@ -1,1 +1,3 @@
-StrideSaber.Core.Startup.StrideSaberApp.Main(args);
+using StrideSaber.Startup;
+
+StrideSaberApp.Main(args);

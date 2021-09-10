@@ -2,7 +2,7 @@
 using Stride.Engine;
 using System;
 
-namespace StrideSaber.Events
+namespace StrideSaber.EventManagement.Events
 {
 	public sealed class GameStartedEvent : Event
 	{

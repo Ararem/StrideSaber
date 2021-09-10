@@ -8,7 +8,7 @@ namespace StrideSaber.Events
 	/// <summary>
 	/// An <see cref="Event"/> that marks when the game is first loaded
 	/// </summary>
-	public sealed class GameLoadEvent : NonReusableEvent
+	public sealed class GameLoadEvent : Event
 	{
 		internal GameLoadEvent(Game game)
 		{

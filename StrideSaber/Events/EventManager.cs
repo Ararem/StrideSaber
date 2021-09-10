@@ -1,7 +1,6 @@
 ﻿using ConcurrentCollections;
 using Serilog;
 using Serilog.Context;
-using Serilog.Events;
 using Stride.Core.Extensions;
 using StrideSaber.Modding;
 using System;
@@ -12,15 +11,13 @@ using System.Reflection;
 
 namespace StrideSaber.Events
 {
+	/// <summary>
+	/// A manager class that manages all <see cref="Event"/>s for the program
+	/// </summary>
 	public static class EventManager
 	{
 		/// <summary>
-		/// The cache of already-instantiated events
-		/// </summary>
-		private static readonly ConcurrentDictionary<Type, ReusableEvent> EventInstanceCache = new();
-
-		/// <summary>
-		/// The map of methods to their events
+		/// The map of methods to their events. Use a <see cref="Type"/> (that inherits from <see cref="Event"/>) as the key to access all methods subscribed to that type of event.
 		/// </summary>
 		private static readonly ConcurrentDictionary<Type, ConcurrentHashSet<Action>> EventMethods = new();
 

@@ -36,6 +36,9 @@ namespace StrideSaber.Core.Startup
 				//Most important things first
 				ConsoleLogListener.ShowConsole();
 
+				//Rename the main thread
+				Thread.CurrentThread.Name = "Main Thread";
+
 				//Here I'm clearing the event because stride sets up it's own handler which I don't want
 				//(Otherwise you would get duped logs when debugging which is annoying)
 				//This is because by default stride logs to the console, but I'm doing that myself
@@ -43,15 +46,15 @@ namespace StrideSaber.Core.Startup
 				Logger.Init();
 
 				EventManager.Init();
+				EventManager.FireEvent(new GameLoadEvent(CurrentGame));
 
 				//Set up some game variables
 				//I can't call game.Window before the game is started because it's null, but I can't call it after because it blocks, so do it with an event
 				//TODO: Use event manager stuff
 				Game.GameStarted += (sender, _) => (sender as Game)!.Window.AllowUserResizing = true;
-				//Rename the main thread
-				Thread.CurrentThread.Name = "Main Thread";
 
 				using Game game = CurrentGame = new Game();
+				game.WindowMinimumUpdateRate.SetMaxFrequency(30 /*fps*/); //Throttle the
 				//Set up an unhanded exception handler
 				game.UnhandledException += (s, e) => OnUnhandledException(s, (Exception) e.ExceptionObject, e.IsTerminating);
 				AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(s, (Exception) e.ExceptionObject, e.IsTerminating);

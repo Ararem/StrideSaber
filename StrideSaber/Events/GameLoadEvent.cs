@@ -1,5 +1,7 @@
-﻿using Stride.Engine;
+﻿using Serilog.Events;
+using Stride.Engine;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace StrideSaber.Events
 {
@@ -29,5 +31,9 @@ namespace StrideSaber.Events
 		{
 			return $"Game loaded at {LoadTime}";
 		}
+
+		/// <inheritdoc />
+		/// <inheritdoc />
+		public override LogEventLevel? FiringLogLevel => LogEventLevel.Information;
 	}
 }

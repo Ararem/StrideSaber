@@ -22,13 +22,13 @@ namespace StrideSaber.Core.Logging
 		///	A message template that prints lots of information to help with debugging
 		/// </summary>
 		private const string DebugTemplate =
-				"[{Timestamp:HH:mm:ss}#{EventNumber} {Level:t3}] [{ThreadName} #{ThreadId} ({ThreadType})]	[{CallerContext}]: 	{Message:lj}{NewLine}{Exception}{StackTrace}{NewLine}{NewLine}";
+				"[{Timestamp:HH:mm:ss} #{EventNumber} {Level:t3}] [{ThreadName} #{ThreadId} ({ThreadType})]	[{CallerContext}]: 	{Message:lj}{NewLine}{Exception}{StackTrace}{NewLine}{NewLine}";
 
 		/// <summary>
 		/// A message template that prints simple information
 		/// </summary>
 		private const string SimpleTemplate =
-				"[{Timestamp:HH:mm:ss} {Level:t3}] [{ThreadName} #{ThreadId} ({ThreadType})] [{CallerContext}]:	{LevelIndent}{Message:lj}{NewLine}{Exception}";
+				"[{Timestamp:HH:mm:ss} #{EventNumber}] [{ThreadName} #{ThreadId}] [{CallerContext}/{Level:t3}]:	{LevelIndent}{Message:lj}{NewLine}{Exception}";
 
 		/// <summary>
 		/// Here so I can guarantee thread-safety when init-ing/shutting down
@@ -66,7 +66,8 @@ namespace StrideSaber.Core.Logging
 				const string template = SimpleTemplate;
 #endif
 				Log.Logger = config
-						.WriteTo.Console(outputTemplate: template, applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Code)
+						// .WriteTo.Async(writeTo => writeTo.Console(outputTemplate: template, applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate))
+						.WriteTo.Console(outputTemplate: template, applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate)
 						.CreateLogger();
 
 				//Hook our logger up to stride's system

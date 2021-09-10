@@ -90,27 +90,27 @@ namespace StrideSaber.EventManagement
 
 						if (method.IsStatic == false)
 						{
-							Log.Verbose("Method {Method} is non-static (instance)", method);
+							Log.Verbose("Method {$Method} is non-static (instance)", method);
 							invalidMethodsCount++;
 							continue; //Skip to the next method
 						}
 
 						if (method.ReturnType != typeof(void))
 						{
-							Log.Verbose("Method {Method} is non-void", method);
+							Log.Verbose("Method {$Method} is non-void", method);
 							invalidMethodsCount++;
 							continue;
 						}
 
 						if (method.GetParameters().Length != 0)
 						{
-							Log.Verbose("Method {Method} requires parameters", method);
+							Log.Verbose("Method {$Method} requires parameters", method);
 							invalidMethodsCount++;
 							continue;
 						}
 
 						var eventTypes = attributes.Select(a => a.EventType).ToArray();
-						Log.Verbose("Method {Method} has {Count} event target attributes", method, attributes.Length);
+						Log.Verbose("Method {$Method} has {Count} event target attributes", method, attributes.Length);
 						Action action = method.CreateDelegate<Action>();
 						//True/false if at least one of the event attributes on the method was valid
 						//Only reason it's needed is because otherwise the tracking numbers are funky and don't match what actually happens
@@ -124,7 +124,7 @@ namespace StrideSaber.EventManagement
 							}
 							else
 							{
-								Log.Warning("Invalid event type ({Type}) for method {Method} (Does not inherit from {EventBaseType})", eventType, method, typeof(Event));
+								Log.Warning("Invalid event type ({Type}) for method {$Method} (Does not inherit from {EventBaseType})", eventType, method, typeof(Event));
 								invalidMethodsCount++;
 							}
 

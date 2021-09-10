@@ -28,7 +28,7 @@ namespace StrideSaber.Events
 		/// <summary>
 		/// The level at which a message should be logged whenever this event is fired. If <see langword="null"/>, a message will not be logged
 		/// </summary>
-		/// <remarks>This should be <see langword="null"/> for high-frequency events like frame updates, but relatively high for important events (like a <see cref="GameLoadEvent"/>)</remarks>
+		/// <remarks>This should be <see langword="null"/> for high-frequency events like frame updates, but relatively high for important events (like a <see cref="GameLoadEvent">Game Load Event</see>)</remarks>
 		public abstract LogEventLevel? FiringLogLevel { get; }
 	}
 }

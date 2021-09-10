@@ -13,7 +13,7 @@ namespace StrideSaber.Core.Logging
 	public static class Logger
 	{
 		/// <summary>
-		/// The minimum level of <see cref="LogEvent"/>s that will be logged
+		/// The minimum level of <see cref="LogEvent">LogEvents</see> that will be logged
 		/// </summary>
 		private const LogEventLevel MinimumLogEventLevel = LogEventLevel.Verbose;
 

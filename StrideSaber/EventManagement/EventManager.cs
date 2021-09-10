@@ -12,7 +12,7 @@ using System.Reflection;
 namespace StrideSaber.Events
 {
 	/// <summary>
-	/// A manager class that manages all <see cref="Event"/>s for the program
+	/// A manager class that manages all <see cref="Event">events</see> for the program
 	/// </summary>
 	public static class EventManager
 	{
@@ -49,7 +49,7 @@ namespace StrideSaber.Events
 			var sw = Stopwatch.StartNew();
 
 			//Loop through all the assemblies we have
-			foreach (Assembly assembly in AssemblyManager.GetAllAssemblies())
+			foreach (Assembly assembly in AssemblyManager.GetAllExternalAssemblies())
 			{
 				//For debugging purposes
 				using IDisposable _ = LogContext.PushProperty("Assembly", assembly);

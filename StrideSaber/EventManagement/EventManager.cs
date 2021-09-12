@@ -79,11 +79,7 @@ namespace StrideSaber.EventManagement
 					{
 						methodScanCount++;
 						var attributes = method.GetCustomAttributes<EventMethodAttribute>().ToArray();
-						if (attributes.Length == 0)
-								//Yeah no I'm not logging this
-								//This single line gives me 4-minute startup times and several gig memory allocations
-								//Log.Verbose("Method {Method} is not marked as event method", method);
-							continue;
+						if (attributes.Length == 0) continue;
 
 						if (method.IsStatic == false)
 						{
@@ -91,14 +87,6 @@ namespace StrideSaber.EventManagement
 							invalidMethodsCount++;
 							continue; //Skip to the next method
 						}
-
-						//TODO: Handle non-void methods by wrapping them into a wrapper function
-						// if (method.ReturnType != typeof(void))
-						// {
-						// 	Log.Verbose("Method {$Method} is non-void", method);
-						// 	invalidMethodsCount++;
-						// 	continue;
-						// }
 
 						var methodParams = method.GetParameters();
 						if (methodParams.Length != 1)
@@ -128,8 +116,8 @@ namespace StrideSaber.EventManagement
 						//For a non-void method, we need to wrap the function into an action that ignores the result
 						else
 						{
-							Func<Event, object> methodAction = method.CreateDelegate<Func<Event, object>>();
-							action = evt => methodAction(evt);
+							Func<Event, object> methodFunc = method.CreateDelegate<Func<Event, object>>();
+							action = evt => methodFunc(evt);
 						}
 
 						//True/false if at least one of the event attributes on the method was valid
@@ -167,7 +155,7 @@ namespace StrideSaber.EventManagement
 
 		private static void AddMethod(Type eventType, Action<Event> action)
 		{
-			Log.Verbose("Adding method {Method} for event {Event}", action, eventType);
+			Log.Verbose("Adding method {@Method} for event {Event}", action, eventType);
 			//I don't know how to explain this, but I'll try
 			//Here, we ensure that the dictionary has a set for us to store actions in.
 			//If the event type already has a set to store in, that's what is returned, otherwise we make a new one.
@@ -185,11 +173,19 @@ namespace StrideSaber.EventManagement
 		public static void FireEvent<T>(T evt) where T : Event
 		{
 			EventMethods.TryGetValue(typeof(T), out var methods);
+			bool log = evt.FiringLogLevel is not null;
 			//TODO: Yeah how thread-safe is this?
-			if (evt.FiringLogLevel is not null) Log.Write(evt.FiringLogLevel.Value, "Firing event {EventId} for {Count} subscribers: {Event}", evt.Id, methods?.Count ?? 0, evt);
+			if (log) Log.Write(evt.FiringLogLevel!.Value, "Firing event {EventId} for {Count} subscribers: {Event}", evt.Id, methods?.Count ?? 0, evt);
 			if (methods != null)
+			{
+				using IDisposable _ = LogContext.PushProperty("Event", evt);
 				foreach (Action<Event> m in methods)
+				{
+					if (log) //I only want this to be logged in very rare circumstances
+						Log.Verbose("[{EventId}]: Invoking method {@Method}", evt.Id, m);
 					m.Invoke(evt);
+				}
+			}
 		}
 	}
 }

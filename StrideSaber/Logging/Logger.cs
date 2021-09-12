@@ -1,4 +1,5 @@
-﻿using LibEternal.Logging.Enrichers;
+﻿using LibEternal.Logging.Destructurers;
+using LibEternal.Logging.Enrichers;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -15,7 +16,7 @@ namespace StrideSaber.Logging
 		/// <summary>
 		/// The minimum level of <see cref="LogEvent">LogEvents</see> that will be logged
 		/// </summary>
-		private const LogEventLevel MinimumLogEventLevel = LogEventLevel.Debug;
+		private const LogEventLevel MinimumLogEventLevel = LogEventLevel.Verbose;
 
 		// ReSharper disable once UnusedMember.Local
 		/// <summary>
@@ -56,7 +57,8 @@ namespace StrideSaber.Logging
 						.Enrich.With<LogEventNumberEnricher>()
 						.Enrich.With<EventLevelIndentEnricher>()
 						.Enrich.With<ThreadInfoEnricher>()
-						.Enrich.FromLogContext();
+						.Enrich.FromLogContext()
+						.Destructure.With<DelegateDestructurer>();
 
 				//Switch the template depending on if we are debugging
 				// ReSharper disable once InlineTemporaryVariable

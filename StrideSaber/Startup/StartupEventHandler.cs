@@ -9,22 +9,28 @@ namespace StrideSaber.Startup
 	/// </summary>
 	internal static class StartupEventHandler
 	{
-		[EventMethod(typeof(GameStartedEvent))]
-		private static void TestGameStartedEvent()
-		{
-			Log.Information("Game started event called");
-		}
-		[EventMethod(typeof(GameLoadEvent))]
-		private static void TestGameLoadEvent()
-		{
-			Log.Information("Game load event called");
-		}
+		// [EventMethod(typeof(GameStartedEvent))]
+		// private static void TestGameStartedEvent(Event @event)
+		// {
+		// 	Log.Information("Game started event called: {Event}", @event);
+		// }
+		// [EventMethod(typeof(GameLoadEvent))]
+		// private static void TestGameLoadEvent(Event @event)
+		// {
+		// 	Log.Information("Game load event called: {Event}", @event);
+		// }
+		//
+		// [EventMethod(typeof(GameStartedEvent))]
+		// [EventMethod(typeof(GameLoadEvent))]
+		// private static void GameStartOrLoadEvent(Event @event)
+		// {
+		// 	Log.Information("Game started/Game load event called: {Event}", @event);
+		// }
 
-		[EventMethod(typeof(GameStartedEvent))]
 		[EventMethod(typeof(GameLoadEvent))]
-		private static void GameStartOrLoadEvent()
+		private static string Test_ReturnsNonVoid()
 		{
-			Log.Information("Game started/Game load event called");
+			return "yeet";
 		}
 		//(sender, _) => (sender as Game)!.Window.AllowUserResizing = true
 	}

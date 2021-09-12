@@ -93,12 +93,12 @@ namespace StrideSaber.EventManagement
 						}
 
 						//TODO: Handle non-void methods by wrapping them into a wrapper function
-						if (method.ReturnType != typeof(void))
-						{
-							Log.Verbose("Method {$Method} is non-void", method);
-							invalidMethodsCount++;
-							continue;
-						}
+						// if (method.ReturnType != typeof(void))
+						// {
+						// 	Log.Verbose("Method {$Method} is non-void", method);
+						// 	invalidMethodsCount++;
+						// 	continue;
+						// }
 
 						var methodParams = method.GetParameters();
 						if (methodParams.Length != 1)
@@ -108,6 +108,7 @@ namespace StrideSaber.EventManagement
 							continue;
 						}
 
+						//TODO: Allow for 0 params
 						ParameterInfo parameter = methodParams[0];
 						if (parameter.ParameterType != typeof(Event))
 						{
@@ -118,7 +119,19 @@ namespace StrideSaber.EventManagement
 
 						var eventTypes = attributes.Select(a => a.EventType).ToArray();
 						Log.Verbose("Method {$Method} has {Count} event target attributes", method, attributes.Length);
-						var action = method.CreateDelegate<Action<Event>>();
+						Action<Event> action;
+						//Methods that return void are easy for us
+						if (method.ReturnType == typeof(void))
+						{
+							action = method.CreateDelegate<Action<Event>>();
+						}
+						//For a non-void method, we need to wrap the function into an action that ignores the result
+						else
+						{
+							Func<Event, object> methodAction = method.CreateDelegate<Func<Event, object>>();
+							action = evt => methodAction(evt);
+						}
+
 						//True/false if at least one of the event attributes on the method was valid
 						//Only reason it's needed is because otherwise the tracking numbers are funky and don't match what actually happens
 						bool success = false;
@@ -164,7 +177,7 @@ namespace StrideSaber.EventManagement
 			set.Add(action);
 		}
 
-		//TODO:Pass in the event into the method when we call it cause otherwise it's pretty shit lol
+		//TODO: Make the event methods be able to handle a more specific/inherited type than plain old Event
 		/// <summary>
 		/// Fires (invokes) an <see cref="Event"/> of type <typeparamref name="T"/>
 		/// </summary>

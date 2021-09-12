@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace StrideSaber.Modding
@@ -17,7 +18,6 @@ namespace StrideSaber.Modding
 		public static IList<Assembly> GetAllExternalAssemblies()
 		{
 			//TODO: Actually make this scan or something
-			// return AppDomain.CurrentDomain.GetAssemblies();
 			return new []{
 				typeof(AssemblyManager).Assembly
 			};

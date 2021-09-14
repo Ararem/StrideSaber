@@ -5,6 +5,7 @@ using Stride.Core.Extensions;
 using StrideSaber.Modding;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -165,27 +166,46 @@ namespace StrideSaber.EventManagement
 			set.Add(action);
 		}
 
+		/// <summary>
+		/// Fires (invokes) an <see cref="Event"/> of type <typeparamref name="T"/>, catching and logging any <see cref="Exception">Exceptions</see>
+		/// </summary>
+		/// <param name="e">The <see cref="Event"/> to fire</param>
+		public static void FireEventSafeLogged<T>(T e) where T : Event
+		{
+			var exceptions = FireEventSafe(e);
+			if (exceptions.Count == 0) return;
+			foreach (Exception exception in exceptions) Log.Verbose(exception, "[{Event}]: Caught exception", e);
+		}
+
 		//TODO: Make the event methods be able to handle a more specific/inherited type than plain old Event
 		/// <summary>
-		/// Fires (invokes) an <see cref="Event"/> of type <typeparamref name="T"/>
+		/// Fires (invokes) an <see cref="Event"/> of type <typeparamref name="T"/>, catching and returning any <see cref="Exception">Exceptions</see>
 		/// </summary>
 		/// <param name="evt">The <see cref="Event"/> to fire</param>
-		public static void FireEvent<T>(T evt) where T : Event
+		public static List<Exception> FireEventSafe<T>(T evt) where T : Event
 		{
 			EventMethods.TryGetValue(typeof(T), out var methods);
+			//Here we catch any exceptions the code might throw
+			List<Exception> exceptions = new(1);
 			bool log = evt.FiringLogLevel is not null;
 			//TODO: Yeah how thread-safe is this?
 			if (log) Log.Write(evt.FiringLogLevel!.Value, "Firing event {EventId} for {Count} subscribers: {Event}", evt.Id, methods?.Count ?? 0, evt);
 			if (methods != null)
-			{
-				using IDisposable _ = LogContext.PushProperty("Event", evt);
 				foreach (Action<Event> m in methods)
 				{
 					if (log) //I only want this to be logged in very rare circumstances
 						Log.Verbose("[{EventId}]: Invoking method {@Method}", evt.Id, m);
-					m.Invoke(evt);
+					try
+					{
+						m.Invoke(evt);
+					}
+					catch (Exception e)
+					{
+						exceptions.Add(e);
+					}
 				}
-			}
+
+			return exceptions;
 		}
 	}
 }

@@ -58,7 +58,8 @@ namespace StrideSaber.Logging
 						.Enrich.With<EventLevelIndentEnricher>()
 						.Enrich.With<ThreadInfoEnricher>()
 						.Enrich.FromLogContext()
-						.Destructure.With<DelegateDestructurer>();
+						.Destructure.With<DelegateDestructurer>()
+						.Destructure.With<StrideObjectDestructurer>();
 
 				//Switch the template depending on if we are debugging
 				// ReSharper disable once InlineTemporaryVariable

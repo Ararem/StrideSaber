@@ -1,0 +1,84 @@
+!UIPageAsset
+Id: 2e4a7adc-eb5e-4953-a1db-9250f7c925c3
+SerializedVersion: {Stride: 2.1.0.1}
+Tags: []
+Design:
+    Resolution: {X: 1920.0, Y: 1080.0, Z: 1000.0}
+Hierarchy:
+    RootParts:
+        - !Grid ref!! 882ab787-6325-4be7-9b42-f2556c0cb83d
+    Parts:
+        -   UIElement: !ScrollBar
+                Id: 08aed14a-4055-4602-82e7-287eeb612d79
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                BarColor: {R: 0, G: 0, B: 0, A: 0}
+        -   UIElement: !Grid
+                Id: 882ab787-6325-4be7-9b42-f2556c0cb83d
+                DependencyProperties: {}
+                BackgroundColor: {R: 255, G: 0, B: 0, A: 255}
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Children:
+                    c5adf01d0e75ec9b2eac4a06c0dd8fce: !Button ref!! f24d7eae-c55d-43d9-968e-9563f2a75b91
+                    7ea2702e4fe5027e017475ad06f4c999: !TextBlock ref!! d4cefff8-6b02-49ed-95d2-10e453093508
+                    4e49a6ad32a0ac992fc30afaee56858e: !ScrollBar ref!! 08aed14a-4055-4602-82e7-287eeb612d79
+                RowDefinitions: {}
+                ColumnDefinitions: {}
+                LayerDefinitions: {}
+        -   UIElement: !TextBlock
+                Id: d4cefff8-6b02-49ed-95d2-10e453093508
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Bottom
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Text: H:mm:ss.FFFFF
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 92.0
+                TextColor: {R: 255, G: 255, B: 255, A: 255}
+                TextAlignment: Center
+        -   UIElement: !TextBlock
+                Id: d9dc482c-27d5-41ee-9f36-d19ff18193b0
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Text: Continue
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 256.0
+                TextColor: {R: 255, G: 255, B: 255, A: 255}
+                TextAlignment: Center
+        -   UIElement: !Button
+                Id: f24d7eae-c55d-43d9-968e-9563f2a75b91
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Continue Button
+                Content: !TextBlock ref!! d9dc482c-27d5-41ee-9f36-d19ff18193b0
+                PressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 2
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns

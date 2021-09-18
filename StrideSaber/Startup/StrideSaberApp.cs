@@ -2,6 +2,7 @@
 using Serilog;
 using Stride.Core.Diagnostics;
 using Stride.Engine;
+using Stride.Games;
 using StrideSaber.EventManagement;
 using StrideSaber.EventManagement.Events;
 using System;
@@ -39,25 +40,19 @@ namespace StrideSaber.Startup
 
 				//Rename the main thread
 				Thread.CurrentThread.Name = "Main Thread";
-
-				//Here I'm clearing the event because stride sets up it's own handler which I don't want
-				//(Otherwise you would get duped logs when debugging which is annoying)
-				//This is because by default stride logs to the console, but I'm doing that myself
-				typeof(GlobalLogger).GetField(nameof(GlobalLogger.GlobalMessageLogged), BindingFlags.Static | BindingFlags.NonPublic)!.SetValue(null, null);
 				Logger.Init();
 
 				EventManager.Init();
-				EventManager.FireEventSafeLogged(new GameLoadEvent(CurrentGame));
-
-				//By the way, even though this isn't in the docs, the sender is the `Game` instance, and eventArgs will always be null
-				Game.GameStarted += (sender, _) => EventManager.FireEventSafeLogged(new GameStartedEvent((Game)sender!));
 
 				using Game game = CurrentGame = new Game();
 				game.WindowMinimumUpdateRate.SetMaxFrequency(30 /*fps*/); //Throttle the
 				//Set up an unhanded exception handler
 				game.UnhandledException += (s, e) => OnUnhandledException(s, (Exception) e.ExceptionObject, e.IsTerminating);
 				AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(s, (Exception) e.ExceptionObject, e.IsTerminating);
+				EventManager.FireEventSafeLogged(new GameLoadEvent(CurrentGame));
 
+				//By the way, even though this isn't in the docs, the sender is the `Game` instance, and eventArgs will always be null
+				Game.GameStarted += (sender, _) => EventManager.FireEventSafeLogged(new GameStartedEvent((Game)sender!));
 				//Now we run the game
 				game.Run();
 			}

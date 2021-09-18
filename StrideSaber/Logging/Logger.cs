@@ -4,7 +4,10 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using Stride.Core.Diagnostics;
+using StrideSaber.EventManagement;
+using StrideSaber.EventManagement.Events;
 using System;
+using System.Reflection;
 
 namespace StrideSaber.Logging
 {
@@ -49,6 +52,8 @@ namespace StrideSaber.Logging
 			lock (Lock)
 			{
 				if (initialized) return;
+				HookAndDisableStrideDefaultLogger(null);
+
 				LoggerConfiguration? config = new LoggerConfiguration()
 						.MinimumLevel.Is(MinimumLogEventLevel)
 						.Enrich.With<CallerContextEnricher>()
@@ -73,12 +78,37 @@ namespace StrideSaber.Logging
 						.WriteTo.Console(outputTemplate: template, applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate)
 						.CreateLogger();
 
-				//Hook our logger up to stride's system
-				GlobalLogger.GlobalMessageLogged += GlobalLogger_OnGlobalMessageLogged;
-
 				Log.Information("Logger initialized");
 				initialized = true;
 			}
+		}
+
+		/// <summary>
+		/// A little method that fixes the stride logging system so that it only does what I want it to do
+		/// </summary>
+		//As to why I have the method hooked up to an event, it's because Stride actually hooks up it's logger in the constructor for the Game
+		/*
+    public Game()
+    {
+      this.logListener = this.GetLogListener();
+      if (this.logListener != null)
+=====>   GlobalLogger.GlobalMessageLogged += (Action<ILogMessage>) this.logListener;
+      ...
+    }
+		 */
+		//Which means I have to call this after the constructor, so we use an event instead of doing it manually
+		[EventMethod(typeof(GameLoadEvent))]
+		private static void HookAndDisableStrideDefaultLogger(Event? _)
+		{
+			Log.Information("Hooking and disabling stride logging system");
+			//TODO: Instead of clearing just removing the annoying stride part
+			//Here I'm clearing the event because stride sets up it's own handler which I don't want
+			//(Otherwise you would get duped logs when debugging which is annoying)
+			//This is because by default stride logs to the console, but I'm doing that myself
+			typeof(GlobalLogger).GetField(nameof(GlobalLogger.GlobalMessageLogged), BindingFlags.Static | BindingFlags.NonPublic)!.SetValue(null, null);
+			//Hook our logger up to stride's system
+			GlobalLogger.GlobalMessageLogged += GlobalLogger_OnGlobalMessageLogged;
+			Log.Information("Stride log redirection complete");
 		}
 
 		/// <summary>

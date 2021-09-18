@@ -8,15 +8,6 @@ Hierarchy:
     RootParts:
         - !Grid ref!! 882ab787-6325-4be7-9b42-f2556c0cb83d
     Parts:
-        -   UIElement: !ScrollBar
-                Id: 08aed14a-4055-4602-82e7-287eeb612d79
-                DependencyProperties: {}
-                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
-                Margin: {}
-                MaximumWidth: 3.4028235E+38
-                MaximumHeight: 3.4028235E+38
-                MaximumDepth: 3.4028235E+38
-                BarColor: {R: 0, G: 0, B: 0, A: 0}
         -   UIElement: !Grid
                 Id: 882ab787-6325-4be7-9b42-f2556c0cb83d
                 DependencyProperties: {}
@@ -28,7 +19,7 @@ Hierarchy:
                 Children:
                     c5adf01d0e75ec9b2eac4a06c0dd8fce: !Button ref!! f24d7eae-c55d-43d9-968e-9563f2a75b91
                     7ea2702e4fe5027e017475ad06f4c999: !TextBlock ref!! d4cefff8-6b02-49ed-95d2-10e453093508
-                    4e49a6ad32a0ac992fc30afaee56858e: !ScrollBar ref!! 08aed14a-4055-4602-82e7-287eeb612d79
+                    d36e4076990b75f948e902b3c7c045eb: !Slider ref!! f5a2ff11-77d8-4854-b25c-a7d96d0028b3
                 RowDefinitions: {}
                 ColumnDefinitions: {}
                 LayerDefinitions: {}
@@ -36,14 +27,16 @@ Hierarchy:
                 Id: d4cefff8-6b02-49ed-95d2-10e453093508
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Height: 104.21876
                 VerticalAlignment: Bottom
-                Margin: {}
+                Margin: {Bottom: 48.0}
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
+                Name: Countdown Text
                 Text: H:mm:ss.FFFFF
                 Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
-                TextSize: 92.0
+                TextSize: 96.0
                 TextColor: {R: 255, G: 255, B: 255, A: 255}
                 TextAlignment: Center
         -   UIElement: !TextBlock
@@ -82,3 +75,29 @@ Hierarchy:
                     CurrentFrame: 1
                 MouseOverImage: !SpriteFromSheet
                     Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+        -   UIElement: !Slider
+                Id: f5a2ff11-77d8-4854-b25c-a7d96d0028b3
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 5
+                CanBeHitByUser: false
+                Height: 48.0
+                VerticalAlignment: Bottom
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Countdown Slider
+                Value: 0.7
+                TrackBackgroundImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                TrackForegroundImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 12
+                TrackStartingOffsets: {X: -1.0, Y: 0.0}
+                TickImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 8
+                AreTicksDisplayed: true
+                TickOffset: 13.0

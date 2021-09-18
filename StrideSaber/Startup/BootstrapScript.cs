@@ -1,15 +1,12 @@
 ﻿using LibEternal.ObjectPools;
-using Microsoft.Extensions.ObjectPool;
-using Stride.Core.MicroThreading;
+using Stride.Core.Annotations;
 using Stride.Engine;
 using Stride.UI;
 using Stride.UI.Controls;
 using Stride.UI.Events;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrideSaber.Startup
@@ -19,21 +16,25 @@ namespace StrideSaber.Startup
 		public bool AutoStart = false;
 		public TimeSpan AutoStartWaitDuration;
 		public UIComponent Ui;
-		[Range(0, 1000)] public ushort UpdateInterval = 100;
+		[DataMemberRange(1, 1000, 1, 50, 0)] public int UpdateInterval = 100;
 
 		/// <inheritdoc />
 		public override async Task Execute()
 		{
-			Serilog.Log.Information("Bootstrap Script executing");
+			Serilog.Log.Debug("Bootstrap Script executing");
 			//Init stuff
 			UIElement root = Ui.Page.RootElement;
 			Button continueButton = root.FindVisualChildOfType<Button>();
 			TextBlock countdownText = root.FindVisualChildOfType<TextBlock>();
-			ScrollBar countdownScroll = root.FindVisualChildOfType<ScrollBar>();
-
+			Slider countdownSlider = root.FindVisualChildOfType<Slider>();
 			Serilog.Log.Verbose("Continue button  is {@ContinueButton}", continueButton);
 			Serilog.Log.Verbose("Countdown text   is {@CountdownText}", countdownText);
-			Serilog.Log.Verbose("Countdown scroll is {@CountdownScroll}", countdownScroll);
+			Serilog.Log.Verbose("Countdown scroll is {@CountdownScroll}", countdownSlider);
+
+			//Log state info
+			Serilog.Log.Verbose("Auto Start: {AutoStart}", AutoStart);
+			Serilog.Log.Verbose("Wait Duration: {AutoStartWaitDuration}", AutoStartWaitDuration);
+			Serilog.Log.Verbose("Update Interval: {UpdateInterval}", UpdateInterval);
 
 			//Get our button ready
 			continueButton.Click += ContinueButtonOnClick;
@@ -42,11 +43,12 @@ namespace StrideSaber.Startup
 			//Then there's no point in waiting for anything else
 			if (!AutoStart)
 			{
+				Serilog.Log.Verbose("Auto start disabled, waiting for user interaction");
 				countdownText.IsEnabled = false;
-				countdownScroll.IsEnabled = false;
+				countdownSlider.IsEnabled = false;
 				return;
 			}
-			
+
 			Stopwatch sw = Stopwatch.StartNew();
 			TimeSpan remaining;
 			StringBuilder sb = StringBuilderPool.GetPooled();
@@ -55,6 +57,7 @@ namespace StrideSaber.Startup
 				//Get the remaining time left until we continue automatically
 				remaining = AutoStartWaitDuration - sw.Elapsed;
 				countdownText.Text = sb.Clear().AppendFormat("{0}", remaining).ToString();
+				Serilog.Log.Verbose("Time Remaining: {TimeRemaining}", remaining);
 				await Task.Delay(UpdateInterval);
 			} while (remaining > TimeSpan.Zero);
 
@@ -62,10 +65,9 @@ namespace StrideSaber.Startup
 			StringBuilderPool.ReturnPooled(sb);
 			Continue();
 		}
-		
+
 		private void Continue()
 		{
-			
 		}
 
 		private void ContinueButtonOnClick(object? sender, RoutedEventArgs e)

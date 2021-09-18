@@ -5,7 +5,7 @@ using System;
 namespace StrideSaber.EventManagement.Events
 {
 	/// <summary>
-	/// An <see cref="Event"/> that marks when the game is first loaded
+	/// An <see cref="Event"/> that marks when the game is first loaded. This would normally be called just after the <see cref="Stride.Engine.Game"/> has been constructed, but before it is actually run.
 	/// </summary>
 	public sealed class GameLoadEvent : Event
 	{

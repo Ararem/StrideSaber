@@ -1,34 +1,30 @@
 ﻿using JetBrains.Annotations;
 using Serilog;
 using Stride.Core.Diagnostics;
-using Stride.Core.Settings;
 using Stride.Engine;
-using Stride.Games;
 using StrideSaber.EventManagement;
 using StrideSaber.EventManagement.Events;
 using System;
-using System.Reflection;
 using System.Threading;
-using Logger = StrideSaber.Logging.Logger;
 
 namespace StrideSaber.Startup
 {
 	/// <summary>
-	/// Literally just the main function
+	///  Literally just the main function
 	/// </summary>
 	internal static class StrideSaberApp
 	{
 		/// <summary>
-		/// The currently running <see cref="Game"/>
+		///  The currently running <see cref="Game"/>
 		/// </summary>
 		/// <remarks>
-		/// Should literally never be null (initialized before the game is even run, in the <c>Main()</c> function)
+		///  Should literally never be null (initialized before the game is even run, in the <c>Main()</c> function)
 		/// </remarks>
 		[PublicAPI]
 		public static Game CurrentGame { get; private set; } = null!;
 
 		/// <summary>
-		/// Read class description lol
+		///  Read class description lol
 		/// </summary>
 		/// <param name="args"></param>
 		// ReSharper disable once UnusedParameter.Global
@@ -38,11 +34,11 @@ namespace StrideSaber.Startup
 			{
 				//Most important things first
 				ConsoleLogListener.ShowConsole();
-				Stride.Core.Diagnostics.Logger.MinimumLevelEnabled = LogMessageType.Verbose;
+				Logger.MinimumLevelEnabled = LogMessageType.Verbose;
 
 				//Rename the main thread
 				Thread.CurrentThread.Name = "Main Thread";
-				Logger.Init();
+				Logging.Logger.Init();
 
 				EventManager.Init();
 
@@ -54,7 +50,7 @@ namespace StrideSaber.Startup
 				EventManager.FireEventSafeLogged(new GameLoadEvent(CurrentGame));
 
 				//By the way, even though this isn't in the docs, the sender is the `Game` instance, and eventArgs will always be null
-				Game.GameStarted += (sender, _) => EventManager.FireEventSafeLogged(new GameStartedEvent((Game)sender!));
+				Game.GameStarted += (sender, _) => EventManager.FireEventSafeLogged(new GameStartedEvent((Game) sender!));
 				//Now we run the game
 				game.Run();
 			}
@@ -70,23 +66,23 @@ namespace StrideSaber.Startup
 		}
 
 		/// <summary>
-		/// Cleans up after the game has finished
+		///  Cleans up after the game has finished
 		/// </summary>
 		private static void Cleanup()
 		{
 			//Only thing to do is close the logger
-			Logger.Shutdown();
+			Logging.Logger.Shutdown();
 		}
 
 		/// <summary>
-		/// Called whenever there is an unhandled exception
+		///  Called whenever there is an unhandled exception
 		/// </summary>
 		private static void OnUnhandledException(object? sender, Exception e, bool terminating)
 		{
 			ConsoleLogListener.ShowConsole();
 			//Log the exception
 			Log.ForContext("Sender", sender)
-					.Fatal(e, "AppDomain Unhandled Exception (Terminating = {IsTerminating})", terminating);
+			   .Fatal(e, "AppDomain Unhandled Exception (Terminating = {IsTerminating})", terminating);
 			//If the CLR is going to terminate, make sure to cleanup (not sure if Main() finally gets called)
 			if (terminating)
 				Cleanup();

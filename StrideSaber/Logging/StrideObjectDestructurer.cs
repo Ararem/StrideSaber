@@ -2,15 +2,13 @@
 using Serilog.Events;
 using Stride.Core;
 using Stride.UI;
-using System.Diagnostics;
-using System.Reflection;
 
 namespace StrideSaber.Logging
 {
-	/// <inheritdoc />
+	/// <inheritdoc/>
 	public sealed class StrideObjectDestructurer : IDestructuringPolicy
 	{
-		/// <inheritdoc />
+		/// <inheritdoc/>
 		public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventPropertyValue? result)
 		{
 			switch (value)

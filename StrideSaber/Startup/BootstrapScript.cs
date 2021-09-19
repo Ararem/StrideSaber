@@ -19,14 +19,14 @@ namespace StrideSaber.Startup
 		public UIComponent Ui;
 		[DataMemberRange(1, 1000, 1, 50, 0)] public int UpdateInterval = 100;
 
-		/// <inheritdoc />
+		/// <inheritdoc/>
 		public override async Task Execute()
 		{
 			Serilog.Log.Debug("Bootstrap Script executing");
 			//Init stuff
 			UIElement root = Ui.Page.RootElement;
 			Button continueButton = root.FindVisualChildOfType<Button>();
-			TextBlock countdownText = root.FindVisualChildrenOfType<TextBlock>().First(t => t.Parent is not Button);//The button will have a child TextBlock as well that we need to ignore
+			TextBlock countdownText = root.FindVisualChildrenOfType<TextBlock>().First(t => t.Parent is not Button); //The button will have a child TextBlock as well that we need to ignore
 			Slider countdownSlider = root.FindVisualChildOfType<Slider>();
 			Serilog.Log.Verbose("Continue button  is {@ContinueButton}", continueButton);
 			Serilog.Log.Verbose("Countdown text   is {@CountdownText}", countdownText);

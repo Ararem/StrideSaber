@@ -11,7 +11,8 @@ using System.Collections.Generic;
 namespace StrideSaber.Hacks
 {
 	/// <summary>
-	///	A script component that automatically adjusts the aspect ratio of the attached <see cref="UIComponent"/> according the the <see cref="Rectangle.Size"/>
+	///  A script component that automatically adjusts the aspect ratio of the attached <see cref="UIComponent"/> according the the
+	///  <see cref="Rectangle.Size"/>
 	/// </summary>
 	[UsedImplicitly]
 	[RequireComponent(typeof(UIComponent))]
@@ -20,14 +21,14 @@ namespace StrideSaber.Hacks
 		private static readonly HashSet<WeakReference<AutoAspectRatioComponent>> Instances = new();
 		private UIComponent ui = null!;
 
-		/// <inheritdoc />
+		/// <inheritdoc/>
 		public override void Start()
 		{
 			ui = EnsureEntity.Get<UIComponent>();
 			Instances.Add(new WeakReference<AutoAspectRatioComponent>(this));
 		}
 
-		/// <inheritdoc />
+		/// <inheritdoc/>
 		public override void Cancel()
 		{
 			//Remove any weak references where the weak reference points to this object (cause it's being destroyed)

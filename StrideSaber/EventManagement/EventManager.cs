@@ -13,12 +13,13 @@ using System.Reflection;
 namespace StrideSaber.EventManagement
 {
 	/// <summary>
-	/// A manager class that manages all <see cref="Event">events</see> for the program
+	///  A manager class that manages all <see cref="Event">events</see> for the program
 	/// </summary>
 	public static class EventManager
 	{
 		/// <summary>
-		/// The map of methods to their events. Use a <see cref="Type"/> (that inherits from <see cref="Event"/>) as the key to access all methods subscribed to that type of event.
+		///  The map of methods to their events. Use a <see cref="Type"/> (that inherits from <see cref="Event"/>) as the key to access all methods subscribed to
+		///  that type of event.
 		/// </summary>
 		private static readonly ConcurrentDictionary<Type, ConcurrentHashSet<Action<Event>>> EventMethods = new();
 
@@ -167,7 +168,7 @@ namespace StrideSaber.EventManagement
 		}
 
 		/// <summary>
-		/// Fires (invokes) an <see cref="Event"/> of type <typeparamref name="T"/>, catching and logging any <see cref="Exception">Exceptions</see>
+		///  Fires (invokes) an <see cref="Event"/> of type <typeparamref name="T"/>, catching and logging any <see cref="Exception">Exceptions</see>
 		/// </summary>
 		/// <param name="e">The <see cref="Event"/> to fire</param>
 		public static void FireEventSafeLogged<T>(T e) where T : Event
@@ -179,7 +180,7 @@ namespace StrideSaber.EventManagement
 
 		//TODO: Make the event methods be able to handle a more specific/inherited type than plain old Event
 		/// <summary>
-		/// Fires (invokes) an <see cref="Event"/> of type <typeparamref name="T"/>, catching and returning any <see cref="Exception">Exceptions</see>
+		///  Fires (invokes) an <see cref="Event"/> of type <typeparamref name="T"/>, catching and returning any <see cref="Exception">Exceptions</see>
 		/// </summary>
 		/// <param name="evt">The <see cref="Event"/> to fire</param>
 		public static List<Exception> FireEventSafe<T>(T evt) where T : Event

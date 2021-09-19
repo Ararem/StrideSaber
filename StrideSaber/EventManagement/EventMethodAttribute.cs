@@ -18,44 +18,44 @@ namespace StrideSaber.EventManagement
 	/// </remarks>
 	/// <example>
 	///  <code>
-	///   using Serilog;
-	///   using StrideSaber.EventManagement;
-	///   using StrideSaber.EventManagement.Events;
-	///   
-	///   namespace StrideSaber.Startup
-	///   {
-	///   	/// &lt;summary&gt;
-	///   	/// Handles events that occur when the game is started
-	///   	/// &lt;/summary&gt;
-	///   	internal static class StartupEventHandler
-	///   	{
-	///   		[EventMethod(typeof(GameStartedEvent))]
-	///   		private static void TestGameStartedEvent(Event @event)
-	///   		{
-	///   			Log.Information("Game started event called: {Event}", @event);
-	///   		}
-	///   		[EventMethod(typeof(GameLoadEvent))]
-	///   		private static void TestGameLoadEvent(Event @event)
-	///   		{
-	///   			Log.Information("Game load event called: {Event}", @event);
-	///   		}
-	///   
-	///   		//This method is subscribed to two different events - for when the game is loaded and when it is started
-	///   		[EventMethod(typeof(GameStartedEvent))]
-	///   		[EventMethod(typeof(GameLoadEvent))]
-	///   		private static bool GameStartOrLoadEvent(Event @event)
-	///   		{
-	///   			if(@event is GameStartedEvent)
-	///   				Log.Information("Game started event called: {Event}", @event);
-	///  			else if(@event is GameLoadedEvent)
-	///   				Log.Information("Game loaded event called: {Event}", @event);
-	///   			else
-	///   				Log.Warning("Something funky is happening"); //This should never actually happen
-	///				return true;
-	///   		}
-	///   	}
-	///   }
-	///   </code>
+	///    using Serilog;
+	///    using StrideSaber.EventManagement;
+	///    using StrideSaber.EventManagement.Events;
+	///    
+	///    namespace StrideSaber.Startup
+	///    {
+	///    	/// &lt;summary&gt;
+	///    	/// Handles events that occur when the game is started
+	///    	/// &lt;/summary&gt;
+	///    	internal static class StartupEventHandler
+	///    	{
+	///    		[EventMethod(typeof(GameStartedEvent))]
+	///    		private static void TestGameStartedEvent(Event @event)
+	///    		{
+	///    			Log.Information("Game started event called: {Event}", @event);
+	///    		}
+	///    		[EventMethod(typeof(GameLoadEvent))]
+	///    		private static void TestGameLoadEvent(Event @event)
+	///    		{
+	///    			Log.Information("Game load event called: {Event}", @event);
+	///    		}
+	///    
+	///    		//This method is subscribed to two different events - for when the game is loaded and when it is started
+	///    		[EventMethod(typeof(GameStartedEvent))]
+	///    		[EventMethod(typeof(GameLoadEvent))]
+	///    		private static bool GameStartOrLoadEvent(Event @event)
+	///    		{
+	///    			if(@event is GameStartedEvent)
+	///    				Log.Information("Game started event called: {Event}", @event);
+	///   			else if(@event is GameLoadedEvent)
+	///    				Log.Information("Game loaded event called: {Event}", @event);
+	///    			else
+	///    				Log.Warning("Something funky is happening"); //This should never actually happen
+	/// 				return true;
+	///    		}
+	///    	}
+	///    }
+	///    </code>
 	/// </example>
 	[AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
 	[MeansImplicitUse]

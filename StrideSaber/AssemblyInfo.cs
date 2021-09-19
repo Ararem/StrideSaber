@@ -1,3 +1,3 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly:InternalsVisibleTo("StrideSaber.Windows")]
+[assembly: InternalsVisibleTo("StrideSaber.Windows")]

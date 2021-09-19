@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Serilog;
 using Stride.Core.Diagnostics;
+using Stride.Core.Settings;
 using Stride.Engine;
 using Stride.Games;
 using StrideSaber.EventManagement;
@@ -37,6 +38,7 @@ namespace StrideSaber.Startup
 			{
 				//Most important things first
 				ConsoleLogListener.ShowConsole();
+				Stride.Core.Diagnostics.Logger.MinimumLevelEnabled = LogMessageType.Verbose;
 
 				//Rename the main thread
 				Thread.CurrentThread.Name = "Main Thread";

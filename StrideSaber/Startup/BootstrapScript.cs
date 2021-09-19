@@ -6,6 +6,7 @@ using Stride.UI.Controls;
 using Stride.UI.Events;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ namespace StrideSaber.Startup
 			//Init stuff
 			UIElement root = Ui.Page.RootElement;
 			Button continueButton = root.FindVisualChildOfType<Button>();
-			TextBlock countdownText = root.FindVisualChildOfType<TextBlock>();
+			TextBlock countdownText = root.FindVisualChildrenOfType<TextBlock>().First(t => t.Parent is not Button);//The button will have a child TextBlock as well that we need to ignore
 			Slider countdownSlider = root.FindVisualChildOfType<Slider>();
 			Serilog.Log.Verbose("Continue button  is {@ContinueButton}", continueButton);
 			Serilog.Log.Verbose("Countdown text   is {@CountdownText}", countdownText);

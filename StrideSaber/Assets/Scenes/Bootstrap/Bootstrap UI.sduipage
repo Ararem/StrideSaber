@@ -49,6 +49,7 @@ Hierarchy:
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
+                Name: Continue Button Text
                 Text: Continue
                 Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
                 TextSize: 256.0

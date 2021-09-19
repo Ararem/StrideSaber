@@ -26,7 +26,7 @@ Hierarchy:
                         Projection: Orthographic
                         VerticalFieldOfView: 179.0
                         OrthographicSize: 1.0
-                        NearClipPlane: 1.0
+                        NearClipPlane: 0.0
                         FarClipPlane: 1.0
                         Slot: 83d9443f-d721-4937-8cff-f193eadd74f8
         -   Entity:
@@ -46,8 +46,8 @@ Hierarchy:
                         Size: {X: 1.92, Y: 1.08, Z: 1.0}
                         ResolutionStretch: FixedHeightAdaptableWidth
                         RenderGroup: Group31
-                    1c797c6348389fdcbedb880bdd48dd56: !StrideSaber.Misc.AutoAspectRatioComponent,StrideSaber
-                        Id: b67064b6-5494-457a-b89f-a7bfd096a723
+                    0f70ace92cde23b7c03f1cd1cde8e5a2: !StrideSaber.Hacks.AutoAspectRatioComponent,StrideSaber
+                        Id: 45236572-39c3-44b0-8ff8-f1ae4a853352
         -   Entity:
                 Id: e30c1b1a-8bcd-4e96-89bc-9751736472c5
                 Name: Bootstrap Script
@@ -64,5 +64,3 @@ Hierarchy:
                         AutoStartWaitDuration: 0:00:00:15.0000000
                         Ui: ref!! 29f6849f-bd9c-482a-83df-874ea1d78afc
                         UpdateInterval: 500
-                    3d67843e84c35213c017b9dcd933821c: !StrideSaber.Misc.TestScript,StrideSaber
-                        Id: b7064ae6-fce3-4b71-a8e7-1b1eb09be31b

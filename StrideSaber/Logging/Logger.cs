@@ -52,7 +52,6 @@ namespace StrideSaber.Logging
 			lock (Lock)
 			{
 				if (initialized) return;
-				HookAndDisableStrideDefaultLogger(null);
 
 				LoggerConfiguration? config = new LoggerConfiguration()
 						.MinimumLevel.Is(MinimumLogEventLevel)

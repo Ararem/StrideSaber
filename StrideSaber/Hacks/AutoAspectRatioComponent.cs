@@ -2,6 +2,7 @@
 using Stride.Core.Mathematics;
 using Stride.Engine;
 using Stride.Games;
+using Stride.Rendering;
 using StrideSaber.EventManagement;
 using StrideSaber.EventManagement.Events;
 using System;
@@ -44,7 +45,7 @@ namespace StrideSaber.Hacks
 				//Do this by checking if the weak reference no longer points to an object
 				Instances.RemoveWhere(w => w.TryGetTarget(out var _) == false);
 				foreach (WeakReference<AutoAspectRatioComponent> weakRef in Instances)
-					if(weakRef.TryGetTarget(out var component))
+					if (weakRef.TryGetTarget(out var component))
 						SetCorrectAspect((GameWindow) sender!, component.ui);
 			};
 		}
@@ -52,10 +53,15 @@ namespace StrideSaber.Hacks
 		private static void SetCorrectAspect(GameWindow window, UIComponent ui)
 		{
 			//These aspects are how many units wide for each unit high
-			float windowAspect = (float) window.ClientBounds.Width / window.ClientBounds.Height;
-			float uiAspect = ui.Resolution.X / ui.Resolution.Y;
+			Vector2 winSize = new(window.ClientBounds.Size.Width, window.ClientBounds.Size.Height);
+			Vector2 uiSize = new(ui.Resolution.X, ui.Resolution.Y);
+			float windowAspect = winSize.X / winSize.Y;
+			float uiAspect = uiSize.X / uiSize.Y;
 			Serilog.Log.Information("Aspect: Window={WindowAspect:n1}\t\tUi={UiAspect:n1}", windowAspect, uiAspect);
 			Serilog.Log.Information("Window={WindowResolution}\tUi={UiResolution}", window.ClientBounds, ui.Resolution);
+			Serilog.Log.Verbose("Window={WindowResolution}\t{WindowAspect}w/h\tUi={WindowResolution}\t{WindowAspect}w/h\t", window.ClientBounds.Size, windowAspect, ui.Resolution.XY().ToString());
+			//If the screen is too wide we want to fix the height so that it doesn't go out of bounds
+			ui.ResolutionStretch = windowAspect > uiAspect ? ResolutionStretch.FixedHeightAdaptableWidth : ResolutionStretch.FixedWidthAdaptableHeight;
 		}
 	}
 }

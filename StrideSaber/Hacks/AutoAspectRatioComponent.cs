@@ -58,11 +58,14 @@ namespace StrideSaber.Hacks
 			Vector2 uiSize = new(ui.Resolution.X, ui.Resolution.Y);
 			float windowAspect = winSize.X / winSize.Y;
 			float uiAspect = uiSize.X / uiSize.Y;
-			Serilog.Log.Information("Aspect: Window={WindowAspect:n1}\t\tUi={UiAspect:n1}", windowAspect, uiAspect);
-			Serilog.Log.Information("Window={WindowResolution}\tUi={UiResolution}", window.ClientBounds, ui.Resolution);
-			Serilog.Log.Verbose("Window={WindowResolution}\t{WindowAspect}w/h\tUi={WindowResolution}\t{WindowAspect}w/h\t", window.ClientBounds.Size, windowAspect, ui.Resolution.XY().ToString());
 			//If the screen is too wide we want to fix the height so that it doesn't go out of bounds
-			ui.ResolutionStretch = windowAspect > uiAspect ? ResolutionStretch.FixedHeightAdaptableWidth : ResolutionStretch.FixedWidthAdaptableHeight;
+			if (windowAspect > uiAspect)
+				ui.ResolutionStretch = ResolutionStretch.FixedHeightAdaptableWidth;
+			else if (windowAspect == uiAspect)
+				ui.ResolutionStretch = ResolutionStretch.FixedWidthFixedHeight;
+			else if(windowAspect < uiAspect)
+				ui.ResolutionStretch = ResolutionStretch.FixedWidthAdaptableHeight;
+			Serilog.Log.Verbose("[Window {WindowName}] {WindowResolution}\t{WindowAspect}w/h\t[Ui {UiName}] {UiResolution}\t{UiAspect}w/h\tMode = {StretchMode}", window.Name, winSize, windowAspect, ui.Entity.Name, uiSize, uiAspect, ui.ResolutionStretch);
 		}
 	}
 }

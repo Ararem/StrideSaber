@@ -11,7 +11,7 @@ Hierarchy:
         -   UIElement: !Grid
                 Id: 882ab787-6325-4be7-9b42-f2556c0cb83d
                 DependencyProperties: {}
-                BackgroundColor: {R: 255, G: 0, B: 0, A: 255}
+                BackgroundColor: {R: 0, G: 0, B: 74, A: 255}
                 Margin: {}
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
@@ -34,7 +34,7 @@ Hierarchy:
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
                 Name: Countdown Text
-                Text: H:mm:ss.FFFFF
+                Text: mm:ss.f
                 Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
                 TextSize: 96.0
                 TextColor: {R: 255, G: 255, B: 255, A: 255}

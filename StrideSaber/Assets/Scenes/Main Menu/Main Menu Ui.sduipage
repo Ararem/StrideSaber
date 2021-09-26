@@ -1,0 +1,143 @@
+!UIPageAsset
+Id: 43b9e236-bd70-4225-ae66-f55fa9351b73
+SerializedVersion: {Stride: 2.1.0.1}
+Tags: []
+Design:
+    Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+Hierarchy:
+    RootParts:
+        - !Grid ref!! fdbdde40-3a7d-4b97-958b-60cc7fa67c6d
+    Parts:
+        -   UIElement: !StackPanel
+                Id: 13cb58ca-8450-427b-8d54-4a2421832fcd
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Width: 480.0
+                Height: 563.2
+                HorizontalAlignment: Left
+                Margin: {Top: 156.8}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Mode Select
+                Children:
+                    09a7436ef2560ebb3167e8371e83d281: !Button ref!! de7a1ea7-a227-4990-b58b-b68b7b5c1721
+                    765357e9ba859f13c2b96dcb5ab04ee0: !Button ref!! 53afa2ab-594a-4ebc-834b-53e0cb49c800
+        -   UIElement: !Button
+                Id: 53afa2ab-594a-4ebc-834b-53e0cb49c800
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                HorizontalAlignment*: Stretch
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name*: Test Button
+                Content: !TextBlock ref!! b77faf08-9ee8-49d8-a726-72480b48c2a2
+                PressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 2
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+            Base:
+                BasePartAsset: 'b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base '
+                BasePartId: 5cb8f869-3c33-4cc2-892d-aa6a1b5b102d
+                InstanceId: 0dbae0ee-6666-42f0-a33c-f63f5cd95451
+        -   UIElement: !TextBlock
+                Id: 873083fe-69f2-4e9f-b2eb-58f2e11c63f6
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 255}
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Title
+                Text*: StrideSaber
+                Font: 46cdc443-6b9c-40e3-8265-940e03b07c9f:Shared/Fonts/JB Mono Regular
+                TextSize: 128.0
+                TextColor*: {R: 255, G: 0, B: 0, A: 255}
+                TextAlignment: Center
+            Base:
+                BasePartAsset: 'b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base '
+                BasePartId: cb025c57-891e-4da4-9570-ca28bc98bd8c
+                InstanceId: 6b4c34b3-43c7-4750-ab96-b014b8aac48b
+        -   UIElement: !TextBlock
+                Id: b77faf08-9ee8-49d8-a726-72480b48c2a2
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: 
+                Text*: Test
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 64.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+            Base:
+                BasePartAsset: 'b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base '
+                BasePartId: 69b03aab-a1d0-4067-bf9b-85c57e1162a7
+                InstanceId: 0dbae0ee-6666-42f0-a33c-f63f5cd95451
+        -   UIElement: !TextBlock
+                Id: bc3eec28-bb89-4839-a5f7-d49b906b7ca6
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: 
+                Text*: Dev Mode
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 64.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+            Base:
+                BasePartAsset: 'b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base '
+                BasePartId: 69b03aab-a1d0-4067-bf9b-85c57e1162a7
+                InstanceId: c3e05e52-ee9b-4ca3-9e5a-4b8b7b410493
+        -   UIElement: !Button
+                Id: de7a1ea7-a227-4990-b58b-b68b7b5c1721
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                HorizontalAlignment*: Stretch
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name*: Dev Mode Button
+                Content: !TextBlock ref!! bc3eec28-bb89-4839-a5f7-d49b906b7ca6
+                PressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 2
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+            Base:
+                BasePartAsset: 'b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base '
+                BasePartId: 5cb8f869-3c33-4cc2-892d-aa6a1b5b102d
+                InstanceId: c3e05e52-ee9b-4ca3-9e5a-4b8b7b410493
+        -   UIElement: !Grid
+                Id: fdbdde40-3a7d-4b97-958b-60cc7fa67c6d
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                Children:
+                    d024a5b315d29382677126061a307b60: !TextBlock ref!! 873083fe-69f2-4e9f-b2eb-58f2e11c63f6
+                    fe6fefdcbe4bee0c6301205445af974f: !StackPanel ref!! 13cb58ca-8450-427b-8d54-4a2421832fcd
+                RowDefinitions: {}
+                ColumnDefinitions: {}
+                LayerDefinitions: {}

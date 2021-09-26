@@ -1,0 +1,53 @@
+!SceneAsset
+Id: 5481ca0d-e173-467d-bd37-652c0601757e
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+ChildrenIds: []
+Offset: {X: 0.0, Y: 0.0, Z: 0.0}
+Hierarchy:
+    RootParts:
+        - ref!! f5353df7-0b10-4fb8-93f3-42f3cc17c9a0
+        - ref!! 606caff8-dc24-497a-b703-9f641b7aa8c0
+    Parts:
+        -   Entity:
+                Id: 606caff8-dc24-497a-b703-9f641b7aa8c0
+                Name: Camera
+                Components:
+                    d3997e64e3c2f296bfba9e4685c6660b: !TransformComponent
+                        Id: fbf8cc73-a3c7-4aab-b541-ddf0bc635652
+                        Position*: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    0a026c41f0f40859a75c1fae1e26f598: !CameraComponent
+                        Id: 538553b9-012b-40a3-ac48-bcc72e5471ce
+                        Name: Camera
+                        Projection: Perspective
+                        VerticalFieldOfView: 90.0
+                        Slot: 83d9443f-d721-4937-8cff-f193eadd74f8
+            Base:
+                BasePartAsset: 4d4aad72-3e6d-47eb-8be0-8e02f05d7c82:Shared/Prefabs/Camera
+                BasePartId: 75a53506-1488-49f0-88e8-6ca8bd330bad
+                InstanceId: da0c8333-09c3-4780-a5d2-257785e5a9c0
+        -   Entity:
+                Id: f5353df7-0b10-4fb8-93f3-42f3cc17c9a0
+                Name: UI
+                Components:
+                    0c3ad140b767c2b64967ea7e5eb1aac4: !TransformComponent
+                        Id: 208ea60a-b94e-4e24-8e93-abafdc6de1f3
+                        Position*: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    a520b3c64a489c04d0bfb3f1929a0ccb: !UIComponent
+                        Id: 403441a9-3ba2-41fa-8de0-4dcc68e2050e
+                        Page*: 43b9e236-bd70-4225-ae66-f55fa9351b73:Scenes/Main Menu/Main Menu Ui
+                        Resolution: {X: 1920.0, Y: 1080.0, Z: 1000.0}
+                        Size: {X: 1.92, Y: 1.08, Z: 1.0}
+                        ResolutionStretch: FixedHeightAdaptableWidth
+                    976dd9e876e61ac41ab157cdf77d64a0: !StrideSaber.Hacks.AutoAspectRatioComponent,StrideSaber
+                        Id: 9b1d07b6-7675-474c-813c-ce6a5c52de3c
+            Base:
+                BasePartAsset: 4e4cb7df-17e2-46b2-955b-7613548fbcfd:Shared/Prefabs/Ui
+                BasePartId: 8a1d01ad-1c34-4e97-ada6-61b07205e3a2
+                InstanceId: 5547a597-a65a-47cd-bb7d-a411cb2aa209

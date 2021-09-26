@@ -61,6 +61,7 @@ namespace StrideSaber.Hacks
 			//If the screen is too wide we want to fix the height so that it doesn't go out of bounds
 			if (windowAspect > uiAspect)
 				ui.ResolutionStretch = ResolutionStretch.FixedHeightAdaptableWidth;
+			// ReSharper disable once CompareOfFloatsByEqualityOperator
 			else if (windowAspect == uiAspect)
 				ui.ResolutionStretch = ResolutionStretch.FixedWidthFixedHeight;
 			else if(windowAspect < uiAspect)

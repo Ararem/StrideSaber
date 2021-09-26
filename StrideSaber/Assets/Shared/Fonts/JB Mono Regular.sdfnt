@@ -1,0 +1,12 @@
+!SpriteFont
+Id: 46cdc443-6b9c-40e3-8265-940e03b07c9f
+SerializedVersion: {Stride: 2.0.0.0}
+Tags: []
+FontSource: !FileFontProvider
+    Source: !file JetBrainsMono-Regular.ttf
+FontType: !SignedDistanceFieldSpriteFontType
+    CharacterSet: null
+    CharacterRegions:
+        8fad0feb815ea4c2483abfd3af9b68cf:
+            Start: ' '
+            End: "\x7F"

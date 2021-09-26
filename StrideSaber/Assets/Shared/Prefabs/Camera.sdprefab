@@ -1,0 +1,24 @@
+!PrefabAsset
+Id: 4d4aad72-3e6d-47eb-8be0-8e02f05d7c82
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+Hierarchy:
+    RootParts:
+        - ref!! 75a53506-1488-49f0-88e8-6ca8bd330bad
+    Parts:
+        -   Entity:
+                Id: 75a53506-1488-49f0-88e8-6ca8bd330bad
+                Name: Camera
+                Components:
+                    d3997e64e3c2f296bfba9e4685c6660b: !TransformComponent
+                        Id: 38a3b5f9-ba9c-4cc1-bcb2-19823e48d1c9
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    0a026c41f0f40859a75c1fae1e26f598: !CameraComponent
+                        Id: 491a780c-a7d3-4bbe-902c-378cdb33dbb3
+                        Name: Camera
+                        Projection: Perspective
+                        VerticalFieldOfView: 90.0
+                        Slot: 83d9443f-d721-4937-8cff-f193eadd74f8

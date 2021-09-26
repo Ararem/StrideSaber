@@ -42,6 +42,7 @@ RenderStages:
         Id: 4a82cae3-d8cf-4be1-a4bc-91968362016e
         Name: UiStage
         EffectSlotName: Main
+        SortMode: !FrontToBackSortMode {}
 RenderFeatures:
     d8fb80b0e7995140a46bca8dc36ee8a2: !Stride.Rendering.MeshRenderFeature,Stride.Rendering
         RenderStageSelectors:
@@ -112,7 +113,7 @@ RenderFeatures:
         RenderStageSelectors:
             14a071694411235038a102ac3794bb4d: !Stride.Rendering.SimpleGroupToRenderStageSelector,Stride.Rendering
                 RenderGroup*: Group0, Group1, Group2, Group3, Group4, Group5, Group6, Group7, Group8, Group9, Group10, Group11, Group12, Group13, Group14, Group15, Group16, Group17, Group18, Group19, Group20, Group21, Group22, Group23, Group24, Group25, Group26, Group27, Group28, Group29, Group30
-                RenderStage: ref!! b42c73eb-c31b-4634-80c2-4764892283b4
+                RenderStage*: ref!! b42c73eb-c31b-4634-80c2-4764892283b4
                 EffectName: Test
             09f9232201373f71d78059e5bd87fb51*: !Stride.Rendering.SimpleGroupToRenderStageSelector,Stride.Rendering
                 RenderGroup: Group31
@@ -126,30 +127,6 @@ RenderFeatures:
                 EffectName: null
         PipelineProcessors: {}
 SharedRenderers:
-    60459475d3a3adaf2d1ba5d99913ca75: !Stride.Rendering.Compositing.ForwardRenderer,Stride.Engine
-        Id: 07bde1d9-3256-4f41-a4d2-80799a14c207
-        Clear:
-            Id: 4bc4b2ca-027e-4e4a-94cb-2912709bef5f
-            Color: {R: 0.40491876, G: 0.41189542, B: 0.43775, A: 1.0}
-        LightProbes: true
-        OpaqueRenderStage: ref!! 0b6b7ab3-e854-4998-b81a-c0a8b9c5fbbb
-        TransparentRenderStage: ref!! b42c73eb-c31b-4634-80c2-4764892283b4
-        ShadowMapRenderStages:
-            fc4d1e0de5c2b0bbc27bcf96e9a848fd: ref!! ae096e75-37b6-42c8-97b3-2ce87aaf19a3
-            87ff1d9cdd52418daf76385176a0e316: ref!! 7d1465a9-9590-4fdc-b8ce-cebc9e6dc934
-            5e059d4cc2db4ee8a1f28a40f4ac3ae8: ref!! f1049bd5-bd26-4c86-ab69-267955b17ab7
-        GBufferRenderStage: ref!! c28828e6-78db-4001-a439-af2e86cd9715
-        PostEffects: !PostProcessingEffects ref!! 61b521f1-307f-4db7-9bd1-6e8d7022fd28
-        LightShafts*:
-            LightBufferDownsampleLevel: 2
-            BoundingVolumeBufferDownsampleLevel: 8
-        VRSettings:
-            Enabled: false
-            RequiredApis: {}
-            Overlays: {}
-        SubsurfaceScatteringBlurEffect*: null
-        MSAALevel: None
-        MSAAResolver: {}
     d5b2e71c088247e21556decdce138d96: !Stride.Rendering.Compositing.ForwardRenderer,Stride.Engine
         Id: 3a36c201-323b-4f07-8f42-232e07aa06f1
         Clear:
@@ -239,6 +216,7 @@ SharedRenderers:
         MSAALevel: None
         MSAAResolver: {}
     ee80a20a9bd99f2d70711114e15fe7ca: ~(Deleted)
+    60459475d3a3adaf2d1ba5d99913ca75: ~(Deleted)
 Game*: !Stride.Rendering.Compositing.SceneRendererCollection,Stride.Rendering
     Id: 52f33858-7a37-4f03-8c5e-53963bf204bd
     Children:

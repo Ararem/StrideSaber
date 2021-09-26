@@ -1,0 +1,103 @@
+!UILibraryAsset
+Id: b1aa678b-de2f-4be1-b8de-d94e761a1838
+SerializedVersion: {Stride: 2.1.0.1}
+Tags: []
+Design:
+    Resolution: {X: 1920.0, Y: 1080.0, Z: 1000.0}
+PublicUIElements:
+    cb025c57-891e-4da4-9570-ca28bc98bd8c: Title
+    95c20b0a-e86a-4375-be75-354d0909a8cc: Small Button
+    5cb8f869-3c33-4cc2-892d-aa6a1b5b102d: Large Button
+Hierarchy:
+    RootParts:
+        - !TextBlock ref!! cb025c57-891e-4da4-9570-ca28bc98bd8c
+        - !Button ref!! 95c20b0a-e86a-4375-be75-354d0909a8cc
+        - !Button ref!! 5cb8f869-3c33-4cc2-892d-aa6a1b5b102d
+    Parts:
+        -   UIElement: !Button
+                Id: 5cb8f869-3c33-4cc2-892d-aa6a1b5b102d
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Large Button
+                Content: !TextBlock ref!! 69b03aab-a1d0-4067-bf9b-85c57e1162a7
+                PressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 2
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+        -   UIElement: !TextBlock
+                Id: 6347ccd9-026e-490e-9920-5a9ad3332966
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: 
+                Text: Small Button
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 32.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !TextBlock
+                Id: 69b03aab-a1d0-4067-bf9b-85c57e1162a7
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: 
+                Text: Large Button
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 64.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !Button
+                Id: 95c20b0a-e86a-4375-be75-354d0909a8cc
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Small Button
+                Content: !TextBlock ref!! 6347ccd9-026e-490e-9920-5a9ad3332966
+                PressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 2
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+        -   UIElement: !TextBlock
+                Id: cb025c57-891e-4da4-9570-ca28bc98bd8c
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 255}
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Title
+                Text: Text Block
+                Font: 46cdc443-6b9c-40e3-8265-940e03b07c9f:Shared/Fonts/JB Mono Regular
+                TextSize: 128.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                TextAlignment: Center

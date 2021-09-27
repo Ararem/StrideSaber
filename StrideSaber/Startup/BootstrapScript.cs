@@ -8,6 +8,7 @@ using Stride.Engine;
 using Stride.UI;
 using Stride.UI.Controls;
 using Stride.UI.Events;
+using StrideSaber.Ui;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -107,7 +108,7 @@ namespace StrideSaber.Startup
 
 				await Task.Delay(UpdateInterval);
 
-				#if true
+				#if false
 				#warning LOOP: TESTING ONLY
 				if (remaining <= TimeSpan.Zero)
 					sw.Restart();

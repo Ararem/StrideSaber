@@ -1,0 +1,418 @@
+!UIPageAsset
+Id: 22cc8e11-c6ec-4efc-b4a8-2213cd7b4b69
+SerializedVersion: {Stride: 2.1.0.1}
+Tags: []
+Design:
+    Resolution: {X: 1920.0, Y: 1080.0, Z: 1000.0}
+Hierarchy:
+    RootParts:
+        - !Grid ref!! b1163ec8-0975-449d-80c2-a4c54aa6080f
+    Parts:
+        -   UIElement: !Slider
+                Id: 08994704-95d5-444e-9c24-f44718c2dbe7
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 5
+                CanBeHitByUser: false
+                Height: 32.0
+                VerticalAlignment: Bottom
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Progress Slider
+                Value: 0.7
+                TrackBackgroundImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                TrackForegroundImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 12
+                TrackStartingOffsets: {X: -1.0, Y: 0.0}
+                TickImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 8
+                AreTicksDisplayed: true
+                TickOffset: 13.0
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: e062f87b-2dd3-4509-b176-4008bc2aaa69
+                InstanceId: 9bbcedda-e8bf-4915-925e-d36b1eff904d
+        -   UIElement: !StackPanel
+                Id: 140c64c5-0616-4a4a-a4b3-f77c89ddc5b6
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Children:
+                    cd0884fa0a62ff270267e9213cc65d53: !TextBlock ref!! 60ac4659-936b-4dd1-a176-3a5d610bc1e3
+                    4e94584adbaa4b27fc4828e9681135f3: !StackPanel ref!! 434da89c-4922-4417-b32d-f68de15f4be4
+        -   UIElement: !Slider
+                Id: 15486ad1-1d8d-4dbc-a2cb-f68541d0df41
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 5
+                CanBeHitByUser: false
+                Height: 32.0
+                VerticalAlignment: Bottom
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Progress Slider
+                Value: 0.7
+                TrackBackgroundImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                TrackForegroundImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 12
+                TrackStartingOffsets: {X: -1.0, Y: 0.0}
+                TickImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 8
+                AreTicksDisplayed: true
+                TickOffset: 13.0
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: e062f87b-2dd3-4509-b176-4008bc2aaa69
+                InstanceId: d5e41629-abb9-430a-bc2c-da8ce12ab21e
+        -   UIElement: !Slider
+                Id: 1a6c4e21-ab00-406a-9773-aea87bdeb192
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 5
+                CanBeHitByUser: false
+                Height: 32.0
+                VerticalAlignment: Bottom
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Progress Slider
+                Value: 0.7
+                TrackBackgroundImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                TrackForegroundImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 12
+                TrackStartingOffsets: {X: -1.0, Y: 0.0}
+                TickImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 8
+                AreTicksDisplayed: true
+                TickOffset: 13.0
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: e062f87b-2dd3-4509-b176-4008bc2aaa69
+                InstanceId: 9e3b5a0e-0f6a-4899-aa2d-335601dc87b1
+        -   UIElement: !StackPanel
+                Id: 434da89c-4922-4417-b32d-f68de15f4be4
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Children:
+                    5368188a68275c7c3e1f865d90a0a114: !Border ref!! ca971369-8c71-4a6c-b1e3-bd93192ec66e
+                    06378c94297aa8be802ebe74c12ef857: !Border ref!! dd8b0339-3d6c-4728-ba93-43c41b4aa0f0
+                    56893b637583d1413e7921bd657c42d0: !Border ref!! 47e8b15d-6724-4b34-b495-8d391795b8d1
+                    d8a117b01d70e3d9f24850c78e297770: !Border ref!! 7b1e40a1-2841-4a1e-b570-5aad5799e1c1
+        -   UIElement: !StackPanel
+                Id: 44c91d08-5c96-4e9b-a293-980876c97734
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Children:
+                    896396f1f72f6151d048ae8bb791c4e5: !TextBlock ref!! 50325a35-7517-4dfd-8258-c5802048986a
+                    d5eeff7e80c4af822f198c80f7f5ef75: !Slider ref!! 678acb09-140b-4054-9c74-9191cfa94006
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: 86d377a8-5cd2-4745-ba38-f791df7073aa
+                InstanceId: d10df39c-d681-4a61-9a14-64507615153f
+        -   UIElement: !Border
+                Id: 47e8b15d-6724-4b34-b495-8d391795b8d1
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Progress Indicator
+                Padding: {}
+                Content: !StackPanel ref!! 44c91d08-5c96-4e9b-a293-980876c97734
+                BorderColor: {R: 0, G: 0, B: 0, A: 255}
+                BorderThickness: {Left: 4.0, Top: 4.0, Right: 4.0, Bottom: 4.0}
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: bb190305-79b3-4f96-a5bd-afaca7e8cc43
+                InstanceId: d10df39c-d681-4a61-9a14-64507615153f
+        -   UIElement: !TextBlock
+                Id: 50325a35-7517-4dfd-8258-c5802048986a
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Width: 192.0
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Task Name
+                Text: Task 69420
+                Font: 46cdc443-6b9c-40e3-8265-940e03b07c9f:Shared/Fonts/JB Mono Regular
+                TextSize: 32.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                TextAlignment: Center
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: 394f64ef-3b35-4085-aacb-e54e022339cf
+                InstanceId: d10df39c-d681-4a61-9a14-64507615153f
+        -   UIElement: !StackPanel
+                Id: 56d1a826-0503-44e9-99e2-a0bf028d6f95
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Children:
+                    896396f1f72f6151d048ae8bb791c4e5: !TextBlock ref!! f8d4e7f0-4ba7-47bd-8b02-db48baa234df
+                    d5eeff7e80c4af822f198c80f7f5ef75: !Slider ref!! 1a6c4e21-ab00-406a-9773-aea87bdeb192
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: 86d377a8-5cd2-4745-ba38-f791df7073aa
+                InstanceId: 9e3b5a0e-0f6a-4899-aa2d-335601dc87b1
+        -   UIElement: !TextBlock
+                Id: 60ac4659-936b-4dd1-a176-3a5d610bc1e3
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 255}
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Title
+                Text*: Background Tasks
+                Font: 46cdc443-6b9c-40e3-8265-940e03b07c9f:Shared/Fonts/JB Mono Regular
+                TextSize*: 48.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                TextAlignment: Center
+            Base:
+                BasePartAsset: 'b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base '
+                BasePartId: cb025c57-891e-4da4-9570-ca28bc98bd8c
+                InstanceId: 38006c96-b99c-44cf-a5a3-643097efca6b
+        -   UIElement: !Slider
+                Id: 678acb09-140b-4054-9c74-9191cfa94006
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 5
+                CanBeHitByUser: false
+                Height: 32.0
+                VerticalAlignment: Bottom
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Progress Slider
+                Value: 0.7
+                TrackBackgroundImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                TrackForegroundImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 12
+                TrackStartingOffsets: {X: -1.0, Y: 0.0}
+                TickImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 8
+                AreTicksDisplayed: true
+                TickOffset: 13.0
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: e062f87b-2dd3-4509-b176-4008bc2aaa69
+                InstanceId: d10df39c-d681-4a61-9a14-64507615153f
+        -   UIElement: !Border
+                Id: 7b1e40a1-2841-4a1e-b570-5aad5799e1c1
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Progress Indicator
+                Padding: {}
+                Content: !StackPanel ref!! f73a3d6e-aa9c-46a3-b127-ef0b48267795
+                BorderColor: {R: 0, G: 0, B: 0, A: 255}
+                BorderThickness: {Left: 4.0, Top: 4.0, Right: 4.0, Bottom: 4.0}
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: bb190305-79b3-4f96-a5bd-afaca7e8cc43
+                InstanceId: d5e41629-abb9-430a-bc2c-da8ce12ab21e
+        -   UIElement: !StackPanel
+                Id: 836def08-16f6-4ca3-bd85-535164d8712d
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Children:
+                    896396f1f72f6151d048ae8bb791c4e5: !TextBlock ref!! f18d26d2-93c5-473c-8be2-0ac5adb9089f
+                    d5eeff7e80c4af822f198c80f7f5ef75: !Slider ref!! 08994704-95d5-444e-9c24-f44718c2dbe7
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: 86d377a8-5cd2-4745-ba38-f791df7073aa
+                InstanceId: 9bbcedda-e8bf-4915-925e-d36b1eff904d
+        -   UIElement: !TextBlock
+                Id: 83fd771f-86f2-43dc-90f0-711df4c77a7d
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Width: 192.0
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Task Name
+                Text: Task 69420
+                Font: 46cdc443-6b9c-40e3-8265-940e03b07c9f:Shared/Fonts/JB Mono Regular
+                TextSize: 32.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                TextAlignment: Center
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: 394f64ef-3b35-4085-aacb-e54e022339cf
+                InstanceId: d5e41629-abb9-430a-bc2c-da8ce12ab21e
+        -   UIElement: !Grid
+                Id: b1163ec8-0975-449d-80c2-a4c54aa6080f
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Children:
+                    45dbc6fdf1dd032dcd7ae87fe0daaa03: !Border ref!! b7978b85-d1e9-473b-ac4b-05977a231947
+                RowDefinitions: {}
+                ColumnDefinitions: {}
+                LayerDefinitions: {}
+        -   UIElement: !Border
+                Id: b7978b85-d1e9-473b-ac4b-05977a231947
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 64}
+                Width: 512.0
+                Height: 512.0
+                HorizontalAlignment: Right
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Padding: {}
+                Content: !StackPanel ref!! 140c64c5-0616-4a4a-a4b3-f77c89ddc5b6
+                BorderColor: {R: 255, G: 255, B: 255, A: 255}
+                BorderThickness: {Left: 8.0, Top: 8.0, Right: 8.0, Bottom: 8.0}
+        -   UIElement: !Border
+                Id: ca971369-8c71-4a6c-b1e3-bd93192ec66e
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Progress Indicator
+                Padding: {}
+                Content: !StackPanel ref!! 836def08-16f6-4ca3-bd85-535164d8712d
+                BorderColor: {R: 0, G: 0, B: 0, A: 255}
+                BorderThickness: {Left: 4.0, Top: 4.0, Right: 4.0, Bottom: 4.0}
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: bb190305-79b3-4f96-a5bd-afaca7e8cc43
+                InstanceId: 9bbcedda-e8bf-4915-925e-d36b1eff904d
+        -   UIElement: !Border
+                Id: dd8b0339-3d6c-4728-ba93-43c41b4aa0f0
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Progress Indicator
+                Padding: {}
+                Content: !StackPanel ref!! 56d1a826-0503-44e9-99e2-a0bf028d6f95
+                BorderColor: {R: 0, G: 0, B: 0, A: 255}
+                BorderThickness: {Left: 4.0, Top: 4.0, Right: 4.0, Bottom: 4.0}
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: bb190305-79b3-4f96-a5bd-afaca7e8cc43
+                InstanceId: 9e3b5a0e-0f6a-4899-aa2d-335601dc87b1
+        -   UIElement: !TextBlock
+                Id: f18d26d2-93c5-473c-8be2-0ac5adb9089f
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Width: 192.0
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Task Name
+                Text: Task 69420
+                Font: 46cdc443-6b9c-40e3-8265-940e03b07c9f:Shared/Fonts/JB Mono Regular
+                TextSize: 32.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                TextAlignment: Center
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: 394f64ef-3b35-4085-aacb-e54e022339cf
+                InstanceId: 9bbcedda-e8bf-4915-925e-d36b1eff904d
+        -   UIElement: !StackPanel
+                Id: f73a3d6e-aa9c-46a3-b127-ef0b48267795
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Children:
+                    896396f1f72f6151d048ae8bb791c4e5: !TextBlock ref!! 83fd771f-86f2-43dc-90f0-711df4c77a7d
+                    d5eeff7e80c4af822f198c80f7f5ef75: !Slider ref!! 15486ad1-1d8d-4dbc-a2cb-f68541d0df41
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: 86d377a8-5cd2-4745-ba38-f791df7073aa
+                InstanceId: d5e41629-abb9-430a-bc2c-da8ce12ab21e
+        -   UIElement: !TextBlock
+                Id: f8d4e7f0-4ba7-47bd-8b02-db48baa234df
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Width: 192.0
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Task Name
+                Text: Task 69420
+                Font: 46cdc443-6b9c-40e3-8265-940e03b07c9f:Shared/Fonts/JB Mono Regular
+                TextSize: 32.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                TextAlignment: Center
+            Base:
+                BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
+                BasePartId: 394f64ef-3b35-4085-aacb-e54e022339cf
+                InstanceId: 9e3b5a0e-0f6a-4899-aa2d-335601dc87b1

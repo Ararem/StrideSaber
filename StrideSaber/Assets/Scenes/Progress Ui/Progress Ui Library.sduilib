@@ -1,0 +1,80 @@
+!UILibraryAsset
+Id: 64b39408-9f03-4e43-b866-680744349de5
+SerializedVersion: {Stride: 2.1.0.1}
+Tags: []
+Design:
+    Resolution: {X: 1920.0, Y: 1080.0, Z: 1000.0}
+PublicUIElements:
+    bb190305-79b3-4f96-a5bd-afaca7e8cc43: Progress Indicator
+Hierarchy:
+    RootParts:
+        - !Border ref!! bb190305-79b3-4f96-a5bd-afaca7e8cc43
+    Parts:
+        -   UIElement: !TextBlock
+                Id: 394f64ef-3b35-4085-aacb-e54e022339cf
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Width: 192.0
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Task Name
+                Text: Task 69420
+                Font: 46cdc443-6b9c-40e3-8265-940e03b07c9f:Shared/Fonts/JB Mono Regular
+                TextSize: 32.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                TextAlignment: Center
+        -   UIElement: !StackPanel
+                Id: 86d377a8-5cd2-4745-ba38-f791df7073aa
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Children:
+                    896396f1f72f6151d048ae8bb791c4e5: !TextBlock ref!! 394f64ef-3b35-4085-aacb-e54e022339cf
+                    d5eeff7e80c4af822f198c80f7f5ef75: !Slider ref!! e062f87b-2dd3-4509-b176-4008bc2aaa69
+        -   UIElement: !Border
+                Id: bb190305-79b3-4f96-a5bd-afaca7e8cc43
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Progress Indicator
+                Padding: {}
+                Content: !StackPanel ref!! 86d377a8-5cd2-4745-ba38-f791df7073aa
+                BorderColor: {R: 0, G: 0, B: 0, A: 255}
+                BorderThickness: {Left: 4.0, Top: 4.0, Right: 4.0, Bottom: 4.0}
+        -   UIElement: !Slider
+                Id: e062f87b-2dd3-4509-b176-4008bc2aaa69
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 5
+                CanBeHitByUser: false
+                Height: 32.0
+                VerticalAlignment: Bottom
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: Progress Slider
+                Value: 0.7
+                TrackBackgroundImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                TrackForegroundImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 12
+                TrackStartingOffsets: {X: -1.0, Y: 0.0}
+                TickImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 8
+                AreTicksDisplayed: true
+                TickOffset: 13.0

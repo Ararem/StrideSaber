@@ -34,42 +34,7 @@
 		<PackageReference Include="Stride.Core.Assets.CompilerApp" Version="4.1.0.1459-beta" IncludeAssets="build;buildTransitive" />
 	</ItemGroup>
 
-	<!-- This lets us write the analyzer logs to file -->
-	<PropertyGroup>
-		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-		<CompilerGeneratedFilesOutputPath>CompilerGenerated</CompilerGeneratedFilesOutputPath>
-	</PropertyGroup>
-
 	<ItemGroup>
-		<!-- Don't include the output from a previous source generator execution into future runs; the */** trick here ensures that there's
-		at least one subdirectory, which is our key that it's coming from a source generator as opposed to something that is coming from
-		some other tool. -->
-		<Compile Remove="$(CompilerGeneratedFilesOutputPath)/*/**/*.cs" />
-		<None Include="CompilerGenerated\StrideSaber.SourceGenerators\StrideSaber.SourceGenerators.StaticInstanceMembersGenerator\Logs.cs" />
-		<Compile Remove="CompilerGenerated\**" />
-		<None Remove="CompilerGenerated\**" />
+	  <ProjectReference Include="..\StrideSaber.Core\StrideSaber.Core.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-		<EmbeddedResource Remove="CompilerGenerated\**" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Reference Include="LibEternal, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<HintPath>..\..\..\C#\LibEternal\LibEternal\LibEternal\bin\Debug\net5.0\LibEternal.dll</HintPath>
-		</Reference>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="SceneSpecific\Main Menu" />
-		<Folder Include="Ui" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\..\..\C#\LibEternal\LibEternal\LibEternal.SourceGenerators\LibEternal.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" SetTargetFramework="TargetFramework=netstandard2.0" />
-	</ItemGroup>
-
-	<PropertyGroup>
-		<PreBuildEvent>msbuild C:\Users\Rowan\Documents\Projects\C#\LibEternal\LibEternal\LibEternal.sln</PreBuildEvent>
-	</PropertyGroup>
 </Project>

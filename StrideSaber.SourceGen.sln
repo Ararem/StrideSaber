@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrideSaber.Windows", "Stri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrideSaber", "StrideSaber\StrideSaber.csproj", "{DD903725-ACF5-4592-A1D5-278EBE81D259}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrideSaber.Core", "StrideSaber.Core\StrideSaber.Core.csproj", "{ED3A921F-1415-4A44-9310-11658184D60D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibEternal.SourceGenerators", "..\..\C#\LibEternal\LibEternal\LibEternal.SourceGenerators\LibEternal.SourceGenerators.csproj", "{87E8063C-CAD0-4D39-BE5D-A00CE77A90C4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibEternal", "..\..\C#\LibEternal\LibEternal\LibEternal\LibEternal.csproj", "{BA2E4AEC-72A8-4F90-9982-953BC6FEB0AA}"
@@ -24,8 +22,6 @@ Global
 		{28BE8A0F-869A-4293-82C4-7EC87045D262}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD903725-ACF5-4592-A1D5-278EBE81D259}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DD903725-ACF5-4592-A1D5-278EBE81D259}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ED3A921F-1415-4A44-9310-11658184D60D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ED3A921F-1415-4A44-9310-11658184D60D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87E8063C-CAD0-4D39-BE5D-A00CE77A90C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{87E8063C-CAD0-4D39-BE5D-A00CE77A90C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA2E4AEC-72A8-4F90-9982-953BC6FEB0AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

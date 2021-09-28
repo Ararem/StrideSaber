@@ -56,7 +56,6 @@
 
 	<ItemGroup>
 		<Folder Include="SceneSpecific\Main Menu" />
-		<Folder Include="Ui" />
 	</ItemGroup>
 
 	<ItemGroup>

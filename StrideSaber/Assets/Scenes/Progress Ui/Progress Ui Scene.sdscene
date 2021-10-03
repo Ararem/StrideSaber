@@ -7,7 +7,30 @@ Offset: {X: 0.0, Y: 0.0, Z: 0.0}
 Hierarchy:
     RootParts:
         - ref!! 8e07e697-dbd7-43f1-9a75-dd5b2325c44c
+        - ref!! 15b154bd-9b92-473b-aaaf-c9c519efe024
     Parts:
+        -   Entity:
+                Id: 15b154bd-9b92-473b-aaaf-c9c519efe024
+                Name: Camera
+                Components:
+                    d3997e64e3c2f296bfba9e4685c6660b: !TransformComponent
+                        Id: 681e44ba-b136-46df-85fe-75cc0ab6a26c
+                        Position*: {X: 0.4, Y: 0.0, Z: 0.75}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    0a026c41f0f40859a75c1fae1e26f598: !CameraComponent
+                        Id: d3942a0a-0a0e-4678-a411-e063535e53bd
+                        Name: Camera
+                        Projection*: Perspective
+                        VerticalFieldOfView: 90.0
+                        NearClipPlane*: 0.1
+                        FarClipPlane*: 1.0
+                        Slot*: 83d9443f-d721-4937-8cff-f193eadd74f8
+            Base:
+                BasePartAsset: 4d4aad72-3e6d-47eb-8be0-8e02f05d7c82:Shared/Prefabs/Camera
+                BasePartId: 75a53506-1488-49f0-88e8-6ca8bd330bad
+                InstanceId: fb5c8c31-c70a-4e41-a696-7f5f0b793b98
         -   Entity:
                 Id: 8e07e697-dbd7-43f1-9a75-dd5b2325c44c
                 Name: UI

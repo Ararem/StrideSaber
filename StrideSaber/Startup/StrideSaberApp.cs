@@ -64,7 +64,10 @@ namespace StrideSaber.Startup
 				//Do cleanup
 				Cleanup();
 				Console.WriteLine("Game exited. Press enter to close console");
-				Console.ReadLine();
+				//Loop until we get an enter key press
+				while (Console.ReadKey(true).Key != ConsoleKey.Enter)
+				{
+				}
 			}
 		}
 

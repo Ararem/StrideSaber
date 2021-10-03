@@ -7,6 +7,9 @@ Cameras:
     de2e75c3b2b23e54162686363f3f138e:
         Id: 83d9443f-d721-4937-8cff-f193eadd74f8
         Name: Main
+    527af868e04dfc51ecfebb6c75d20884*:
+        Id: d0e2fc9b-75ed-43e5-b471-93586ee45378
+        Name: Progress Ui
 RenderStages:
     47116750c1a5d449b4ad3625f71439b3:
         Id: 0b6b7ab3-e854-4998-b81a-c0a8b9c5fbbb

@@ -70,3 +70,4 @@ Hierarchy:
                         Ui: ref!! b5751c8d-a8ea-4b8c-9ceb-ae00022d7f69
                         MainMenuScene: 5481ca0d-e173-467d-bd37-652c0601757e:Scenes/Main Menu/Main Menu Scene
                         UpdateInterval: 1
+                        ProgressUiScene: 1bf77dc4-8155-43c9-b50f-030b1b12ac00:Scenes/Progress Ui/Progress Ui Scene

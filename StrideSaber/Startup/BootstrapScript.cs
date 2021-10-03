@@ -1,20 +1,18 @@
 ﻿using JetBrains.Annotations;
 using LibEternal.ObjectPools;
-using Serilog.Context;
 using Stride.Core.Annotations;
 using Stride.Core.Serialization;
-using Stride.Core.Serialization.Contents;
 using Stride.Engine;
 using Stride.UI;
 using Stride.UI.Controls;
 using Stride.UI.Events;
-using StrideSaber.Ui;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SLog = Serilog.Log;
+
 #pragma warning disable 8618
 
 namespace StrideSaber.Startup
@@ -50,10 +48,19 @@ namespace StrideSaber.Startup
 		/// </summary>
 		[DataMemberRange(1, 1000, 1, 50, 0)] public int UpdateInterval = 100;
 
+		public UrlReference<Scene> ProgressUiScene;
+
 		/// <inheritdoc/>
 		public override async Task Execute()
 		{
 			SLog.Debug("Bootstrap Script executing");
+
+			await Task.Delay(4000);
+			Scene s = Content.Load(ProgressUiScene);
+			SceneSystem.SceneInstance.RootScene.Children.Add(s);
+			SLog.Debug("Loaded Progress Ui");
+			return;
+
 			//Init stuff
 			UIElement root = Ui.Page.RootElement;
 			Button continueButton = root.FindVisualChildOfType<Button>();
@@ -84,8 +91,8 @@ namespace StrideSaber.Startup
 
 			//Ensure our slider scales are correct
 			//At the moment, they're in seconds
-			countdownSlider.Minimum = (float) TimeSpan.Zero.TotalSeconds;
-			countdownSlider.Maximum = (float) AutoStartWaitDuration.TotalSeconds;
+			countdownSlider.Minimum = (float)TimeSpan.Zero.TotalSeconds;
+			countdownSlider.Maximum = (float)AutoStartWaitDuration.TotalSeconds;
 			//TODO: Make this scale properly with the wait duration
 			countdownSlider.Step = 1F;
 			countdownSlider.TickFrequency = 10F;
@@ -104,7 +111,7 @@ namespace StrideSaber.Startup
 				SLog.Verbose("Time Remaining: {TimeRemaining}", remaining);
 
 				countdownText.Text = sb.Clear().AppendFormat("{0:mm':'ss'.'f}", remaining).ToString();
-				countdownSlider.Value = (float) remaining.TotalSeconds;
+				countdownSlider.Value = (float)remaining.TotalSeconds;
 
 				await Task.Delay(UpdateInterval);
 
@@ -113,7 +120,7 @@ namespace StrideSaber.Startup
 				if (remaining <= TimeSpan.Zero)
 					sw.Restart();
 			} while (true);
-			#else
+				#else
 			} while (remaining > TimeSpan.Zero); //Loop until the time remaining is less than or equal to 0
 			#endif
 

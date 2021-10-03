@@ -1,16 +1,24 @@
-﻿using Stride.Engine;
+﻿using JetBrains.Annotations;
+using Stride.Engine;
 using Stride.UI;
 using Stride.UI.Controls;
 using SLog = Serilog.Log;
 
 namespace StrideSaber.SceneSpecific.Main_Menu
 {
+	/// <summary>
+	/// A script that controls the main menu for the game
+	/// </summary>
 	public sealed class MainMenuUiController : StartupScript
 	{
-		public UIComponent Ui;
+		/// <summary>
+		/// The <see cref="UIComponent"/> that this component will be controlling
+		/// </summary>
+		[UsedImplicitly]
+		public UIComponent Ui = null!;
 
-		private Button devModeButton;
-		private Button testButton;
+		private Button devModeButton = null!;
+		private Button testButton = null!;
 
 		/// <inheritdoc />
 		public override void Start()

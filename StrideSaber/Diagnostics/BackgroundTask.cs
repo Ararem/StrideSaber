@@ -1,11 +1,13 @@
 ﻿using ConcurrentCollections;
 using JetBrains.Annotations;
+using Serilog;
 using Stride.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace StrideSaber.Diagnostics
@@ -33,11 +35,16 @@ namespace StrideSaber.Diagnostics
 	/// ]]>
 	/// </code>
 	/// </example>
-	public delegate void BackgroundTaskDelegate(Action<float> updateProgress);
+	public delegate Task BackgroundTaskDelegate(Action<float> updateProgress);
 
 	//TODO: IDisposable (or async)
-	public class BackgroundTask : IIdentifiable, IAsyncDisposable
+	public class BackgroundTask : IIdentifiable
 	{
+		/// <summary>
+		/// If messages should be logged when instances are created and destroyed (completed)
+		/// </summary>
+		public static bool LogLifetimes { get; set; } = true;
+
 		/// <summary>
 		/// An object that can be locked upon for global (static) synchronisation
 		/// </summary>
@@ -49,28 +56,29 @@ namespace StrideSaber.Diagnostics
 		/// <remarks>This value should be considered mutable and may change while being accessed, so should not be accessed directly</remarks>
 		private static readonly ConcurrentHashSet<BackgroundTask> Instances = new();
 
-		private static bool instancesDirty = false;
-
-		/// <summary>
-		/// A field that caches the array version of our instances so that we don't allocate a new one each time
-		/// </summary>
-		private static BackgroundTask[] cachedInstancesArray = Array.Empty<BackgroundTask>();
-
 		/// <summary>
 		/// A <see cref="IReadOnlyCollection{T}">collection</see> that encompasses all the currently running background task instances
 		/// </summary>
-		public static IReadOnlyCollection<BackgroundTask> GetAllInstances()
+		/// <remarks>
+		/// This collection is guaranteed to not be mutated internally
+		/// </remarks>
+		public static IReadOnlyCollection<BackgroundTask> CloneAllInstances()
 		{
 			lock (GlobalLock)
 			{
-				//Update our cache 
-				if (instancesDirty)
-				{
-					cachedInstancesArray = Instances.ToArray();
-					instancesDirty = false;
-				}
+				return Instances.ToArray();
+			}
+		}
 
-				return cachedInstancesArray;
+		/// <inheritdoc cref="Instances"/>
+		public static IReadOnlyCollection<BackgroundTask> UnsafeInstances
+		{
+			get
+			{
+				lock (GlobalLock)
+				{
+					return Instances;
+				}
 			}
 		}
 
@@ -98,8 +106,10 @@ namespace StrideSaber.Diagnostics
 			}
 			protected set
 			{
-				if (value is < 0 or >1)
-					throw new ArgumentOutOfRangeException(nameof(value), value, "The given value must be in the range of [0..1] (inclusive)");
+				//Due to some issues with floating point approximation, I've decided to ignore throwing and just internally clamp
+				value = Math.Clamp(value, 0, 1);
+				// if (value is < 0 or >1)
+				// throw new ArgumentOutOfRangeException(nameof(value), value, "The given value must be in the range of [0..1] (inclusive)");
 				progress = value;
 			}
 		}
@@ -116,73 +126,66 @@ namespace StrideSaber.Diagnostics
 		/// <param name="taskDelegate">The <see cref="BackgroundTaskDelegate"/> function to be executed</param>
 		public BackgroundTask(string name, BackgroundTaskDelegate taskDelegate)
 		{
-			lock (GlobalLock)
-			{
-				Instances.Add(this);
-			}
-
-			Task = null;
 			Name = name;
-			awaiter = new BackgroundTaskAwaiter(this);
-			this.taskDelegate = taskDelegate;
+			//awaiter = new BackgroundTaskAwaiter(this);
+			if(LogLifetimes)
+				Log.Verbose("Created new BackgroundTask {Task}", this);
+			AddThis();
+			TaskDelegate = taskDelegate;
+			Task = Task.Run(TaskRunInternal);
 		}
 
-		public void Run()
+		private async Task TaskRunInternal()
 		{
-			if (isDisposed) throw new ObjectDisposedException(Name);
-			Task = Task.Run(async delegate
-			{
-				//Call the user task delegate
-				taskDelegate(
-						//Essentially, evey time the user calls updateProgress (the parameter)
-						//We update our property
-						UpdateThisInstanceProgress
-				);
-				//Now mark as disposed because the user work has completed
-				await DisposeAsync();
-			});
+			UpdateThisInstanceProgress(0);
+			//Call the user task delegate
+			await TaskDelegate(
+					//Essentially, evey time the user calls updateProgress (the parameter)
+					//We update our property
+					UpdateThisInstanceProgress
+			);
+			UpdateThisInstanceProgress(1);
+			//Now mark as disposed because the user work has completed
+			Dispose();
 		}
 
-		private void UpdateThisInstanceProgress(float progress)
+		private void UpdateThisInstanceProgress(float _progress)
 		{
 			if (isDisposed) throw new ObjectDisposedException(ToString());
-			Progress = progress;
-			lock (GlobalLock)
-			{
-				instancesDirty = true;
-			}
+			Progress = _progress;
 		}
 
 		/// <summary>
 		/// The <see cref="System.Threading.Tasks.Task"/> that is associated with the current instance
 		/// </summary>
-		public Task? Task { get; private set; }
+		public Task Task { get; private set; }
 
 		/// <summary>
-		/// The delegate that will be run in the background thread
+		/// The <see cref="BackgroundTaskDelegate"/> that this instance is running
 		/// </summary>
-		private readonly BackgroundTaskDelegate taskDelegate;
+		public BackgroundTaskDelegate TaskDelegate { get; private set; }
 
 		/// <summary>
 		/// Returns the awaiter for this instance
 		/// </summary>
 		[PublicAPI]
-		public BackgroundTaskAwaiter GetAwaiter()
+		public TaskAwaiter GetAwaiter()
 		{
-			return awaiter;
+			return Task.GetAwaiter();
 		}
 
-		/// <summary>
-		/// The cached awaiter for this instance
-		/// </summary>
-		private readonly BackgroundTaskAwaiter awaiter;
+		// /// <summary>
+		// /// The cached awaiter for this instance
+		// /// </summary>
+		// private readonly BackgroundTaskAwaiter awaiter;
 
 		private bool isDisposed = false;
 
-		/// <inheritdoc />
-		public async ValueTask DisposeAsync()
+		private void Dispose()
 		{
 			if (isDisposed) return;
+			if(LogLifetimes)
+				Log.Verbose("Disposing BackgroundTask {Task}", this);
 			isDisposed = true;
 			RemoveThis();
 			Task = null!;
@@ -192,63 +195,89 @@ namespace StrideSaber.Diagnostics
 
 		private void RemoveThis()
 		{
+			if(LogLifetimes)
+				Log.Verbose("Removing BackgroundTask {Task}", this);
 			lock (GlobalLock)
 			{
 				Instances.TryRemove(this);
-				instancesDirty = true;
 			}
 		}
 
 		private void AddThis()
 		{
+			if(LogLifetimes)
+				Log.Verbose("Adding BackgroundTask {Task}", this);
 			lock (GlobalLock)
 			{
 				Instances.Add(this);
-				instancesDirty = true;
 			}
 		}
 
 	#endregion
-	}
-
-	/// <summary>
-	/// An awaiter for the <see cref="BackgroundTask"/> type, allowing use of the <see langword="await"/> keyword
-	/// </summary>
-	public readonly struct BackgroundTaskAwaiter : INotifyCompletion
-	{
-		private readonly BackgroundTask instance;
-
-		/// <summary>
-		/// Constructs a new <see cref="BackgroundTaskAwaiter"/> for the <see cref="BackgroundTask"/> <paramref name="instance"/>
-		/// </summary>
-		/// <param name="instance">The <see cref="BackgroundTask"/> to create the awaiter for</param>
-		public BackgroundTaskAwaiter(BackgroundTask instance)
-		{
-			this.instance = instance;
-		}
 
 		/// <inheritdoc />
-		public void OnCompleted(Action continuation)
+		public override string ToString()
 		{
-			Task.Run(continuation);
+			return $"BackgroundTask \"{Name}\" Id \"{Id}\": {Progress:p0} complete";
 		}
 
 		/// <summary>
-		/// Gets the result for this awaitable instance
+		/// The same as <see cref="ToString"/> but includes a progress bar
 		/// </summary>
-		/// <remarks>Does nothing under the hood (empty method body)</remarks>
-		[PublicAPI]
-		#pragma warning disable CA1822
-		public void GetResult()
+		public string ToStringBar()
 		{
+			const int progressSegments = 25;
+			const char fullChar = '=';
+			const char emptyChar = '-';
+			Span<char> progressBar = stackalloc char[progressSegments];
+			int lastFullChar = (int)MathF.Floor((Progress) * progressSegments);
+			for (int i = 0; i < progressSegments; i++)
+				//Fill depending on if we've reached the last full segment yet
+				progressBar[i] = i <= lastFullChar ? fullChar : emptyChar;
+			return $"BackgroundTask \"{Name}\"\tId \"{Id}\":\t{Progress:p0} complete\t[{new string(progressBar)}]";
 		}
-		#pragma warning restore CA1822
-
-		// ReSharper disable once CompareOfFloatsByEqualityOperator
-		/// <summary>
-		/// Gets whether the <see cref="BackgroundTask"/> has completed
-		/// </summary>
-		[PublicAPI]
-		public bool IsCompleted => instance.Progress == 1f;
 	}
+	
+	// /// <summary>
+	// ReSharper disable CommentTypo
+	// /// An awaiter for the <see cref="BackgroundTask"/> type, allowing use of the <see langword="await"/> keyword
+	// /// </summary>
+	// public readonly struct BackgroundTaskAwaiter : INotifyCompletion
+	// {
+	// 	private readonly BackgroundTask instance;
+	//
+	// 	/// <summary>
+	// 	/// Constructs a new <see cref="BackgroundTaskAwaiter"/> for the <see cref="BackgroundTask"/> <paramref name="instance"/>
+	// 	/// </summary>
+	// 	/// <param name="instance">The <see cref="BackgroundTask"/> to create the awaiter for</param>
+	// 	public BackgroundTaskAwaiter(BackgroundTask instance)
+	// 	{
+	// 		this.instance = instance;
+	// 	}
+	//
+	// 	/// <inheritdoc />
+	// 	public void OnCompleted(Action continuation)
+	// 	{
+	// 		Task.Run(continuation);
+	// 	}
+	//
+	// 	/// <summary>
+	// 	/// Gets the result for this awaitable instance
+	// 	/// </summary>
+	// 	/// <remarks>Does nothing under the hood (empty method body)</remarks>
+	// 	[PublicAPI]
+	// 	#pragma warning disable CA1822
+	// 	public void GetResult()
+	// 	{
+	// 	}
+	// 	#pragma warning restore CA1822
+	//
+	// 	// ReSharper disable once CompareOfFloatsByEqualityOperator
+	// 	/// <summary>
+	// 	/// Gets whether the <see cref="BackgroundTask"/> has completed
+	// 	/// </summary>
+	// 	[PublicAPI]
+	// 	public bool IsCompleted => instance.Progress == 1f;
+	// }
+	// ReSharper restore CommentTypo
 }

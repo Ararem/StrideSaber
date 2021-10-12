@@ -130,6 +130,7 @@ Hierarchy:
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
+                Name: Task View
                 Children:
                     896396f1f72f6151d048ae8bb791c4e5: !TextBlock ref!! 50325a35-7517-4dfd-8258-c5802048986a
                     d5eeff7e80c4af822f198c80f7f5ef75: !Slider ref!! 678acb09-140b-4054-9c74-9191cfa94006
@@ -184,6 +185,7 @@ Hierarchy:
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
+                Name: Task View
                 Children:
                     896396f1f72f6151d048ae8bb791c4e5: !TextBlock ref!! f8d4e7f0-4ba7-47bd-8b02-db48baa234df
                     d5eeff7e80c4af822f198c80f7f5ef75: !Slider ref!! 1a6c4e21-ab00-406a-9773-aea87bdeb192
@@ -267,6 +269,7 @@ Hierarchy:
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
+                Name: Task View
                 Children:
                     896396f1f72f6151d048ae8bb791c4e5: !TextBlock ref!! f18d26d2-93c5-473c-8be2-0ac5adb9089f
                     d5eeff7e80c4af822f198c80f7f5ef75: !Slider ref!! 08994704-95d5-444e-9c24-f44718c2dbe7
@@ -389,6 +392,7 @@ Hierarchy:
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
+                Name: Task View
                 Children:
                     896396f1f72f6151d048ae8bb791c4e5: !TextBlock ref!! 83fd771f-86f2-43dc-90f0-711df4c77a7d
                     d5eeff7e80c4af822f198c80f7f5ef75: !Slider ref!! 15486ad1-1d8d-4dbc-a2cb-f68541d0df41

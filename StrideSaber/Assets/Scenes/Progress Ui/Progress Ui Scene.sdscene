@@ -26,7 +26,7 @@ Hierarchy:
                         VerticalFieldOfView: 90.0
                         NearClipPlane*: 0.1
                         FarClipPlane*: 1.0
-                        Slot*: 83d9443f-d721-4937-8cff-f193eadd74f8
+                        Slot*: d0e2fc9b-75ed-43e5-b471-93586ee45378
             Base:
                 BasePartAsset: 4d4aad72-3e6d-47eb-8be0-8e02f05d7c82:Shared/Prefabs/Camera
                 BasePartId: 75a53506-1488-49f0-88e8-6ca8bd330bad
@@ -49,6 +49,9 @@ Hierarchy:
                         ResolutionStretch: FixedHeightAdaptableWidth
                     976dd9e876e61ac41ab157cdf77d64a0: !StrideSaber.Hacks.AutoAspectRatioComponent,StrideSaber
                         Id: c6718cdb-fb42-484b-8612-0f7cfac607be
+                    68c0469c7cb7756aee5e3239593f683a*: !StrideSaber.SceneSpecific.Progress_Ui.ProgressUiController,StrideSaber
+                        Id: 6c62d49a-661b-4bc1-a21d-519642736556
+                        Ui: ref!! aebf542a-f947-4583-8dc3-7e0c93b25723
             Base:
                 BasePartAsset: 4e4cb7df-17e2-46b2-955b-7613548fbcfd:Shared/Prefabs/Ui
                 BasePartId: 8a1d01ad-1c34-4e97-ada6-61b07205e3a2

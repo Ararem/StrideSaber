@@ -34,6 +34,7 @@ Hierarchy:
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
+                Name: Task View
                 Children:
                     896396f1f72f6151d048ae8bb791c4e5: !TextBlock ref!! 394f64ef-3b35-4085-aacb-e54e022339cf
                     d5eeff7e80c4af822f198c80f7f5ef75: !Slider ref!! e062f87b-2dd3-4509-b176-4008bc2aaa69

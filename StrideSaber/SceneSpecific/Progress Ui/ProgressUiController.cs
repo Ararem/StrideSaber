@@ -8,6 +8,7 @@ using Stride.UI.Panels;
 using StrideSaber.Diagnostics;
 using StrideSaber.Startup;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,9 @@ using SLog = Serilog.Log;
 
 namespace StrideSaber.SceneSpecific.Progress_Ui
 {
+	/// <summary>
+	/// A script that controls UI elements to display the progress of all the currently running <see cref="BackgroundTask"/> instances
+	/// </summary>
 	[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 	public class ProgressUiController : SyncScript
 	{
@@ -43,6 +47,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 
 		private static Random r = new();
 
+		[SuppressMessage("ReSharper","All")]
 		private static async Task AsyncTaskCreator()
 		{
 			_ = new BackgroundTask("Fps", FpsTask);
@@ -56,6 +61,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			}
 		}
 
+		[SuppressMessage("ReSharper","All")]
 		private static async Task FpsTask(Action<float> updateProgress)
 		{
 			while (true)
@@ -65,6 +71,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			}
 		}
 
+		[SuppressMessage("ReSharper","All")]
 		private static async Task AsyncTaskTest(Action<float> updateProgress)
 		{
 			DateTime start = DateTime.Now;

@@ -8,7 +8,7 @@ namespace StrideSaber.SceneManagement
 	{
 		public static async Task LoadSceneAsync(this UrlReference<Scene> sceneRef)
 		{
-			
+
 		}
 	}
 }

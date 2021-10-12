@@ -48,6 +48,9 @@ namespace StrideSaber.Startup
 		/// </summary>
 		[DataMemberRange(1, 1000, 1, 50, 0)] public int UpdateInterval = 100;
 
+		/// <summary>
+		/// The <see cref="Scene"/> that should be loaded for the progress UI
+		/// </summary>
 		public UrlReference<Scene> ProgressUiScene;
 
 		/// <inheritdoc/>
@@ -55,11 +58,10 @@ namespace StrideSaber.Startup
 		{
 			SLog.Debug("Bootstrap Script executing");
 
-			await Task.Delay(2000);
-			Scene s = Content.Load(ProgressUiScene);
+			SLog.Debug("Loading progress UI asynchronously");
+			Scene s = await Content.LoadAsync(ProgressUiScene);
 			SceneSystem.SceneInstance.RootScene.Children.Add(s);
 			SLog.Debug("Loaded Progress Ui");
-			return;
 
 			//Init stuff
 			UIElement root = Ui.Page.RootElement;

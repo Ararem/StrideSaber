@@ -36,7 +36,10 @@ namespace StrideSaber.Diagnostics
 	public delegate Task BackgroundTaskDelegate(Action<float> updateProgress);
 
 	//TODO: IDisposable (or async)
-	public class BackgroundTask : IIdentifiable
+	/// <summary>
+	/// A task-like type that can be used to create tasks whose progress can be tracked and displayed to the user
+	/// </summary>
+	public sealed class BackgroundTask : IIdentifiable
 	{
 		/// <summary>
 		/// If messages should be logged when instances are created and destroyed (completed), or an error occurs
@@ -102,7 +105,7 @@ namespace StrideSaber.Diagnostics
 						_   => progress
 				};
 			}
-			protected set
+			private set
 			{
 				//Due to some issues with floating point approximation, I've decided to ignore throwing and just internally clamp
 				value = Math.Clamp(value, 0, 1);
@@ -158,6 +161,8 @@ namespace StrideSaber.Diagnostics
 			}
 		}
 
+		// ReSharper disable once InconsistentNaming
+		//I purposefully want the name to be wrong so I don't get confused
 		private void UpdateThisInstanceProgress(float _progress)
 		{
 			if (isDisposed) throw new ObjectDisposedException(ToString());

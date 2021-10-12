@@ -23,7 +23,8 @@ namespace StrideSaber.Startup
 			Log.Debug("Setting size and position of window");
 			window.Position = Int2.Zero;
 			window.SetSize(new Int2(1280, 720));
-			Log.Error("{X}", window.ClientBounds);
+
+			Log.Debug("Window Bounds: {WindowBounds}", window.ClientBounds);
 		}
 	}
 }

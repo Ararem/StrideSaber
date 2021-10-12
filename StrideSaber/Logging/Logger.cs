@@ -7,6 +7,7 @@ using Stride.Core.Diagnostics;
 using StrideSaber.EventManagement;
 using StrideSaber.EventManagement.Events;
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace StrideSaber.Logging
@@ -86,25 +87,59 @@ namespace StrideSaber.Logging
 		///  A little method that fixes the stride logging system so that it only does what I want it to do
 		/// </summary>
 		//As to why I have the method hooked up to an event, it's because Stride actually hooks up it's logger in the constructor for the Game
-		/*
-    public Game()
-    {
-      this.logListener = this.GetLogListener();
-      if (this.logListener != null)
-=====>   GlobalLogger.GlobalMessageLogged += (Action<ILogMessage>) this.logListener;
-      ...
-    }
-		 */
+		//     public Game()
+		//     {
+		//       this.logListener = this.GetLogListener();
+		//       if (this.logListener != null)
+		// =====>   GlobalLogger.GlobalMessageLogged += (Action<ILogMessage>) this.logListener;
+		//       ...
+		//     }
 		//Which means I have to call this after the constructor, so we use an event instead of doing it manually
 		[EventMethod(typeof(GameLoadEvent))]
-		private static void HookAndDisableStrideDefaultLogger(Event? _)
+		private static void HookAndDisableStrideConsoleLogger(Event? _)
 		{
-			Log.Information("Hooking and disabling stride logging system");
+			Log.Information("Hooking and disabling stride console logging system");
 			//TODO: Instead of clearing just removing the annoying stride part
 			//Here I'm clearing the event because stride sets up it's own handler which I don't want
 			//(Otherwise you would get duped logs when debugging which is annoying)
 			//This is because by default stride logs to the console, but I'm doing that myself
-			typeof(GlobalLogger).GetField(nameof(GlobalLogger.GlobalMessageLogged), BindingFlags.Static | BindingFlags.NonPublic)!.SetValue(null, null);
+			//typeof(GlobalLogger).GetField(nameof(GlobalLogger.GlobalMessageLogged), BindingFlags.Static | BindingFlags.NonPublic)!.GetValue(null);
+			//typeof(GlobalLogger).GetEvent(nameof(GlobalLogger.GlobalMessageLogged))
+			//                    .RemoveMethod.Invoke( //Try and remove a method from the event
+			//		                    null,         //The event is static so it doesn't have a target
+			//		                    new object[]{
+			//				                    typeof(GlobalLogger).GetField(nameof(GlobalLogger.GlobalMessageLogged), BindingFlags.Static | BindingFlags.NonPublic)!.GetValue(null) //Try and remove the action that is currently
+			//		                    }
+			//                    )
+			//Get the event info that corresponds to the event called when a message is logged (the one we want to modify)
+			EventInfo? eventInfo = typeof(GlobalLogger).GetEvent(nameof(GlobalLogger.GlobalMessageLogged));
+			if (eventInfo is null)
+			{
+				Log.Warning("Could not find event {EventName} in class {Type} to modify", nameof(GlobalLogger.GlobalMessageLogged), typeof(GlobalLogger));
+				return;
+			}
+
+			//Find the action we want to remove
+			const string serilogMethodName = "OnLogInternal";
+			MethodInfo? toRemoveMethodInfo = typeof(LogListener).GetMethod(serilogMethodName, BindingFlags.Instance | BindingFlags.NonPublic);
+			if (toRemoveMethodInfo is null)
+			{
+				Log.Warning("Could not find internal serilog method {MethodName} in class {Type} to modify", serilogMethodName, typeof(LogListener));
+				return;
+			}
+
+			FieldInfo? backingField = typeof(GlobalLogger).GetField(nameof(GlobalLogger.GlobalMessageLogged), BindingFlags.Static | BindingFlags.NonPublic);
+			if (backingField is null)
+			{
+				Log.Warning("Could not find backing field for event {EventName} in class {Type}", nameof(GlobalLogger.GlobalMessageLogged), typeof(GlobalLogger));
+				return;
+			}
+
+			Delegate toRemoveDelegate = ((Action<ILogMessage>)backingField.GetValue(null)!)
+			                            // Go through the methods added and find the one that points to the method we're trying to remove
+			                            .GetInvocationList().First(d => d.Method.Equals(toRemoveMethodInfo));
+
+			eventInfo.RemoveEventHandler(null, toRemoveDelegate);
 			//Hook our logger up to stride's system
 			GlobalLogger.GlobalMessageLogged += GlobalLogger_OnGlobalMessageLogged;
 			Log.Information("Stride log redirection complete");

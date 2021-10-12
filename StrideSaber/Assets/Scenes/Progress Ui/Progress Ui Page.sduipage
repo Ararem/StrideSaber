@@ -46,6 +46,7 @@ Hierarchy:
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
+                Name: All StackPanel
                 Children:
                     cd0884fa0a62ff270267e9213cc65d53: !TextBlock ref!! 60ac4659-936b-4dd1-a176-3a5d610bc1e3
                     4e94584adbaa4b27fc4828e9681135f3: !StackPanel ref!! 434da89c-4922-4417-b32d-f68de15f4be4
@@ -117,6 +118,7 @@ Hierarchy:
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
+                Name: Indicators
                 Children:
                     5368188a68275c7c3e1f865d90a0a114: !Border ref!! ca971369-8c71-4a6c-b1e3-bd93192ec66e
                     06378c94297aa8be802ebe74c12ef857: !Border ref!! dd8b0339-3d6c-4728-ba93-43c41b4aa0f0
@@ -152,7 +154,7 @@ Hierarchy:
                 Padding: {}
                 Content: !StackPanel ref!! 44c91d08-5c96-4e9b-a293-980876c97734
                 BorderColor: {R: 0, G: 0, B: 0, A: 255}
-                BorderThickness: {Left: 4.0, Top: 4.0, Right: 4.0, Bottom: 4.0}
+                BorderThickness: {Left: 4.0, Top: 2.0, Right: 4.0, Bottom: 6.0}
             Base:
                 BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
                 BasePartId: bb190305-79b3-4f96-a5bd-afaca7e8cc43
@@ -256,7 +258,7 @@ Hierarchy:
                 Padding: {}
                 Content: !StackPanel ref!! f73a3d6e-aa9c-46a3-b127-ef0b48267795
                 BorderColor: {R: 0, G: 0, B: 0, A: 255}
-                BorderThickness: {Left: 4.0, Top: 4.0, Right: 4.0, Bottom: 4.0}
+                BorderThickness: {Left: 4.0, Top: 2.0, Right: 4.0, Bottom: 6.0}
             Base:
                 BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
                 BasePartId: bb190305-79b3-4f96-a5bd-afaca7e8cc43
@@ -315,13 +317,13 @@ Hierarchy:
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 64}
                 Width: 512.0
-                Height: 512.0
                 HorizontalAlignment: Right
                 VerticalAlignment: Top
                 Margin: {}
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
+                Name: Border
                 Padding: {}
                 Content: !StackPanel ref!! 140c64c5-0616-4a4a-a4b3-f77c89ddc5b6
                 BorderColor: {R: 255, G: 255, B: 255, A: 255}
@@ -330,6 +332,7 @@ Hierarchy:
                 Id: ca971369-8c71-4a6c-b1e3-bd93192ec66e
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                IsEnabled*: true
                 HorizontalAlignment: Center
                 VerticalAlignment: Center
                 Margin: {}
@@ -340,7 +343,7 @@ Hierarchy:
                 Padding: {}
                 Content: !StackPanel ref!! 836def08-16f6-4ca3-bd85-535164d8712d
                 BorderColor: {R: 0, G: 0, B: 0, A: 255}
-                BorderThickness: {Left: 4.0, Top: 4.0, Right: 4.0, Bottom: 4.0}
+                BorderThickness: {Left: 4.0, Top: 2.0, Right: 4.0, Bottom: 6.0}
             Base:
                 BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
                 BasePartId: bb190305-79b3-4f96-a5bd-afaca7e8cc43
@@ -359,7 +362,7 @@ Hierarchy:
                 Padding: {}
                 Content: !StackPanel ref!! 56d1a826-0503-44e9-99e2-a0bf028d6f95
                 BorderColor: {R: 0, G: 0, B: 0, A: 255}
-                BorderThickness: {Left: 4.0, Top: 4.0, Right: 4.0, Bottom: 4.0}
+                BorderThickness: {Left: 4.0, Top: 2.0, Right: 4.0, Bottom: 6.0}
             Base:
                 BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
                 BasePartId: bb190305-79b3-4f96-a5bd-afaca7e8cc43

@@ -5,6 +5,7 @@ using Stride.Engine;
 using StrideSaber.EventManagement;
 using StrideSaber.EventManagement.Events;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using Logger = StrideSaber.Logging.Logger;
 
@@ -44,7 +45,8 @@ namespace StrideSaber.Startup
 				EventManager.Init();
 
 				using Game game = CurrentGame = new Game();
-				game.WindowMinimumUpdateRate.SetMaxFrequency(30 /*fps*/); //Throttle the
+				game.WindowMinimumUpdateRate.SetMaxFrequency(120 /*fps*/);         //Cap the max fps
+				game.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false; //No VSync
 				//Set up an unhanded exception handler
 				game.UnhandledException += (s, e) => OnUnhandledException(s, (Exception) e.ExceptionObject);
 				EventManager.FireEventSafeLogged(new GameLoadEvent(CurrentGame));

@@ -8,5 +8,5 @@ FontType: !SignedDistanceFieldSpriteFontType
     CharacterSet: null
     CharacterRegions:
         8fad0feb815ea4c2483abfd3af9b68cf:
-            Start: ' '
-            End: "\x7F"
+            Start: "\0"
+            End: "ÿ"

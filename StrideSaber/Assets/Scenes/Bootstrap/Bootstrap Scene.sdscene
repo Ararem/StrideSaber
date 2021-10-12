@@ -12,7 +12,7 @@ Hierarchy:
     Parts:
         -   Entity:
                 Id: 42706429-7563-48b3-b79b-83c206e55f5c
-                Name: UI
+                Name*: Bootstrap UI
                 Components:
                     0c3ad140b767c2b64967ea7e5eb1aac4: !TransformComponent
                         Id: 1bc53cd4-d31f-40c7-8033-6c3ad601d7b7
@@ -35,7 +35,7 @@ Hierarchy:
                 InstanceId: 3580ff14-961e-4145-b21d-239ba631a2e5
         -   Entity:
                 Id: 853e0a34-9ea7-47f4-a6ba-ba3ea53f09cd
-                Name: Camera
+                Name*: Bootstrap Camera
                 Components:
                     d3997e64e3c2f296bfba9e4685c6660b: !TransformComponent
                         Id: c2074193-3e46-4f75-8eb0-537db2569d78

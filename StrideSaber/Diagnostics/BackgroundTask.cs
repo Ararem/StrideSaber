@@ -41,9 +41,9 @@ namespace StrideSaber.Diagnostics
 	public class BackgroundTask : IIdentifiable
 	{
 		/// <summary>
-		/// If messages should be logged when instances are created and destroyed (completed)
+		/// If messages should be logged when instances are created and destroyed (completed), or an error occurs
 		/// </summary>
-		public static bool LogLifetimes { get; set; } = true;
+		public static bool LogInternalEvents { get; set; } = false;
 
 		/// <summary>
 		/// An object that can be locked upon for global (static) synchronisation
@@ -128,7 +128,7 @@ namespace StrideSaber.Diagnostics
 		{
 			Name = name;
 			//awaiter = new BackgroundTaskAwaiter(this);
-			if(LogLifetimes)
+			if(LogInternalEvents)
 				Log.Verbose("Created new BackgroundTask {Task}", this);
 			AddThis();
 			TaskDelegate = taskDelegate;
@@ -138,15 +138,26 @@ namespace StrideSaber.Diagnostics
 		private async Task TaskRunInternal()
 		{
 			UpdateThisInstanceProgress(0);
-			//Call the user task delegate
-			await TaskDelegate(
-					//Essentially, evey time the user calls updateProgress (the parameter)
-					//We update our property
-					UpdateThisInstanceProgress
-			);
-			UpdateThisInstanceProgress(1);
-			//Now mark as disposed because the user work has completed
-			Dispose();
+			try
+			{
+				//Call the user task delegate
+				await TaskDelegate(
+						//Essentially, evey time the user calls updateProgress (the parameter)
+						//We update our property
+						UpdateThisInstanceProgress
+				);
+			}
+			catch (Exception e)
+			{
+				if(LogInternalEvents)
+					Log.Warning(e, "Caught exception when running task {BackgroundTask}", this);
+			}
+			finally
+			{
+				UpdateThisInstanceProgress(1);
+				//Now mark as disposed because the user work has completed
+				Dispose();
+			}
 		}
 
 		private void UpdateThisInstanceProgress(float _progress)
@@ -184,7 +195,7 @@ namespace StrideSaber.Diagnostics
 		private void Dispose()
 		{
 			if (isDisposed) return;
-			if(LogLifetimes)
+			if(LogInternalEvents)
 				Log.Verbose("Disposing BackgroundTask {Task}", this);
 			isDisposed = true;
 			RemoveThis();
@@ -195,7 +206,7 @@ namespace StrideSaber.Diagnostics
 
 		private void RemoveThis()
 		{
-			if(LogLifetimes)
+			if(LogInternalEvents)
 				Log.Verbose("Removing BackgroundTask {Task}", this);
 			lock (GlobalLock)
 			{
@@ -205,7 +216,7 @@ namespace StrideSaber.Diagnostics
 
 		private void AddThis()
 		{
-			if(LogLifetimes)
+			if(LogInternalEvents)
 				Log.Verbose("Adding BackgroundTask {Task}", this);
 			lock (GlobalLock)
 			{
@@ -237,7 +248,7 @@ namespace StrideSaber.Diagnostics
 			return $"BackgroundTask \"{Name}\"\tId \"{Id}\":\t{Progress:p0} complete\t[{new string(progressBar)}]";
 		}
 	}
-	
+
 	// /// <summary>
 	// ReSharper disable CommentTypo
 	// /// An awaiter for the <see cref="BackgroundTask"/> type, allowing use of the <see langword="await"/> keyword

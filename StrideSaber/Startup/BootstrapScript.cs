@@ -55,7 +55,7 @@ namespace StrideSaber.Startup
 		{
 			SLog.Debug("Bootstrap Script executing");
 
-			await Task.Delay(4000);
+			await Task.Delay(2000);
 			Scene s = Content.Load(ProgressUiScene);
 			SceneSystem.SceneInstance.RootScene.Children.Add(s);
 			SLog.Debug("Loaded Progress Ui");

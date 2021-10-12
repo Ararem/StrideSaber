@@ -11,7 +11,7 @@ Hierarchy:
     Parts:
         -   Entity:
                 Id: 15b154bd-9b92-473b-aaaf-c9c519efe024
-                Name: Camera
+                Name*: Progress Camera
                 Components:
                     d3997e64e3c2f296bfba9e4685c6660b: !TransformComponent
                         Id: 681e44ba-b136-46df-85fe-75cc0ab6a26c
@@ -27,13 +27,9 @@ Hierarchy:
                         NearClipPlane*: 0.1
                         FarClipPlane*: 1.0
                         Slot*: d0e2fc9b-75ed-43e5-b471-93586ee45378
-            Base:
-                BasePartAsset: 4d4aad72-3e6d-47eb-8be0-8e02f05d7c82:Shared/Prefabs/Camera
-                BasePartId: 75a53506-1488-49f0-88e8-6ca8bd330bad
-                InstanceId: fb5c8c31-c70a-4e41-a696-7f5f0b793b98
         -   Entity:
                 Id: 8e07e697-dbd7-43f1-9a75-dd5b2325c44c
-                Name: UI
+                Name*: Progress UI
                 Components:
                     0c3ad140b767c2b64967ea7e5eb1aac4: !TransformComponent
                         Id: f04b2a12-84b0-48a3-9e2d-476c9b7b0155
@@ -52,6 +48,7 @@ Hierarchy:
                     68c0469c7cb7756aee5e3239593f683a*: !StrideSaber.SceneSpecific.Progress_Ui.ProgressUiController,StrideSaber
                         Id: 6c62d49a-661b-4bc1-a21d-519642736556
                         Ui: ref!! aebf542a-f947-4583-8dc3-7e0c93b25723
+                        LibraryReference: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
             Base:
                 BasePartAsset: 4e4cb7df-17e2-46b2-955b-7613548fbcfd:Shared/Prefabs/Ui
                 BasePartId: 8a1d01ad-1c34-4e97-ada6-61b07205e3a2

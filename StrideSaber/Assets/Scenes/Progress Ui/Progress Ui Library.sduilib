@@ -52,7 +52,7 @@ Hierarchy:
                 Padding: {}
                 Content: !StackPanel ref!! 86d377a8-5cd2-4745-ba38-f791df7073aa
                 BorderColor: {R: 0, G: 0, B: 0, A: 255}
-                BorderThickness: {Left: 4.0, Top: 4.0, Right: 4.0, Bottom: 4.0}
+                BorderThickness: {Left: 4.0, Top: 2.0, Right: 4.0, Bottom: 6.0}
         -   UIElement: !Slider
                 Id: e062f87b-2dd3-4509-b176-4008bc2aaa69
                 DependencyProperties: {}

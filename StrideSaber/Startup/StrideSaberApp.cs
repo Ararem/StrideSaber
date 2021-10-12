@@ -5,7 +5,6 @@ using Stride.Engine;
 using StrideSaber.EventManagement;
 using StrideSaber.EventManagement.Events;
 using System;
-using System.Diagnostics;
 using System.Threading;
 using Logger = StrideSaber.Logging.Logger;
 

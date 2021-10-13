@@ -30,7 +30,7 @@ Hierarchy:
                 Id: 86d377a8-5cd2-4745-ba38-f791df7073aa
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
-                Margin: {}
+                Margin: {Left: 4.0, Right: 2.0}
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
@@ -66,16 +66,17 @@ Hierarchy:
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
                 Name: Progress Slider
-                Value: 0.7
-                TrackBackgroundImage: !SpriteFromSheet
-                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
-                    CurrentFrame: 1
-                TrackForegroundImage: !SpriteFromSheet
-                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
-                    CurrentFrame: 12
+                Value: 0.766
+                TrackBackgroundImage: !SpriteFromTexture
+                    Texture: 475b8248-d3d5-4ded-832d-5cbe395d6b36:Shared/UI/Textures/Grey_1x1
+                    Center: {X: 0.0, Y: 0.0}
+                TrackForegroundImage: !SpriteFromTexture
+                    Texture: 68b46292-35ad-499c-9625-9056963c2ec0:Shared/UI/Textures/LightGrey_1x1
+                    Center: {X: 0.0, Y: 0.0}
                 TrackStartingOffsets: {X: -1.0, Y: 0.0}
-                TickImage: !SpriteFromSheet
-                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
-                    CurrentFrame: 8
+                TickImage: !SpriteFromTexture
+                    Texture: e5fd2076-8b3b-458f-9ec0-6dbbb30dce9c:Shared/UI/Textures/SemiLightGrey_1x1
+                    PixelsPerUnit: 50.0
+                    Center: {X: 0.0, Y: 0.0}
                 AreTicksDisplayed: true
-                TickOffset: 13.0
+                TickOffset: 0.0

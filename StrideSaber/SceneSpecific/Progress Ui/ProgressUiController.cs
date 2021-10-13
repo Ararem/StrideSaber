@@ -1,7 +1,11 @@
 ﻿using JetBrains.Annotations;
 using LibEternal.ObjectPools;
+using SharpDX.Direct3D11;
+using Stride.Core.Mathematics;
 using Stride.Core.Serialization;
 using Stride.Engine;
+using Stride.Graphics;
+using Stride.Rendering.Sprites;
 using Stride.UI;
 using Stride.UI.Controls;
 using Stride.UI.Panels;
@@ -26,6 +30,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 		/// The <see cref="UIComponent"/> that this script will control
 		/// </summary>
 		public UIComponent Ui = null!;
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -34,7 +39,8 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 		private UILibrary library = null!;
 		private StackPanel indicatorsPanel = null!;
 
-		#region Testing
+	#region Testing
+
 		/// <inheritdoc />
 		public override void Start()
 		{
@@ -47,7 +53,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 
 		private static Random r = new();
 
-		[SuppressMessage("ReSharper","All")]
+		[SuppressMessage("ReSharper", "All")]
 		private static async Task AsyncTaskCreator()
 		{
 			_ = new BackgroundTask("Fps", FpsTask);
@@ -57,21 +63,21 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				int delay = r.Next(1000, 7000);
 				await Task.Delay(delay);
 				if (BackgroundTask.UnsafeInstances.Count < 10)
-					_ = new BackgroundTask($"Test task {++i}", AsyncTaskTest);
+					_ = new BackgroundTask($"Test task {++i}", AsyncTaskTest) { Id = Guid.Empty };
 			}
 		}
 
-		[SuppressMessage("ReSharper","All")]
+		[SuppressMessage("ReSharper", "All")]
 		private static async Task FpsTask(Action<float> updateProgress)
 		{
 			while (true)
 			{
-				updateProgress(StrideSaberApp.CurrentGame.UpdateTime.FramePerSecond/100);
+				updateProgress(StrideSaberApp.CurrentGame.UpdateTime.FramePerSecond / 100);
 				await Task.Delay(1);
 			}
 		}
 
-		[SuppressMessage("ReSharper","All")]
+		[SuppressMessage("ReSharper", "All")]
 		private static async Task AsyncTaskTest(Action<float> updateProgress)
 		{
 			DateTime start = DateTime.Now;
@@ -81,20 +87,33 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				await Task.Delay(1);
 				updateProgress((float)((DateTime.Now - start) / (end - start)));
 			}
+
 			updateProgress(1);
 		}
 
-		#endregion
+	#endregion
+
+		private static Color
+				backgroundColour = Color.Red,
+				foregroundColour = Color.White,
+				trackColour = Color.WhiteSmoke;
 
 		/// <inheritdoc />
 		public override void Update()
 		{
-			//Get all the current tasks
+			//Get all the current tasks, ordered by ID
 			var tasks = BackgroundTask.UnsafeInstances
-			                          .OrderBy(t=>t.Name)
+			                          .OrderByDescending(t => t.Id)
 			                          .ToArray();
 			//Now update the UI
 			StringBuilder sb = StringBuilderPool.GetPooled();
+			Texture bgTex = Texture.New2D(
+					GraphicsDevice,
+					1,
+					1,
+					PixelFormat.R8G8B8A8_UNorm_SRgb, //R8G8B8A8_UNorm_SRgb seems to work without fucking stuff up
+					new [] {backgroundColour}
+					);
 			for (int i = 0; i < tasks.Length; i++)
 			{
 				UIElement indicator;
@@ -110,11 +129,20 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 					indicator = library.InstantiateElement<UIElement>("Progress Indicator");
 					indicatorsPanel.Children.Add(indicator);
 				}
+
+				//Set the text and slider values for the task
 				sb.Clear();
 				sb.AppendFormat("{0}:\t{1,3:p0}", task.Name, task.Progress);
 				indicator.FindVisualChildOfType<TextBlock>().Text = sb.ToString();
-				indicator.FindVisualChildOfType<Slider>().Value = task.Progress;
+				Slider slider = indicator.FindVisualChildOfType<Slider>();
+				slider.Value = task.Progress;
+
+				//Try and give the task a nice little colour too
+				Color borderColour = Color.Lerp(Color.Red, Color.Green, task.Progress);
+				(indicator as Border)!.BorderColor = borderColour;
+				slider.TrackBackgroundImage = new SpriteFromTexture { Texture = bgTex };
 			}
+
 			StringBuilderPool.ReturnPooled(sb);
 
 			//Remove any extra elements we didn't use

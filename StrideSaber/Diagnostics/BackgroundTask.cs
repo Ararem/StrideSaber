@@ -1,12 +1,14 @@
 ﻿using ConcurrentCollections;
 using JetBrains.Annotations;
 using Serilog;
+using ServiceWire.ZeroKnowledge;
 using Stride.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using BigInteger = System.Numerics.BigInteger;
 
 namespace StrideSaber.Diagnostics
 {
@@ -39,7 +41,7 @@ namespace StrideSaber.Diagnostics
 	/// <summary>
 	/// A task-like type that can be used to create tasks whose progress can be tracked and displayed to the user
 	/// </summary>
-	public sealed class BackgroundTask : IIdentifiable
+	public sealed class BackgroundTask
 	{
 		/// <summary>
 		/// If messages should be logged when instances are created and destroyed (completed), or an error occurs
@@ -83,8 +85,10 @@ namespace StrideSaber.Diagnostics
 			}
 		}
 
-		/// <inheritdoc />
-		public Guid Id { get; set; } = Guid.NewGuid();
+		/// <summary>
+		/// Gets the id of this instance
+		/// </summary>
+		public Guid Id { get; init; } = Guid.NewGuid();
 
 		private float progress;
 
@@ -129,12 +133,23 @@ namespace StrideSaber.Diagnostics
 		{
 			Name = name;
 			//awaiter = new BackgroundTaskAwaiter(this);
-			if(LogInternalEvents)
+			if (LogInternalEvents)
 				Log.Verbose("Created new BackgroundTask {Task}", this);
 			AddThis();
 			TaskDelegate = taskDelegate;
 			Task = Task.Run(TaskRunInternal);
+			Id = GetNextId();
 		}
+
+		private static Guid GetNextId()
+		{
+			TaskCounter++;
+			TaskCounter.TryWriteBytes(TaskCounterBytes, out int written);
+			return new Guid(TaskCounterBytes);
+		}
+
+		private static readonly byte[] TaskCounterBytes = new byte[16];
+		private static BigInteger TaskCounter = BigInteger.Zero;
 
 		private async Task TaskRunInternal()
 		{
@@ -150,7 +165,7 @@ namespace StrideSaber.Diagnostics
 			}
 			catch (Exception e)
 			{
-				if(LogInternalEvents)
+				if (LogInternalEvents)
 					Log.Warning(e, "Caught exception when running task {BackgroundTask}", this);
 			}
 			finally
@@ -198,7 +213,7 @@ namespace StrideSaber.Diagnostics
 		private void Dispose()
 		{
 			if (isDisposed) return;
-			if(LogInternalEvents)
+			if (LogInternalEvents)
 				Log.Verbose("Disposing BackgroundTask {Task}", this);
 			isDisposed = true;
 			RemoveThis();
@@ -209,7 +224,7 @@ namespace StrideSaber.Diagnostics
 
 		private void RemoveThis()
 		{
-			if(LogInternalEvents)
+			if (LogInternalEvents)
 				Log.Verbose("Removing BackgroundTask {Task}", this);
 			lock (GlobalLock)
 			{
@@ -219,7 +234,7 @@ namespace StrideSaber.Diagnostics
 
 		private void AddThis()
 		{
-			if(LogInternalEvents)
+			if (LogInternalEvents)
 				Log.Verbose("Adding BackgroundTask {Task}", this);
 			lock (GlobalLock)
 			{
@@ -246,7 +261,7 @@ namespace StrideSaber.Diagnostics
 			Span<char> progressBar = stackalloc char[progressSegments];
 			int lastFullChar = (int)MathF.Floor((Progress) * progressSegments);
 			for (int i = 0; i < progressSegments; i++)
-				//Fill depending on if we've reached the last full segment yet
+					//Fill depending on if we've reached the last full segment yet
 				progressBar[i] = i <= lastFullChar ? fullChar : emptyChar;
 			return $"BackgroundTask \"{Name}\"\tId \"{Id}\":\t{Progress:p0} complete\t[{new string(progressBar)}]";
 		}

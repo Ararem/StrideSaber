@@ -1,0 +1,7 @@
+!Texture
+Id: 68b46292-35ad-499c-9625-9056963c2ec0
+SerializedVersion: {Stride: 2.0.0.0}
+Tags: []
+Source: !file LightGrey_1x1.png
+Type: !ColorTextureType
+    ColorKeyColor: {R: 255, G: 0, B: 255, A: 255}

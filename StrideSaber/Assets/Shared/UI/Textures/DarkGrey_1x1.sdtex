@@ -1,0 +1,7 @@
+!Texture
+Id: 1cf932cb-e516-40b4-9803-89f3a3308e36
+SerializedVersion: {Stride: 2.0.0.0}
+Tags: []
+Source: !file DarkGrey_1x1.png
+Type: !ColorTextureType
+    ColorKeyColor: {R: 255, G: 0, B: 255, A: 255}

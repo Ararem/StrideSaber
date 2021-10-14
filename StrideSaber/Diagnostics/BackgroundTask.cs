@@ -144,6 +144,8 @@ namespace StrideSaber.Diagnostics
 		private static Guid GetNextId()
 		{
 			TaskCounter++;
+			//Technically this could fail if `TaskCounter` is too big to fit in 16 bytes, but that's seriously unlikely
+			//So we would need to create 85070591730234615865843651857942052864 GUID's before this happens
 			TaskCounter.TryWriteBytes(TaskCounterBytes, out int written);
 			return new Guid(TaskCounterBytes);
 		}

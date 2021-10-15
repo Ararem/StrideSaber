@@ -143,15 +143,32 @@ namespace StrideSaber.Diagnostics
 
 		private static Guid GetNextId()
 		{
-			TaskCounter++;
-			//Technically this could fail if `TaskCounter` is too big to fit in 16 bytes, but that's seriously unlikely
-			//So we would need to create 85070591730234615865843651857942052864 GUID's before this happens
-			TaskCounter.TryWriteBytes(TaskCounterBytes, out int written);
-			return new Guid(TaskCounterBytes);
+			lock (TaskCounterBytes) //Thread safety
+			{
+				//Find if we can increment any of the bytes without them overflowing to zero
+				//If all overflow, none will match and this will be false
+				bool canIncrement = GuidByteOrder.Any(i =>
+				{
+					TaskCounterBytes[i]++;
+					return TaskCounterBytes[i] != 0;
+				});
+				if (!canIncrement)                                    //If the bytes would overflow (Not going to happen lol because it needs like 42535295865117307932921825928971026432 GUIDs)
+					for (int i = 0; i < TaskCounterBytes.Length; i++) //Reset them all to zero
+						TaskCounterBytes[i] = 0;
+
+				//Bytes are incremented nicely, return them as a GUID
+				return new Guid(TaskCounterBytes);
+			}
 		}
 
+		/// <summary>
+		/// The order that bytes in a <see cref="Guid"/> are read from an array
+		/// </summary>
+		private static readonly int[] GuidByteOrder = { 15, 14, 13, 12, 11, 10, 9, 8, 6, 7, 4, 5, 0, 1, 2, 3 };
+		/// <summary>
+		/// 
+		/// </summary>
 		private static readonly byte[] TaskCounterBytes = new byte[16];
-		private static BigInteger TaskCounter = BigInteger.Zero;
 
 		private async Task TaskRunInternal()
 		{

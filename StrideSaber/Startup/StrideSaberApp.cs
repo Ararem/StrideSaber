@@ -1,12 +1,19 @@
-﻿using JetBrains.Annotations;
+﻿using CommandLine;
+using CommandLine.Text;
+using Irony.Parsing;
+using JetBrains.Annotations;
 using Serilog;
 using Stride.Core.Diagnostics;
 using Stride.Engine;
 using StrideSaber.EventManagement;
 using StrideSaber.EventManagement.Events;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using Logger = StrideSaber.Logging.Logger;
+using Parser = CommandLine.Parser;
 
 namespace StrideSaber.Startup
 {
@@ -29,7 +36,7 @@ namespace StrideSaber.Startup
 		/// </summary>
 		/// <param name="args"></param>
 		// ReSharper disable once UnusedParameter.Global
-		internal static void Main(string[] args)
+		internal static void Main(IEnumerable<string> args)
 		{
 			try
 			{
@@ -40,6 +47,13 @@ namespace StrideSaber.Startup
 				//Rename the main thread
 				Thread.CurrentThread.Name = "Main Thread";
 				Logger.Init();
+
+				CommandLineOptions? cmdOptions = ParseCommandLine(args);
+				if (cmdOptions is null)
+				{
+					Cleanup();
+					goto Quit;
+				}
 
 				EventManager.Init();
 
@@ -64,11 +78,12 @@ namespace StrideSaber.Startup
 			{
 				//Do cleanup
 				Cleanup();
-				Console.WriteLine("Game exited. Press enter to close console");
-				//Loop until we get an enter key press
-				while (Console.ReadKey(true).Key != ConsoleKey.Enter)
-				{
-				}
+			}
+		Quit: ;
+			Console.WriteLine("Game exited. Press enter to close console");
+			//Loop until we get an enter key press
+			while (Console.ReadKey(true).Key != ConsoleKey.Enter)
+			{
 			}
 		}
 
@@ -121,6 +136,39 @@ namespace StrideSaber.Startup
 			// 		}
 			// };
 			// SDL.SDL_ShowMessageBox(ref data, out int _);
+		}
+
+		private static CommandLineOptions? ParseCommandLine(IEnumerable<string> args)
+		{
+			Log.Verbose("Parsing command-line arguments");
+
+			TextWriter helpText = new StringWriter();
+			//Set up some settings for parsing
+			Parser parser = new(s =>
+			{
+				s.CaseSensitive = false;
+				s.CaseInsensitiveEnumValues = true;
+				//Help screen text will now be written to our TextWriter not the console
+				s.HelpWriter = helpText;
+			});
+			//Parse the options and errors
+			var result = parser.ParseArguments<CommandLineOptions>(args);
+			switch (result)
+			{
+				//Everything is fine, I'm happy
+				case Parsed<CommandLineOptions> parsed:
+					CommandLineOptions options = parsed.Value;
+					Log.Verbose("Successfully got command-line options: {@Options}", options);
+					return options;
+				//Someone fucked up, throw a tantrum
+				case NotParsed<CommandLineOptions> errors:
+					HelpText? errorHelpText = HelpText.DefaultParsingErrorsHandler(errors, new HelpText());
+					Log.Error("Error parsing command-line options:{ErrorHelpText}", errorHelpText);
+					return null;
+				default:
+					Log.Error("Command-line parser failed to return a result");
+					return null;
+			}
 		}
 	}
 }

@@ -107,28 +107,30 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			                          .ToArray();
 			//Now update the UI
 			StringBuilder sb = StringBuilderPool.GetPooled();
+			//R8G8B8A8_UNorm_SRgb seems to work without fucking stuff up
+			//Because Stride.Core.Mathematics.Color is 1 byte per channel, RGBA
 			Texture bgTex = Texture.New2D(
 					GraphicsDevice,
 					1,
 					1,
-					PixelFormat.R8G8B8A8_UNorm_SRgb, //R8G8B8A8_UNorm_SRgb seems to work without fucking stuff up
+					PixelFormat.R8G8B8A8_UNorm_SRgb,
 					new [] {backgroundColour}
 					);
 			Texture fgTex = Texture.New2D(
 					GraphicsDevice,
 					1,
 					1,
-					PixelFormat.R8G8B8A8_UNorm_SRgb, //R8G8B8A8_UNorm_SRgb seems to work without fucking stuff up
+					PixelFormat.R8G8B8A8_UNorm_SRgb,
 					new [] {foregroundColour}
 					);
-			Texture bgTex = Texture.New2D(
+			Texture tickTex = Texture.New2D(
 					GraphicsDevice,
 					1,
 					1,
-					PixelFormat.R8G8B8A8_UNorm_SRgb, //R8G8B8A8_UNorm_SRgb seems to work without fucking stuff up
-					new [] {backgroundColour}
+					PixelFormat.R8G8B8A8_UNorm_SRgb,
+					new [] {trackColour}
 					);
-			
+
 			for (int i = 0; i < tasks.Length; i++)
 			{
 				UIElement indicator;
@@ -156,6 +158,8 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				Color borderColour = Color.Lerp(Color.Red, Color.Green, task.Progress);
 				(indicator as Border)!.BorderColor = borderColour;
 				slider.TrackBackgroundImage = new SpriteFromTexture { Texture = bgTex };
+				slider.TrackForegroundImage = new SpriteFromTexture { Texture = fgTex };
+				slider.TickImage = new SpriteFromTexture { Texture = tickTex };
 			}
 
 			StringBuilderPool.ReturnPooled(sb);

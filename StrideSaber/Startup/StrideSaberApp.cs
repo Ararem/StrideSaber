@@ -38,36 +38,45 @@ namespace StrideSaber.Startup
 		// ReSharper disable once UnusedParameter.Global
 		internal static void Main(IEnumerable<string> args)
 		{
+			//Most important things first
+			ConsoleLogListener.ShowConsole();
+			Stride.Core.Diagnostics.Logger.MinimumLevelEnabled = LogMessageType.Verbose;
+
+			//Rename the main thread
+			Thread.CurrentThread.Name = "Main Thread";
+			Logger.Init();
+
 			try
 			{
-				//Most important things first
-				ConsoleLogListener.ShowConsole();
-				Stride.Core.Diagnostics.Logger.MinimumLevelEnabled = LogMessageType.Verbose;
-
-				//Rename the main thread
-				Thread.CurrentThread.Name = "Main Thread";
-				Logger.Init();
-
+				//First thing to do is parse the options
 				CommandLineOptions? cmdOptions = ParseCommandLine(args);
+				//If they're null, that means some error happened, so we assume invalid state and don't bother running the game
 				if (cmdOptions is null)
 				{
 					Cleanup();
-					goto Quit;
+					//Skip the game loop code using the goto
+					goto End;
 				}
-
 				EventManager.Init();
 
-				using Game game = CurrentGame = new Game();
-				game.WindowMinimumUpdateRate.SetMaxFrequency(120 /*fps*/);         //Cap the max fps
-				game.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false; //No VSync
-				//Set up an unhanded exception handler
-				game.UnhandledException += (s, e) => OnUnhandledException(s, (Exception) e.ExceptionObject);
-				EventManager.FireEventSafeLogged(new GameLoadEvent(CurrentGame));
+				using (Game game = CurrentGame = new Game())
+				{
+					game.WindowMinimumUpdateRate.SetMaxFrequency(120 /*fps*/);         //Cap the max fps
+					game.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false; //No VSync
+					//Set up an unhanded exception handler
+					game.UnhandledException += (s, e) => OnUnhandledException(s, (Exception)e.ExceptionObject);
+					EventManager.FireEventSafeLogged(new GameLoadEvent(CurrentGame));
 
-				//By the way, even though this isn't in the docs, the sender is the `Game` instance, and eventArgs will always be null
-				Game.GameStarted += (sender, _) => EventManager.FireEventSafeLogged(new GameStartedEvent((Game) sender!));
-				//Now we run the game
-				game.Run();
+					//By the way, even though this isn't in the docs, the sender is the `Game` instance, and eventArgs will always be null
+					Game.GameStarted += (sender, _) => EventManager.FireEventSafeLogged(new GameStartedEvent((Game)sender!));
+					//Now we run the game
+					game.Run();
+				}
+
+				//This label is here so that we can essentially skip running the game loop
+				//Which equates to ending the program execution
+				//But we still want the `finally` to be called, so we just skip over the game loop
+				End: ;
 			}
 			//Don't need to do this because our `game.UnhandledException` catches it anyway
 			// catch (Exception e)
@@ -78,12 +87,11 @@ namespace StrideSaber.Startup
 			{
 				//Do cleanup
 				Cleanup();
-			}
-		Quit: ;
-			Console.WriteLine("Game exited. Press enter to close console");
-			//Loop until we get an enter key press
-			while (Console.ReadKey(true).Key != ConsoleKey.Enter)
-			{
+				Console.WriteLine("Game exited. Press enter to close console");
+				//Loop until we get an enter key press
+				while (Console.ReadKey(true).Key != ConsoleKey.Enter)
+				{
+				}
 			}
 		}
 
@@ -92,7 +100,7 @@ namespace StrideSaber.Startup
 		/// </summary>
 		private static void Cleanup()
 		{
-			//Only thing to do is close the logger
+			CurrentGame = null!;
 			Logger.Shutdown();
 		}
 
@@ -102,6 +110,7 @@ namespace StrideSaber.Startup
 		private static void OnUnhandledException(object? sender, Exception e)
 		{
 			ConsoleLogListener.ShowConsole();
+
 			//Log the exception
 			Log.ForContext("Sender", sender)
 			   .Fatal(e, "Unhandled Exception");
@@ -141,8 +150,8 @@ namespace StrideSaber.Startup
 		private static CommandLineOptions? ParseCommandLine(IEnumerable<string> args)
 		{
 			Log.Verbose("Parsing command-line arguments");
-
 			TextWriter helpText = new StringWriter();
+
 			//Set up some settings for parsing
 			Parser parser = new(s =>
 			{
@@ -151,6 +160,7 @@ namespace StrideSaber.Startup
 				//Help screen text will now be written to our TextWriter not the console
 				s.HelpWriter = helpText;
 			});
+
 			//Parse the options and errors
 			var result = parser.ParseArguments<CommandLineOptions>(args);
 			switch (result)

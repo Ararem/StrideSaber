@@ -56,14 +56,14 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 		[SuppressMessage("ReSharper", "All")]
 		private static async Task AsyncTaskCreator()
 		{
-			_ = new BackgroundTask("Fps", FpsTask);
+			_ = new BackgroundTask("Fps", FpsTask) { Id = Guid.Empty };
 			int i = 0;
 			while (true)
 			{
 				int delay = r.Next(1000, 7000);
 				await Task.Delay(delay);
 				if (BackgroundTask.UnsafeInstances.Count < 10)
-					_ = new BackgroundTask($"Test task {++i}", AsyncTaskTest) { Id = Guid.Empty };
+					_ = new BackgroundTask($"Test task {++i}", AsyncTaskTest);
 			}
 		}
 
@@ -103,7 +103,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 		{
 			//Get all the current tasks, ordered by ID
 			var tasks = BackgroundTask.UnsafeInstances
-			                          .OrderByDescending(t => t.Id)
+			                          .OrderBy(t => t.Id)
 			                          .ToArray();
 			//Now update the UI
 			StringBuilder sb = StringBuilderPool.GetPooled();
@@ -114,6 +114,21 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 					PixelFormat.R8G8B8A8_UNorm_SRgb, //R8G8B8A8_UNorm_SRgb seems to work without fucking stuff up
 					new [] {backgroundColour}
 					);
+			Texture fgTex = Texture.New2D(
+					GraphicsDevice,
+					1,
+					1,
+					PixelFormat.R8G8B8A8_UNorm_SRgb, //R8G8B8A8_UNorm_SRgb seems to work without fucking stuff up
+					new [] {foregroundColour}
+					);
+			Texture bgTex = Texture.New2D(
+					GraphicsDevice,
+					1,
+					1,
+					PixelFormat.R8G8B8A8_UNorm_SRgb, //R8G8B8A8_UNorm_SRgb seems to work without fucking stuff up
+					new [] {backgroundColour}
+					);
+			
 			for (int i = 0; i < tasks.Length; i++)
 			{
 				UIElement indicator;

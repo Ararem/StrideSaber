@@ -88,7 +88,7 @@ namespace StrideSaber.Diagnostics
 		/// <summary>
 		/// Gets the id of this instance
 		/// </summary>
-		public Guid Id { get; init; } = Guid.NewGuid();
+		public Guid Id { get; init; }
 
 		private float progress;
 
@@ -141,20 +141,27 @@ namespace StrideSaber.Diagnostics
 			Id = GetNextId();
 		}
 
-		private static Guid GetNextId()
+		public static Guid GetNextId()
 		{
 			lock (TaskCounterBytes) //Thread safety
 			{
-				//Find if we can increment any of the bytes without them overflowing to zero
-				//If all overflow, none will match and this will be false
-				bool canIncrement = GuidByteOrder.Any(i =>
+				//Loop over the bytes, in the order we need to increment them for the GUID to look nice
+				foreach (int byteIndex in GuidByteOrder)
 				{
-					TaskCounterBytes[i]++;
-					return TaskCounterBytes[i] != 0;
-				});
-				if (!canIncrement)                                    //If the bytes would overflow (Not going to happen lol because it needs like 42535295865117307932921825928971026432 GUIDs)
-					for (int i = 0; i < TaskCounterBytes.Length; i++) //Reset them all to zero
-						TaskCounterBytes[i] = 0;
+					//The byte that we're going to increment
+					ref byte b = ref TaskCounterBytes[byteIndex];
+					//If the byte isn't max (255), then we can safely increase it without overflowing
+					if (b != byte.MaxValue)
+					{
+						b++;   //Increment it
+						break; //And break out of the loop (so we don't modify any more bytes)
+					}
+					else //Byte is max (255)
+					{
+						b = 0; //Set the byte to 0
+						continue; //And move on to the next byte (try increment it next loop)
+					}
+				}
 
 				//Bytes are incremented nicely, return them as a GUID
 				return new Guid(TaskCounterBytes);
@@ -165,6 +172,7 @@ namespace StrideSaber.Diagnostics
 		/// The order that bytes in a <see cref="Guid"/> are read from an array
 		/// </summary>
 		private static readonly int[] GuidByteOrder = { 15, 14, 13, 12, 11, 10, 9, 8, 6, 7, 4, 5, 0, 1, 2, 3 };
+
 		/// <summary>
 		/// 
 		/// </summary>

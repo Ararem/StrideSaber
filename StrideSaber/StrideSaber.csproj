@@ -5,7 +5,7 @@
 		<Nullable>enable</Nullable>
 		<Configurations>Debug</Configurations>
 		<Platforms>AnyCPU</Platforms>
-		<LangVersion>9</LangVersion>
+		<LangVersion>preview</LangVersion>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 	</PropertyGroup>

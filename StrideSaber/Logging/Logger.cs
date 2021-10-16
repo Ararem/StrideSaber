@@ -1,7 +1,6 @@
 ﻿using LibEternal.Logging.Destructurers;
 using LibEternal.Logging.Enrichers;
 using Serilog;
-using Serilog.Configuration;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using Stride.Core.Diagnostics;
@@ -22,7 +21,6 @@ namespace StrideSaber.Logging
 	/// </summary>
 	public static class Logger
 	{
-		// ReSharper disable once UnusedMember.Local
 		/// <summary>
 		///  A message template that prints lots of information to help with debugging
 		/// </summary>
@@ -56,7 +54,7 @@ namespace StrideSaber.Logging
 
 				CmdOptions cmdOptions = StrideSaberApp.CmdOptions;
 				Stride.Core.Diagnostics.Logger.MinimumLevelEnabled = LogMessageType.Verbose;
-				LoggerConfiguration? config = new LoggerConfiguration()
+				LoggerConfiguration config = new LoggerConfiguration()
 				                              .MinimumLevel.Is(cmdOptions.LogLevel)
 				                              .Enrich.With<CallerContextEnricher>()
 				                              .Enrich.With<DemystifiedExceptionsEnricher>()

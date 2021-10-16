@@ -1,6 +1,5 @@
 ﻿using CommandLine;
 using CommandLine.Text;
-using Irony.Parsing;
 using JetBrains.Annotations;
 using Serilog;
 using Stride.Core.Diagnostics;
@@ -9,8 +8,6 @@ using StrideSaber.EventManagement;
 using StrideSaber.EventManagement.Events;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading;
 using Logger = StrideSaber.Logging.Logger;
 using Parser = CommandLine.Parser;
@@ -35,7 +32,6 @@ namespace StrideSaber.Startup
 		///  Read class description lol
 		/// </summary>
 		/// <param name="args"></param>
-		// ReSharper disable once UnusedParameter.Global
 		internal static void Main(IEnumerable<string> args)
 		{
 			//Most important things first
@@ -49,7 +45,7 @@ namespace StrideSaber.Startup
 			try
 			{
 				//First thing to do is parse the options
-				CommandLineOptions? cmdOptions = ParseCommandLine(args);
+				CmdOptions? cmdOptions = ParseCommandLine(args);
 				//If they're null, that means some error happened, so we assume invalid state and don't bother running the game
 				if (cmdOptions is null)
 				{
@@ -57,6 +53,7 @@ namespace StrideSaber.Startup
 					//Skip the game loop code using the goto
 					goto End;
 				}
+
 				EventManager.Init();
 
 				using (Game game = CurrentGame = new Game())
@@ -76,7 +73,7 @@ namespace StrideSaber.Startup
 				//This label is here so that we can essentially skip running the game loop
 				//Which equates to ending the program execution
 				//But we still want the `finally` to be called, so we just skip over the game loop
-				End: ;
+			End: ;
 			}
 			//Don't need to do this because our `game.UnhandledException` catches it anyway
 			// catch (Exception e)
@@ -147,36 +144,27 @@ namespace StrideSaber.Startup
 			// SDL.SDL_ShowMessageBox(ref data, out int _);
 		}
 
-		private static CommandLineOptions? ParseCommandLine(IEnumerable<string> args)
+		private static CmdOptions? ParseCommandLine(IEnumerable<string> args)
 		{
 			Log.Verbose("Parsing command-line arguments");
-			TextWriter helpText = new StringWriter();
 
 			//Set up some settings for parsing
-			Parser parser = new(s =>
-			{
-				s.CaseSensitive = false;
-				s.CaseInsensitiveEnumValues = true;
-				//Help screen text will now be written to our TextWriter not the console
-				s.HelpWriter = helpText;
-			});
+			Parser parser = new(s => { s.HelpWriter = null; });
 
 			//Parse the options and errors
-			var result = parser.ParseArguments<CommandLineOptions>(args);
+			var result = parser.ParseArguments<CmdOptions>(args);
 			switch (result)
 			{
-				//Everything is fine, I'm happy
-				case Parsed<CommandLineOptions> parsed:
-					CommandLineOptions options = parsed.Value;
+				case Parsed<CmdOptions> parsed:
+					CmdOptions options = parsed.Value;
 					Log.Verbose("Successfully got command-line options: {@Options}", options);
 					return options;
-				//Someone fucked up, throw a tantrum
-				case NotParsed<CommandLineOptions> errors:
-					HelpText? errorHelpText = HelpText.DefaultParsingErrorsHandler(errors, new HelpText());
-					Log.Error("Error parsing command-line options:{ErrorHelpText}", errorHelpText);
+				case NotParsed<CmdOptions> notParsed:
+					var helpText = HelpText.AutoBuild(notParsed);
+					Log.Fatal("Error parsing command-line options:\n{ErrorHelpText}", helpText);
 					return null;
 				default:
-					Log.Error("Command-line parser failed to return a result");
+					Log.Fatal("Command-line parser failed to return a result");
 					return null;
 			}
 		}

@@ -174,7 +174,7 @@ namespace StrideSaber.Startup
 					var helpText = HelpText.AutoBuild(notParsed);
 					Error[] errors = notParsed.Errors.ToArray();
 					//If the *only* error is a help error
-					if ((errors.Length == 1) && errors[0] is HelpRequestedError or HelpVerbRequestedError)
+					if ((errors.Length == 1) && errors[0] is HelpRequestedError or HelpVerbRequestedError or UnknownOptionError {Token: "help"})
 					{
 						Console.WriteLine("Displaying help:");
 						Console.WriteLine(helpText);

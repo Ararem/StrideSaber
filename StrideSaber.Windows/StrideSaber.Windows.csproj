@@ -15,8 +15,32 @@
 		<Nullable>enable</Nullable>
 		<Configurations>Debug</Configurations>
 		<Platforms>AnyCPU</Platforms>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	</PropertyGroup>
 
+	<!-- This lets us write the analyzer logs to file -->
+	<PropertyGroup>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<CompilerGeneratedFilesOutputPath>CompilerGenerated</CompilerGeneratedFilesOutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Don't include the output from a previous source generator execution into future runs; the */** trick here ensures that there's
+		at least one subdirectory, which is our key that it's coming from a source generator as opposed to something that is coming from
+		some other tool. -->
+		<Compile Remove="$(CompilerGeneratedFilesOutputPath)/*/**/*.cs" />
+		<Compile Remove="CompilerGenerated\**" />
+		<None Remove="CompilerGenerated\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\C#\LibEternal\LibEternal\LibEternal.SourceGenerators.Attributes\LibEternal.SourceGenerators.Attributes.csproj" />
+		<ProjectReference Include="..\..\..\C#\LibEternal\LibEternal\LibEternal\LibEternal.csproj" />
+
+		<ProjectReference Include="..\..\..\C#\LibEternal\LibEternal\LibEternal.SourceGenerators\LibEternal.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" SetTargetFramework="TargetFramework=netstandard2.0" />
+		<ProjectReference Include="..\..\..\C#\LibEternal\LibEternal\LibEternal.SourceGenerators.Attributes\LibEternal.SourceGenerators.Attributes.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" SetTargetFramework="TargetFramework=netstandard2.0" />
+	</ItemGroup>
+	
 	<ItemGroup>
 		<ProjectReference Include="..\StrideSaber\StrideSaber.csproj" />
 	</ItemGroup>

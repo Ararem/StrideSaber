@@ -9,6 +9,10 @@ using StrideSaber.EventManagement.Events;
 using System;
 using System.Linq;
 using System.Reflection;
+using static LibEternal.Logging.Enrichers.CallerContextEnricher;
+using static LibEternal.Logging.Enrichers.ThreadInfoEnricher;
+using static LibEternal.Logging.Enrichers.EventLevelIndentEnricher;
+using static LibEternal.Logging.Enrichers.LogEventNumberEnricher;
 
 namespace StrideSaber.Logging
 {
@@ -27,13 +31,13 @@ namespace StrideSaber.Logging
 		///  A message template that prints lots of information to help with debugging
 		/// </summary>
 		private const string DebugTemplate =
-				@"[{Timestamp:HH:mm:ss}	#{EventNumber}	{Level:t3}]	[{ThreadName}	#{ThreadId}	({ThreadType})]	[{CallerContext}]:	{Message:lj}{NewLine}{Exception}{StackTrace}{NewLine}{NewLine}";
+				$@"[{{Timestamp:HH:mm:ss}}	#{{{EventNumberProp}}}	{{Level:t3}}]	[{{{ThreadNameProp}}}	#{{{ThreadIdProp}}}	({{{ThreadTypeProp}}})]	[{{{CallingTypeProp}}}/{{{CallingMethodProp}}}]:	{{Message:lj}}{{NewLine}}{{Exception}}{{{StackTraceProp}}}{{NewLine}}{{NewLine}}";
 
 		/// <summary>
 		///  A message template that prints simple information
 		/// </summary>
 		private const string SimpleTemplate =
-				@"[{Timestamp:HH:mm:ss}	#{EventNumber}	{Level:t3}]	[{ThreadName}	#{ThreadId}]	[{CallerContext}/]:	{LevelIndent}{Message:lj}{NewLine}{Exception}";
+				$@"[{{Timestamp:HH:mm:ss}}	#{{{EventNumberProp}}}	{{Level:t3}}]	[{{{ThreadNameProp}}}	#{{{ThreadIdProp}}}]	[{{{CallingTypeProp}}}/]:	{{Message:lj}}{{NewLine}}{{Exception}}";
 
 		/// <summary>
 		///  Here so I can guarantee thread-safety when init-ing/shutting down
@@ -57,7 +61,6 @@ namespace StrideSaber.Logging
 				LoggerConfiguration? config = new LoggerConfiguration()
 				                              .MinimumLevel.Is(MinimumLogEventLevel)
 				                              .Enrich.With<CallerContextEnricher>()
-				                              .Enrich.With<StackTraceEnricher>()
 				                              .Enrich.With<DemystifiedExceptionsEnricher>()
 				                              .Enrich.With<LogEventNumberEnricher>()
 				                              .Enrich.With<EventLevelIndentEnricher>()

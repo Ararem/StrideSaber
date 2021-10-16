@@ -5,6 +5,7 @@
 		<Nullable>enable</Nullable>
 		<Configurations>Debug</Configurations>
 		<Platforms>AnyCPU</Platforms>
+		<LangVersion>10</LangVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

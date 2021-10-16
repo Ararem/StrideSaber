@@ -1,17 +1,18 @@
 ﻿using LibEternal.Logging.Destructurers;
 using LibEternal.Logging.Enrichers;
 using Serilog;
+using Serilog.Configuration;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using Stride.Core.Diagnostics;
 using StrideSaber.EventManagement;
 using StrideSaber.EventManagement.Events;
+using StrideSaber.Startup;
 using System;
 using System.Linq;
 using System.Reflection;
 using static LibEternal.Logging.Enrichers.CallerContextEnricher;
 using static LibEternal.Logging.Enrichers.ThreadInfoEnricher;
-using static LibEternal.Logging.Enrichers.EventLevelIndentEnricher;
 using static LibEternal.Logging.Enrichers.LogEventNumberEnricher;
 
 namespace StrideSaber.Logging
@@ -21,11 +22,6 @@ namespace StrideSaber.Logging
 	/// </summary>
 	public static class Logger
 	{
-		/// <summary>
-		///  The minimum level of <see cref="LogEvent">LogEvents</see> that will be logged
-		/// </summary>
-		private const LogEventLevel MinimumLogEventLevel = LogEventLevel.Verbose;
-
 		// ReSharper disable once UnusedMember.Local
 		/// <summary>
 		///  A message template that prints lots of information to help with debugging
@@ -37,7 +33,7 @@ namespace StrideSaber.Logging
 		///  A message template that prints simple information
 		/// </summary>
 		private const string SimpleTemplate =
-				$@"[{{Timestamp:HH:mm:ss}}	#{{{EventNumberProp}}}	{{Level:t3}}]	[{{{ThreadNameProp}}}	#{{{ThreadIdProp}}}]	[{{{CallingTypeProp}}}/]:	{{Message:lj}}{{NewLine}}{{Exception}}";
+				$@"[{{Timestamp:HH:mm:ss}}	#{{{EventNumberProp}}}	{{Level:t3}}]	[{{{ThreadNameProp}}}	#{{{ThreadIdProp}}}]	[{{{CallingTypeProp}}}/{{{CallingMethodProp}}}]:	{{Message:lj}}{{NewLine}}{{Exception}}";
 
 		/// <summary>
 		///  Here so I can guarantee thread-safety when init-ing/shutting down
@@ -58,8 +54,10 @@ namespace StrideSaber.Logging
 			{
 				if (initialized) return;
 
+				CmdOptions cmdOptions = StrideSaberApp.CmdOptions;
+				Stride.Core.Diagnostics.Logger.MinimumLevelEnabled = LogMessageType.Verbose;
 				LoggerConfiguration? config = new LoggerConfiguration()
-				                              .MinimumLevel.Is(MinimumLogEventLevel)
+				                              .MinimumLevel.Is(cmdOptions.LogLevel)
 				                              .Enrich.With<CallerContextEnricher>()
 				                              .Enrich.With<DemystifiedExceptionsEnricher>()
 				                              .Enrich.With<LogEventNumberEnricher>()
@@ -69,18 +67,14 @@ namespace StrideSaber.Logging
 				                              .Destructure.With<DelegateDestructurer>()
 				                              .Destructure.With<StrideObjectDestructurer>();
 
-				//Switch the template depending on if we are debugging
-				// ReSharper disable once InlineTemporaryVariable
-				#if DEBUG && false
-			const string template = DebugTemplate;
-				#else
-				const string template = SimpleTemplate;
-				#endif
-				Log.Logger = config
-				             // .WriteTo.Async(writeTo => writeTo.Console(outputTemplate: template, applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate))
-				             .WriteTo.Console(outputTemplate: template, applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate)
-				             .CreateLogger();
-
+				string template = cmdOptions.DebugTemplate ? DebugTemplate : SimpleTemplate;
+				if (cmdOptions.AsyncLog)
+					Log.Logger = config.WriteTo.Async(writeTo => writeTo.Console(outputTemplate: template, applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate)
+							                   ).CreateLogger();
+				else
+					Log.Logger = config
+					             .WriteTo.Console(outputTemplate: template, applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate)
+					             .CreateLogger();
 				Log.Information("Logger initialized");
 				initialized = true;
 			}

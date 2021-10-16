@@ -8,9 +8,9 @@ using StrideSaber.EventManagement;
 using StrideSaber.EventManagement.Events;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Logger = StrideSaber.Logging.Logger;
-using Parser = CommandLine.Parser;
 
 namespace StrideSaber.Startup
 {
@@ -28,6 +28,8 @@ namespace StrideSaber.Startup
 		[PublicAPI]
 		public static Game CurrentGame { get; private set; } = null!;
 
+		public static CmdOptions CmdOptions { get; private set; } = null!;
+
 		/// <summary>
 		///  Read class description lol
 		/// </summary>
@@ -36,24 +38,24 @@ namespace StrideSaber.Startup
 		{
 			//Most important things first
 			ConsoleLogListener.ShowConsole();
-			Stride.Core.Diagnostics.Logger.MinimumLevelEnabled = LogMessageType.Verbose;
 
+			//First thing to do is parse the options
+			CmdOptions? cmdOptions = ParseCommandLine(args);
+			//If they're null, that means some error happened, so we assume invalid state and don't bother running the game
+			if (cmdOptions is null)
+			{
+				//Do cleanup and quit
+				CleanupAndExit();
+				return;
+			}
+
+			CmdOptions = cmdOptions;
 			//Rename the main thread
 			Thread.CurrentThread.Name = "Main Thread";
 			Logger.Init();
 
 			try
 			{
-				//First thing to do is parse the options
-				CmdOptions? cmdOptions = ParseCommandLine(args);
-				//If they're null, that means some error happened, so we assume invalid state and don't bother running the game
-				if (cmdOptions is null)
-				{
-					Cleanup();
-					//Skip the game loop code using the goto
-					goto End;
-				}
-
 				EventManager.Init();
 
 				using (Game game = CurrentGame = new Game())
@@ -73,7 +75,6 @@ namespace StrideSaber.Startup
 				//This label is here so that we can essentially skip running the game loop
 				//Which equates to ending the program execution
 				//But we still want the `finally` to be called, so we just skip over the game loop
-			End: ;
 			}
 			//Don't need to do this because our `game.UnhandledException` catches it anyway
 			// catch (Exception e)
@@ -83,22 +84,22 @@ namespace StrideSaber.Startup
 			finally
 			{
 				//Do cleanup
-				Cleanup();
-				Console.WriteLine("Game exited. Press enter to close console");
-				//Loop until we get an enter key press
-				while (Console.ReadKey(true).Key != ConsoleKey.Enter)
-				{
-				}
+				CleanupAndExit();
 			}
 		}
 
 		/// <summary>
 		///  Cleans up after the game has finished
 		/// </summary>
-		private static void Cleanup()
+		private static void CleanupAndExit()
 		{
 			CurrentGame = null!;
 			Logger.Shutdown();
+			Console.WriteLine("Game exited. Press enter to close console");
+			//Loop until we get an enter key press
+			while (Console.ReadKey(true).Key != ConsoleKey.Enter)
+			{
+			}
 		}
 
 		/// <summary>
@@ -111,7 +112,7 @@ namespace StrideSaber.Startup
 			//Log the exception
 			Log.ForContext("Sender", sender)
 			   .Fatal(e, "Unhandled Exception");
-			Cleanup();
+			CleanupAndExit();
 
 			// SDL.SDL_MessageBoxData data = new()
 			// {
@@ -146,10 +147,18 @@ namespace StrideSaber.Startup
 
 		private static CmdOptions? ParseCommandLine(IEnumerable<string> args)
 		{
-			Log.Verbose("Parsing command-line arguments");
+			//By the way, the logging system doesn't exist as of yet so we can't write to it
+			//So use the console instead
 
 			//Set up some settings for parsing
-			Parser parser = new(s => { s.HelpWriter = null; });
+			Parser parser = new(s =>
+			{
+				s.HelpWriter = null;
+				s.CaseInsensitiveEnumValues = true;
+				s.CaseSensitive = false;
+				s.AutoVersion = false;
+				s.AutoHelp = false;
+			});
 
 			//Parse the options and errors
 			var result = parser.ParseArguments<CmdOptions>(args);
@@ -157,14 +166,30 @@ namespace StrideSaber.Startup
 			{
 				case Parsed<CmdOptions> parsed:
 					CmdOptions options = parsed.Value;
-					Log.Verbose("Successfully got command-line options: {@Options}", options);
+					#if DEBUG
+					Console.WriteLine($"Successfully got command-line options: {options}");
+					#endif
 					return options;
 				case NotParsed<CmdOptions> notParsed:
 					var helpText = HelpText.AutoBuild(notParsed);
-					Log.Fatal("Error parsing command-line options:\n{ErrorHelpText}", helpText);
+					Error[] errors = notParsed.Errors.ToArray();
+					//If the *only* error is a help error
+					if ((errors.Length == 1) && errors[0] is HelpRequestedError or HelpVerbRequestedError)
+					{
+						Console.WriteLine("Displaying help:");
+						Console.WriteLine(helpText);
+					}
+					else
+					{
+						Console.ForegroundColor = ConsoleColor.Red;
+						Console.WriteLine("Error parsing command-line options:");
+						Console.WriteLine(helpText);
+					}
+
 					return null;
 				default:
-					Log.Fatal("Command-line parser failed to return a result");
+					Console.ForegroundColor = ConsoleColor.Red;
+					Console.WriteLine("Command-line parser failed to return a result");
 					return null;
 			}
 		}

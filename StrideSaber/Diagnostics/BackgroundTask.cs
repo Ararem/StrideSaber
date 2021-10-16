@@ -141,7 +141,7 @@ namespace StrideSaber.Diagnostics
 			Id = GetNextId();
 		}
 
-		public static Guid GetNextId()
+		private static Guid GetNextId()
 		{
 			lock (TaskCounterBytes) //Thread safety
 			{

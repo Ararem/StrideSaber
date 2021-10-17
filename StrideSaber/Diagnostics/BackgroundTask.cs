@@ -1,42 +1,15 @@
 ﻿using ConcurrentCollections;
 using JetBrains.Annotations;
 using Serilog;
-using ServiceWire.ZeroKnowledge;
-using Stride.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using BigInteger = System.Numerics.BigInteger;
+using static StrideSaber.Diagnostics.BackgroundTaskEvent;
 
 namespace StrideSaber.Diagnostics
 {
-	/// <summary>
-	/// A delegate type for a <see cref="BackgroundTask"/>
-	/// </summary>
-	/// <param name="updateProgress">A method to be called to update progress.</param>
-	/// <example>
-	///<code>
-	/// <![CDATA[
-	/// new BackgroundTask("Example Task Name",
-	///		delegate(Action<float> updateProgress)
-	///			{
-	///				const int start = 0;
-	///				const int end = 100;
-	/// 			for (int i = start; i < end; i++)
-	/// 			{
-	/// 				int x = (i + 69) * 420;
-	/// 				float progress = (float)((i - start) + 1) / (end - start); //Complex math but it works for any start and end
-	/// 				updateProgress(progress);
-	/// 			}
-	///			}
-	///		).Run();
-	/// ]]>
-	/// </code>
-	/// </example>
-	public delegate Task BackgroundTaskDelegate(Action<float> updateProgress);
-
 	//TODO: IDisposable (or async)
 	/// <summary>
 	/// A task-like type that can be used to create tasks whose progress can be tracked and displayed to the user
@@ -44,9 +17,9 @@ namespace StrideSaber.Diagnostics
 	public sealed class BackgroundTask
 	{
 		/// <summary>
-		/// If messages should be logged when instances are created and destroyed (completed), or an error occurs
+		/// What event types messages should be logged for
 		/// </summary>
-		public static bool LogInternalEvents { get; set; } = false;
+		public static BackgroundTaskEvent EnabledLogEvents { get; set; } = None;
 
 		/// <summary>
 		/// An object that can be locked upon for global (static) synchronisation
@@ -133,12 +106,11 @@ namespace StrideSaber.Diagnostics
 		{
 			Name = name;
 			//awaiter = new BackgroundTaskAwaiter(this);
-			if (LogInternalEvents)
-				Log.Verbose("Created new BackgroundTask {Task}", this);
 			AddThis();
 			TaskDelegate = taskDelegate;
 			Task = Task.Run(TaskRunInternal);
 			Id = GetNextId();
+			RaiseEvent(Created);
 		}
 
 		private static Guid GetNextId()
@@ -156,10 +128,10 @@ namespace StrideSaber.Diagnostics
 						b++;   //Increment it
 						break; //And break out of the loop (so we don't modify any more bytes)
 					}
-					else //Byte is max (255)
+					//else //Byte is max (255)
 					{
-						b = 0; //Set the byte to 0
-						continue; //And move on to the next byte (try increment it next loop)
+						b = 0;    //Set the byte to 0
+						//continue; //And move on to the next byte (try increment it next loop)
 					}
 				}
 
@@ -189,11 +161,13 @@ namespace StrideSaber.Diagnostics
 						//We update our property
 						UpdateThisInstanceProgress
 				);
+				RaiseEvent(Success);
 			}
 			catch (Exception e)
 			{
-				if (LogInternalEvents)
-					Log.Warning(e, "Caught exception when running task {BackgroundTask}", this);
+				//Set the exception that was thrown
+				Task = Task.FromException(e);
+				RaiseEvent(Error);
 			}
 			finally
 			{
@@ -208,6 +182,7 @@ namespace StrideSaber.Diagnostics
 		private void UpdateThisInstanceProgress(float _progress)
 		{
 			if (isDisposed) throw new ObjectDisposedException(ToString());
+			RaiseEvent(ProgressUpdated);
 			Progress = _progress;
 		}
 
@@ -240,9 +215,8 @@ namespace StrideSaber.Diagnostics
 		private void Dispose()
 		{
 			if (isDisposed) return;
-			if (LogInternalEvents)
-				Log.Verbose("Disposing BackgroundTask {Task}", this);
 			isDisposed = true;
+			RaiseEvent(Disposed);
 			RemoveThis();
 			Task = null!;
 		}
@@ -251,8 +225,6 @@ namespace StrideSaber.Diagnostics
 
 		private void RemoveThis()
 		{
-			if (LogInternalEvents)
-				Log.Verbose("Removing BackgroundTask {Task}", this);
 			lock (GlobalLock)
 			{
 				Instances.TryRemove(this);
@@ -261,11 +233,38 @@ namespace StrideSaber.Diagnostics
 
 		private void AddThis()
 		{
-			if (LogInternalEvents)
-				Log.Verbose("Adding BackgroundTask {Task}", this);
 			lock (GlobalLock)
 			{
 				Instances.Add(this);
+			}
+		}
+
+		private void RaiseEvent(BackgroundTaskEvent evt)
+		{
+			//Also need to check if the flag is `none` because otherwise the second `if` will not return when we want it to
+			//If the flag is not enabled, do nothing
+			if ((EnabledLogEvents & evt) == 0) return;
+			switch (evt)
+			{
+				case Created:
+					Log.Verbose("BackgroundTask {Task} created", this);
+					break;
+				case Disposed:
+					Log.Verbose("BackgroundTask {Task} disposed", this);
+					break;
+				case Error:
+					Log.Warning(Task.Exception, "BackgroundTask {Task} threw exception", this);
+					break;
+				case Success:
+					Log.Verbose("BackgroundTask {Task} completed successfully", this);
+					break;
+				case ProgressUpdated:
+					Log.Verbose("BackgroundTask {Task} progress update", this);
+					break;
+				case None:
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(evt), evt, null);
 			}
 		}
 

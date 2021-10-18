@@ -25,13 +25,13 @@ namespace StrideSaber.Logging
 		///  A message template that prints lots of information to help with debugging
 		/// </summary>
 		private const string DebugTemplate =
-				$@"[{{Timestamp:HH:mm:ss}}	#{{{EventNumberProp}}}	{{Level:t3}}]	[{{{ThreadNameProp}}}	#{{{ThreadIdProp}}}	({{{ThreadTypeProp}}})]	[{{{CallingTypeProp}}}/{{{CallingMethodProp}}}]:	{{Message:lj}}{{NewLine}}{{Exception}}{{{StackTraceProp}}}{{NewLine}}{{NewLine}}";
+				"[{Timestamp:HH:mm:ss}\t#{" + EventNumberProp + "}\t{Level:t3}]\t[{" + ThreadNameProp + "}\t#{" + ThreadIdProp + "}\t({" + ThreadTypeProp + "})]\t[{" + CallingTypeProp + "}/{" + CallingMethodProp + "}]:\t{Message:lj}{NewLine}{Exception}{" + StackTraceProp + "}{NewLine}{NewLine}";
 
 		/// <summary>
 		///  A message template that prints simple information
 		/// </summary>
 		private const string SimpleTemplate =
-				$@"[{{Timestamp:HH:mm:ss}}	#{{{EventNumberProp}}}	{{Level:t3}}]	[{{{ThreadNameProp}}}	#{{{ThreadIdProp}}}]	[{{{CallingTypeProp}}}/{{{CallingMethodProp}}}]:	{{Message:lj}}{{NewLine}}{{Exception}}";
+				"[{Timestamp:HH:mm:ss}\t#{" + EventNumberProp + "}\t{Level:t3}]\t[{" + ThreadNameProp + "}\t#{" + ThreadIdProp + "}]\t[{" + CallingTypeProp + "}/{" + CallingMethodProp + "}]:\t{Message:lj}{NewLine}{Exception}";
 
 		/// <summary>
 		///  Here so I can guarantee thread-safety when init-ing/shutting down
@@ -52,7 +52,7 @@ namespace StrideSaber.Logging
 			{
 				if (initialized) return;
 
-				CmdOptions cmdOptions = StrideSaberApp.CmdOptions;
+				DefaultOptions cmdOptions = (DefaultOptions)StrideSaberApp.CmdOptions;
 				Stride.Core.Diagnostics.Logger.MinimumLevelEnabled = LogMessageType.Verbose;
 				LoggerConfiguration config = new LoggerConfiguration()
 				                              .MinimumLevel.Is(cmdOptions.LogLevel)
@@ -65,7 +65,7 @@ namespace StrideSaber.Logging
 				                              .Destructure.With<DelegateDestructurer>()
 				                              .Destructure.With<StrideObjectDestructurer>();
 
-				string template = cmdOptions.DebugTemplate ? DebugTemplate : SimpleTemplate;
+				string template = (cmdOptions as DebugOptions)?.DebugTemplate == true ? DebugTemplate : SimpleTemplate;
 				if (cmdOptions.AsyncLog)
 					Log.Logger = config.WriteTo.Async(writeTo => writeTo.Console(outputTemplate: template, applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate)
 							                   ).CreateLogger();

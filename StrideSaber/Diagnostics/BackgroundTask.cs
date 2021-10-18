@@ -1,6 +1,8 @@
 ﻿using ConcurrentCollections;
 using JetBrains.Annotations;
 using Serilog;
+using SmartFormat;
+using SmartFormat.Core.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +21,7 @@ namespace StrideSaber.Diagnostics
 		/// <summary>
 		/// What event types messages should be logged for
 		/// </summary>
-		public static BackgroundTaskEvent EnabledLogEvents { get; set; } = None;
+		public static BackgroundTaskEvent EnabledLogEvents { get; set; } = Error | Success | Created | Disposed | ProgressUpdated;
 
 		/// <summary>
 		/// An object that can be locked upon for global (static) synchronisation
@@ -128,9 +130,10 @@ namespace StrideSaber.Diagnostics
 						b++;   //Increment it
 						break; //And break out of the loop (so we don't modify any more bytes)
 					}
+
 					//else //Byte is max (255)
 					{
-						b = 0;    //Set the byte to 0
+						b = 0; //Set the byte to 0
 						//continue; //And move on to the next byte (try increment it next loop)
 					}
 				}
@@ -247,19 +250,19 @@ namespace StrideSaber.Diagnostics
 			switch (evt)
 			{
 				case Created:
-					Log.Verbose("BackgroundTask {Task} created", this);
+					Log.Verbose("{Task} created", this);
 					break;
 				case Disposed:
-					Log.Verbose("BackgroundTask {Task} disposed", this);
+					Log.Verbose("{Task} disposed", this);
 					break;
 				case Error:
-					Log.Warning(Task.Exception, "BackgroundTask {Task} threw exception", this);
+					Log.Warning(Task.Exception, "{Task} threw exception", this);
 					break;
 				case Success:
-					Log.Verbose("BackgroundTask {Task} completed successfully", this);
+					Log.Verbose("{Task} completed successfully", this);
 					break;
 				case ProgressUpdated:
-					Log.Verbose("BackgroundTask {Task} progress update", this);
+					Log.Verbose("{Task} progress update", this);
 					break;
 				case None:
 					break;
@@ -270,27 +273,34 @@ namespace StrideSaber.Diagnostics
 
 	#endregion
 
+	#region ToString()
+
+		/// <summary>
+		/// A cached <see cref="Format"/> for default <see cref="ToString()"/> behaviour
+		/// </summary>
+		private static readonly Format DefaultToStringFormat = Smart.Default.Parser.ParseFormat("BackgroundTask \"{Name}\" Id {Id} ({Progress:p0})");
+
 		/// <inheritdoc />
 		public override string ToString()
 		{
-			return $"BackgroundTask \"{Name}\" Id \"{Id}\": {Progress:p0} complete";
+			return ToString(DefaultToStringFormat);
 		}
 
-		/// <summary>
-		/// The same as <see cref="ToString"/> but includes a progress bar
-		/// </summary>
-		public string ToStringBar()
+		/// <inheritdoc cref="ToString()"/>
+		/// <remarks>Uses <see cref="SmartFormat"/> format strings</remarks>
+		public string ToString(string format)
 		{
-			const int progressSegments = 25;
-			const char fullChar = '=';
-			const char emptyChar = '-';
-			Span<char> progressBar = stackalloc char[progressSegments];
-			int lastFullChar = (int)MathF.Floor((Progress) * progressSegments);
-			for (int i = 0; i < progressSegments; i++)
-					//Fill depending on if we've reached the last full segment yet
-				progressBar[i] = i <= lastFullChar ? fullChar : emptyChar;
-			return $"BackgroundTask \"{Name}\"\tId \"{Id}\":\t{Progress:p0} complete\t[{new string(progressBar)}]";
+			return Smart.Format(format, this);
 		}
+
+		/// <inheritdoc cref="ToString()"/>
+		/// <remarks>Uses <see cref="SmartFormat"/> format strings</remarks>
+		public string ToString(Format format)
+		{
+			return Smart.Default.Format(format, this);
+		}
+
+	#endregion
 	}
 
 	// /// <summary>

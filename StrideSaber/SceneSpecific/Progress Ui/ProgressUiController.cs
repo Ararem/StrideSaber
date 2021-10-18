@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 using LibEternal.ObjectPools;
-using SharpDX.Direct3D11;
+using SmartFormat;
 using Stride.Core.Mathematics;
 using Stride.Core.Serialization;
 using Stride.Engine;
@@ -149,7 +149,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 
 				//Set the text and slider values for the task
 				sb.Clear();
-				sb.AppendFormat("{0}:\t{1,3:p0}", task.Name, task.Progress);
+				sb.AppendSmart("{0}:\t{1,3:p0}", task.Name, task.Progress);
 				indicator.FindVisualChildOfType<TextBlock>().Text = sb.ToString();
 				Slider slider = indicator.FindVisualChildOfType<Slider>();
 				slider.Value = task.Progress;

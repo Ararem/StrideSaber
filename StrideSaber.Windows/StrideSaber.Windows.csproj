@@ -13,7 +13,7 @@
 		<!-- Force msbuild to check to rebuild this assembly instead of letting VS IDE guess -->
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 		<Nullable>enable</Nullable>
-		<Configurations>Debug</Configurations>
+		<Configurations>Debug;Release</Configurations>
 		<Platforms>AnyCPU</Platforms>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	</PropertyGroup>
@@ -22,6 +22,10 @@
 	<PropertyGroup>
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 		<CompilerGeneratedFilesOutputPath>CompilerGenerated</CompilerGeneratedFilesOutputPath>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+	  <DebugType>full</DebugType>
+	  <WarningsAsErrors>;NU1605;CS8785</WarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>

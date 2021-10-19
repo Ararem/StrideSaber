@@ -140,7 +140,6 @@ namespace StrideSaber.Startup
 			//Log the exception
 			Log.ForContext("Sender", sender)
 			   .Fatal(e, "Unhandled Exception");
-			CleanupAndExit();
 
 			// SDL.SDL_MessageBoxData data = new()
 			// {

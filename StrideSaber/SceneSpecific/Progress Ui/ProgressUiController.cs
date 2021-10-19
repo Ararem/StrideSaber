@@ -95,8 +95,9 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 
 		private static Color
 				backgroundColour = Color.Red,
-				foregroundColour = Color.White,
-				trackColour = Color.WhiteSmoke;
+				foregroundColourStart = Color.Red,
+				foregroundColourEnd = Color.Green,
+				tickColour = Color.LightGray;
 
 		/// <inheritdoc />
 		public override void Update()
@@ -105,32 +106,8 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			var tasks = BackgroundTask.UnsafeInstances
 			                          .OrderBy(t => t.Id)
 			                          .ToArray();
-			//Now update the UI
-			StringBuilder sb = StringBuilderPool.GetPooled();
-			//R8G8B8A8_UNorm_SRgb seems to work without fucking stuff up
-			//Because Stride.Core.Mathematics.Color is 1 byte per channel, RGBA
-			Texture bgTex = Texture.New2D(
-					GraphicsDevice,
-					1,
-					1,
-					PixelFormat.R8G8B8A8_UNorm_SRgb,
-					new [] {backgroundColour}
-					);
-			Texture fgTex = Texture.New2D(
-					GraphicsDevice,
-					1,
-					1,
-					PixelFormat.R8G8B8A8_UNorm_SRgb,
-					new [] {foregroundColour}
-					);
-			Texture tickTex = Texture.New2D(
-					GraphicsDevice,
-					1,
-					1,
-					PixelFormat.R8G8B8A8_UNorm_SRgb,
-					new [] {trackColour}
-					);
 
+			StringBuilder sb = StringBuilderPool.GetPooled();
 			for (int i = 0; i < tasks.Length; i++)
 			{
 				UIElement indicator;
@@ -149,17 +126,23 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 
 				//Set the text and slider values for the task
 				sb.Clear();
-				sb.AppendSmart("{0}:\t{1,3:p0}", task.Name, task.Progress);
+				sb.AppendSmart("{Name}:\t{Progress,3:p0}", task);
 				indicator.FindVisualChildOfType<TextBlock>().Text = sb.ToString();
 				Slider slider = indicator.FindVisualChildOfType<Slider>();
 				slider.Value = task.Progress;
 
 				//Try and give the task a nice little colour too
-				Color borderColour = Color.Lerp(Color.Red, Color.Green, task.Progress);
-				(indicator as Border)!.BorderColor = borderColour;
-				slider.TrackBackgroundImage = new SpriteFromTexture { Texture = bgTex };
-				slider.TrackForegroundImage = new SpriteFromTexture { Texture = fgTex };
-				slider.TickImage = new SpriteFromTexture { Texture = tickTex };
+				//This one is based on the progression of the task
+				Color progressColour = Color.Lerp(foregroundColourStart, foregroundColourEnd, task.Progress);
+				//And this one on the hash of the task ID
+				Color uniqueTaskColour = Color.FromRgba(task.Id.GetHashCode());
+				uniqueTaskColour.A = 255;
+
+				//Assign all the colours
+				(indicator as Border)!.BorderColor = uniqueTaskColour; //Unique border for each task
+				slider.TrackBackgroundImage = new SpriteFromTexture { Texture = TextureFromColour(backgroundColour) };
+				slider.TrackForegroundImage = new SpriteFromTexture { Texture = TextureFromColour(progressColour) };
+				slider.TickImage = new SpriteFromTexture { Texture = TextureFromColour(tickColour) };
 			}
 
 			StringBuilderPool.ReturnPooled(sb);
@@ -172,6 +155,19 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			//End at children -1
 			//Do this in reverse so we can use `RemoveAt()` (which is faster than `Remove()`) without any complex maths
 			for (int i = indicatorsPanel.Children.Count - 1; i >= tasks.Length; i--) indicatorsPanel.Children.RemoveAt(i);
+		}
+
+		private Texture TextureFromColour(Color colour)
+		{
+			//R8G8B8A8_UNorm_SRgb seems to work without fucking stuff up
+			//Because Stride.Core.Mathematics.Color is 1 byte per channel, RGBA
+			return Texture.New2D(
+					GraphicsDevice,
+					1,
+					1,
+					PixelFormat.R8G8B8A8_UNorm_SRgb,
+					new[] { colour }
+			);
 		}
 	}
 }

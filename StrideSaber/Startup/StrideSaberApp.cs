@@ -95,12 +95,6 @@ namespace StrideSaber.Startup
 
 					using (Game game = CurrentGame = new Game())
 					{
-						if (options.NoSplash)
-						{
-							game.SceneSystem.SplashScreenEnabled = false;
-							game.SceneSystem.SplashScreenUrl = null;
-						}
-
 						game.WindowMinimumUpdateRate.SetMaxFrequency(120 /*fps*/);         //Cap the max fps
 						game.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false; //No VSync
 						EventManager.FireEventSafeLogged(new GameLoadEvent(CurrentGame));

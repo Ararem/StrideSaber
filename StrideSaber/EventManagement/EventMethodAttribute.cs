@@ -58,7 +58,7 @@ namespace StrideSaber.EventManagement
 	///    </code>
 	/// </example>
 	[AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
-	[MeansImplicitUse]
+	[MeansImplicitUse(ImplicitUseTargetFlags.Itself)]
 	public sealed class EventMethodAttribute : Attribute
 	{
 		/// <summary>

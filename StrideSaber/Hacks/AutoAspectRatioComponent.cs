@@ -14,11 +14,19 @@ namespace StrideSaber.Hacks
 	///  A script component that automatically adjusts the aspect ratio of the attached <see cref="UIComponent"/> according the the
 	///  <see cref="Rectangle.Size"/>
 	/// </summary>
+	/// <see cref="UIComponent"/>
 	[UsedImplicitly]
 	[RequireComponent(typeof(UIComponent))]
 	public class AutoAspectRatioComponent : StartupScript
 	{
+		/// <summary>
+		/// A hashset that weakly references all the current <see cref="AutoAspectRatioComponent"/> instances
+		/// </summary>
 		private static readonly HashSet<WeakReference<AutoAspectRatioComponent>> Instances = new();
+
+		/// <summary>
+		/// The <see cref="UIComponent"/> that this object should modify
+		/// </summary>
 		private UIComponent ui = null!;
 
 		/// <inheritdoc/>
@@ -44,7 +52,7 @@ namespace StrideSaber.Hacks
 			{
 				//Remove any invalid instances
 				//Do this by checking if the weak reference no longer points to an object
-				Instances.RemoveWhere(w => w.TryGetTarget(out var _) == false);
+				Instances.RemoveWhere(w => w.TryGetTarget(out var c) == false);
 				foreach (WeakReference<AutoAspectRatioComponent> weakRef in Instances)
 					if (weakRef.TryGetTarget(out var component))
 						SetCorrectAspect((GameWindow) sender!, component.ui);

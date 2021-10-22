@@ -16,12 +16,14 @@ namespace StrideSaber.Diagnostics
 	/// <summary>
 	/// A task-like type that can be used to create tasks whose progress can be tracked and displayed to the user
 	/// </summary>
-	public sealed class BackgroundTask
+	public sealed class BackgroundTask : IFormattable
 	{
 		/// <summary>
 		/// What event types messages should be logged for
 		/// </summary>
-		public static BackgroundTaskEvent EnabledLogEvents { get; set; } = Error | Success | Created | Disposed | ProgressUpdated;
+		public static BackgroundTaskEvent EnabledLogEvents { get; set; } =
+			//Error | Success | Created | Disposed | ProgressUpdated;
+			ProgressUpdated;
 
 		/// <summary>
 		/// An object that can be locked upon for global (static) synchronisation
@@ -244,7 +246,6 @@ namespace StrideSaber.Diagnostics
 
 		private void RaiseEvent(BackgroundTaskEvent evt)
 		{
-			//Also need to check if the flag is `none` because otherwise the second `if` will not return when we want it to
 			//If the flag is not enabled, do nothing
 			if ((EnabledLogEvents & evt) == 0) return;
 			switch (evt)
@@ -262,7 +263,7 @@ namespace StrideSaber.Diagnostics
 					Log.Verbose("{Task} completed successfully", this);
 					break;
 				case ProgressUpdated:
-					Log.Verbose("{Task} progress update", this);
+					Log.Verbose("{Task:'Name'} progress update", this);
 					break;
 				case None:
 					break;
@@ -286,18 +287,28 @@ namespace StrideSaber.Diagnostics
 			return ToString(DefaultToStringFormat);
 		}
 
+		/// <inheritdoc />
+		public string ToString(string? format, IFormatProvider? formatProvider)
+		{
+			return format is null ? ToString() : ToString(format);
+		}
+
 		/// <inheritdoc cref="ToString()"/>
 		/// <remarks>Uses <see cref="SmartFormat"/> format strings</remarks>
 		public string ToString(string format)
 		{
-			return Smart.Format(format, this);
+			return ToString(Smart.Default.Parser.ParseFormat(format));
 		}
 
 		/// <inheritdoc cref="ToString()"/>
 		/// <remarks>Uses <see cref="SmartFormat"/> format strings</remarks>
 		public string ToString(Format format)
 		{
-			return Smart.Default.Format(format, this);
+			#warning HACK - SmartFormat is not thread-safe
+			lock(GlobalLock)
+			{
+				return Smart.Default.Format(format, this);
+			}
 		}
 
 	#endregion

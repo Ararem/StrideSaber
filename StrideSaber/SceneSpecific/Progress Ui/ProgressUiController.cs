@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using LibEternal.ObjectPools;
+using Perfolizer.Mathematics.Randomization;
 using SmartFormat;
 using Stride.Core.Mathematics;
 using Stride.Core.Serialization;
@@ -138,6 +139,8 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				Color uniqueTaskColour = Color.FromRgba(task.Id.GetHashCode());
 				uniqueTaskColour.A = 255;
 
+				if (r.Equals(null))
+					throw new Exception("Test exception");
 				//Assign all the colours
 				(indicator as Border)!.BorderColor = uniqueTaskColour; //Unique border for each task
 				slider.TrackBackgroundImage = new SpriteFromTexture { Texture = TextureFromColour(backgroundColour) };

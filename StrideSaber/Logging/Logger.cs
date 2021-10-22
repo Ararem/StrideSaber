@@ -1,17 +1,19 @@
 ﻿using LibEternal.Logging.Destructurers;
 using LibEternal.Logging.Enrichers;
 using Serilog;
+using Serilog.Debugging;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using Stride.Core.Diagnostics;
 using StrideSaber.EventManagement;
 using StrideSaber.EventManagement.Events;
+using StrideSaber.Hacks;
 using StrideSaber.Startup;
 using System;
 using System.Linq;
 using System.Reflection;
 using static LibEternal.Logging.Enrichers.CallerContextEnricher;
-using static LibEternal.Logging.Enrichers.ThreadInfoEnricher;
+using static StrideSaber.Logging.StrideThreadInfoEnricher;
 using static LibEternal.Logging.Enrichers.LogEventNumberEnricher;
 
 namespace StrideSaber.Logging
@@ -25,13 +27,13 @@ namespace StrideSaber.Logging
 		///  A message template that prints lots of information to help with debugging
 		/// </summary>
 		private const string DebugTemplate =
-				"[{Timestamp:HH:mm:ss}\t#{" + EventNumberProp + "}\t{Level:t3}]\t[{" + ThreadNameProp + "}\t#{" + ThreadIdProp + "}\t({" + ThreadTypeProp + "})]\t[{" + CallingTypeProp + "}/{" + CallingMethodProp + "}]:\t{Message:lj}{NewLine}{Exception}{" + StackTraceProp + "}{NewLine}{NewLine}";
+				"[{Timestamp:HH:mm:ss} {" + EventNumberProp + ",-5:'#'####} {Level:t3}] [{" + ThreadNameProp + ",-20} {" + ThreadIdProp + ",-3:'#'##} ({" + ThreadTypeProp /*Always 11 chars (from enricher)*/+ "})]\t[{" + CallingTypeProp + "}/{" + CallingMethodProp + "}]:\t{Message:lj}{NewLine}{Exception}{" + StackTraceProp + "}{NewLine}{NewLine}";
 
 		/// <summary>
 		///  A message template that prints simple information
 		/// </summary>
 		private const string SimpleTemplate =
-				"[{Timestamp:HH:mm:ss}\t#{" + EventNumberProp + "}\t{Level:t3}]\t[{" + ThreadNameProp + "}\t#{" + ThreadIdProp + "}]\t[{" + CallingTypeProp + "}/{" + CallingMethodProp + "}]:\t{Message:lj}{NewLine}{Exception}";
+				"[{Timestamp:HH:mm:ss} {" + EventNumberProp + ",-5:'#'####} {Level:t3}] [{" + ThreadNameProp + ",-20} {" + ThreadIdProp + ",-3:'#'##}] [{" + CallingTypeProp + "}/{" + CallingMethodProp + "}]:\t{Message:lj}{NewLine}{Exception}";
 
 		/// <summary>
 		///  Here so I can guarantee thread-safety when init-ing/shutting down
@@ -52,16 +54,18 @@ namespace StrideSaber.Logging
 			{
 				if (initialized) return;
 
+				SelfLog.Enable(SelfLog_OnMessage);
 				DefaultOptions cmdOptions = (DefaultOptions)StrideSaberApp.CmdOptions;
 				Stride.Core.Diagnostics.Logger.MinimumLevelEnabled = LogMessageType.Verbose;
 				LoggerConfiguration config = new LoggerConfiguration()
 				                              .MinimumLevel.Is(cmdOptions.LogLevel)
+				                              .Enrich.FromLogContext()
 				                              .Enrich.With<CallerContextEnricher>()
 				                              .Enrich.With<DemystifiedExceptionsEnricher>()
 				                              .Enrich.With<LogEventNumberEnricher>()
 				                              .Enrich.With<EventLevelIndentEnricher>()
-				                              .Enrich.With<ThreadInfoEnricher>()
-				                              .Enrich.FromLogContext()
+				                              .Enrich.With<StrideThreadInfoEnricher>()
+				                              .Enrich.With<PropertyLengthTrackerEnricher>()
 				                              .Destructure.With<DelegateDestructurer>()
 				                              .Destructure.With<StrideObjectDestructurer>();
 
@@ -76,6 +80,11 @@ namespace StrideSaber.Logging
 				Log.Information("Logger initialized");
 				initialized = true;
 			}
+		}
+
+		private static void SelfLog_OnMessage(string message)
+		{
+			Console.Error.WriteLine(message);
 		}
 
 		/// <summary>

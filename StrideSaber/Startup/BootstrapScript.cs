@@ -6,6 +6,7 @@ using Stride.Engine;
 using Stride.UI;
 using Stride.UI.Controls;
 using Stride.UI.Events;
+using StrideSaber.SceneManagement;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -18,50 +19,50 @@ using SLog = Serilog.Log;
 namespace StrideSaber.Startup
 {
 	/// <summary>
-	/// An <see cref="AsyncScript"/> that initializes stuff
+	///  An <see cref="AsyncScript"/> that initializes stuff
 	/// </summary>
 	[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 	public class BootstrapScript : AsyncScript
 	{
 		/// <summary>
-		/// Whether the script should automatically start the game
+		///  Whether the script should automatically start the game
 		/// </summary>
 		public bool AutoStart = false;
 
 		/// <summary>
-		/// The time to wait before starting automatically if <see cref="AutoStart"/> is <see langword="true"/>
+		///  The time to wait before starting automatically if <see cref="AutoStart"/> is <see langword="true"/>
 		/// </summary>
 		public TimeSpan AutoStartWaitDuration;
 
 		/// <summary>
-		/// The <see cref="UIComponent"/> that this object is linked to
-		/// </summary>
-		public UIComponent Ui;
-
-		/// <summary>
-		/// A reference to a <see cref="Scene"/> asset that will be loaded as soon as the script <see cref="Continue">continues</see>
+		///  A reference to a <see cref="Scene"/> asset that will be loaded as soon as the script <see cref="Continue">continues</see>
 		/// </summary>
 		public UrlReference<Scene> MainMenuScene;
 
 		/// <summary>
-		/// The time in milliseconds between updates of the <see cref="Ui"/>
-		/// </summary>
-		[DataMemberRange(1, 1000, 1, 50, 0)] public int UpdateInterval = 100;
-
-		/// <summary>
-		/// The <see cref="Scene"/> that should be loaded for the progress UI
+		///  The <see cref="Scene"/> that should be loaded for the progress UI
 		/// </summary>
 		public UrlReference<Scene> ProgressUiScene;
+
+		/// <summary>
+		///  The <see cref="UIComponent"/> that this object is linked to
+		/// </summary>
+		public UIComponent Ui;
+
+		/// <summary>
+		///  The time in milliseconds between updates of the <see cref="Ui"/>
+		/// </summary>
+		[DataMemberRange(1, 1000, 1, 50, 0)] public int UpdateInterval = 100;
 
 		/// <inheritdoc/>
 		public override async Task Execute()
 		{
 			SLog.Debug("Bootstrap Script executing");
 
-			SLog.Debug("Loading progress UI asynchronously");
+			SLog.Debug("Asynchronously loading Progress UI ({Scene})", ProgressUiScene);
 			Scene s = await Content.LoadAsync(ProgressUiScene);
 			SceneSystem.SceneInstance.RootScene.Children.Add(s);
-			SLog.Debug("Loaded Progress Ui");
+			SLog.Debug("Asynchronously loaded Progress Ui ({Scene})", ProgressUiScene);
 
 			//Init stuff
 			UIElement root = Ui.Page.RootElement;
@@ -79,7 +80,8 @@ namespace StrideSaber.Startup
 			SLog.Verbose("Main Menu Scene :	{MainMenuScene}", MainMenuScene);
 
 			//Get our button ready
-			continueButton.Click += ContinueButtonOnClick;
+			continueButton.Click += (_, _) => Task.Run(ContinueButtonOnClick);
+			SLog.Verbose("Subscribed continue button click event");
 
 			//If we're not auto-starting (aka waiting for the user)
 			//Then there's no point in waiting for anything else
@@ -129,27 +131,21 @@ namespace StrideSaber.Startup
 			//Once we get to here we know the `while()` has finished so we can continue
 			StringBuilderPool.ReturnPooled(sb);
 			SLog.Verbose("Bootstrap countdown complete, autostarting");
-			Continue();
+			await Continue();
 		}
 
-		private void Continue()
+		private async Task Continue()
 		{
 			SLog.Information("Continue() called");
-			//Unload old scene
-			SLog.Verbose("Unloading old scene");
-			Content.Unload(Entity.Scene);
-			SLog.Verbose("Old scene unloaded");
-			//Load the new scene
-			SLog.Verbose("Loading new scene");
-			Content.LoadAsync(MainMenuScene);
-			SLog.Verbose("Loaded new scene");
+			//Swap scenes
+			await Content.UnloadSceneAsync(Entity.Scene);
+			await Content.LoadSceneAsync(MainMenuScene);
 		}
 
-		private void ContinueButtonOnClick(object? sender, RoutedEventArgs e)
+		private async Task ContinueButtonOnClick()
 		{
-			e.Handled = true;
 			SLog.Verbose("User pressed continue button, continuing");
-			Continue();
+			await Continue();
 		}
 	}
 }

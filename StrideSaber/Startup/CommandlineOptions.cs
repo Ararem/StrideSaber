@@ -2,7 +2,6 @@
 using JetBrains.Annotations;
 using Serilog.Events;
 using SmartFormat;
-using System;
 using System.Collections.Generic;
 
 namespace StrideSaber.Startup
@@ -37,6 +36,12 @@ namespace StrideSaber.Startup
 		/// </summary>
 		[Option('a', nameof(AsyncLog), Default = false, HelpText = "Whether logging should be done asynchronously or on the caller thread.")]
 		public bool AsyncLog { get; init; }
+
+		/// <summary>
+		/// If the default splash screen should be disabled
+		/// </summary>
+		[Option('s', nameof(NoSplash), Default = false, HelpText = "A flag that disables the splash screen")]
+		public bool NoSplash { get; init; }
 	}
 
 	/// <summary>

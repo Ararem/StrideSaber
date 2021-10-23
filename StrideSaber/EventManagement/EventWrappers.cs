@@ -1,4 +1,5 @@
 ﻿using System;
+
 // ReSharper disable InconsistentNaming
 
 namespace StrideSaber.EventManagement
@@ -6,19 +7,19 @@ namespace StrideSaber.EventManagement
 	partial class EventManager
 	{
 		/// <summary>
-		/// The base class used to wrap events so they can be called by the <see cref="EventManager"/>
+		///  The base class used to wrap events so they can be called by the <see cref="EventManager"/>
 		/// </summary>
 		private abstract class EventWrapper
 		{
-			/// <summary>
-			/// Invokes the wrapped event
-			/// </summary>
-			public abstract void Invoke(Event e);
-
 			public abstract Delegate Delegate { get; }
 
 			//This is here so Serilog picks it up and formats it nicely
 			public Type Type => GetType();
+
+			/// <summary>
+			///  Invokes the wrapped event
+			/// </summary>
+			public abstract void Invoke(Event e);
 		}
 
 		private sealed class Void_Param_EventWrapper<TEvent> : EventWrapper where TEvent : Event
@@ -56,6 +57,7 @@ namespace StrideSaber.EventManagement
 				_ = Delegate((TEvent)e);
 			}
 		}
+
 		private sealed class Void_NoParams_EventWrapper : EventWrapper
 		{
 			public Void_NoParams_EventWrapper(Action @delegate)

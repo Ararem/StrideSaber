@@ -1,5 +1,4 @@
 ﻿using ConcurrentCollections;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Serilog;
 using Serilog.Context;
 using Stride.Core.Extensions;
@@ -143,7 +142,7 @@ namespace StrideSaber.EventManagement
 			Log.Debug("Total: {TypeCount:n0} event types, {MethodCount:n0} methods", EventMethods.Count, EventMethods.Values.Sum(s => s.Count));
 		}
 
-		#region Event storage and invocation
+	#region Event storage and invocation
 
 		private static void AddMethod(Type eventType, MethodInfo method)
 		{
@@ -177,17 +176,18 @@ namespace StrideSaber.EventManagement
 				{
 					//It's a void returning method, wrap it into a Void_Param_EventWrapper<TEvent>
 					Type wrapperType = typeof(Void_Param_EventWrapper<>)
-							.MakeGenericType(paramType); //Have to pass in the generic type arg
-					wrapper = (EventWrapper) Activator.CreateInstance(wrapperType, del)!; //The constructor should have an appropriate input type (I hope)
+							.MakeGenericType(paramType);                                 //Have to pass in the generic type arg
+					wrapper = (EventWrapper)Activator.CreateInstance(wrapperType, del)!; //The constructor should have an appropriate input type (I hope)
 				}
 				else
 				{
 					//It's an object returning method, wrap it into a Returns_Param_EventWrapper<TEvent>
 					Type wrapperType = typeof(Returns_Param_EventWrapper<>)
-							.MakeGenericType(paramType);                                  //Have to pass in the generic type arg
-					wrapper = (EventWrapper) Activator.CreateInstance(wrapperType, del)!; //The constructor should have an appropriate input type (I hope)
+							.MakeGenericType(paramType);                                 //Have to pass in the generic type arg
+					wrapper = (EventWrapper)Activator.CreateInstance(wrapperType, del)!; //The constructor should have an appropriate input type (I hope)
 				}
 			}
+
 			set.Add(wrapper);
 		}
 
@@ -233,6 +233,6 @@ namespace StrideSaber.EventManagement
 			return exceptions;
 		}
 
-		#endregion
+	#endregion
 	}
 }

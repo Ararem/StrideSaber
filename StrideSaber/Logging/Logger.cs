@@ -102,19 +102,12 @@ namespace StrideSaber.Logging
 		[EventMethod(typeof(GameLoadEvent))]
 		private static void HookAndDisableStrideConsoleLogger(Event? _)
 		{
-			Log.Information("Hooking and disabling stride console logging system");
-			//TODO: Instead of clearing just removing the annoying stride part
 			//Here I'm clearing the event because stride sets up it's own handler which I don't want
 			//(Otherwise you would get duped logs when debugging which is annoying)
 			//This is because by default stride logs to the console, but I'm doing that myself
-			//typeof(GlobalLogger).GetField(nameof(GlobalLogger.GlobalMessageLogged), BindingFlags.Static | BindingFlags.NonPublic)!.GetValue(null);
-			//typeof(GlobalLogger).GetEvent(nameof(GlobalLogger.GlobalMessageLogged))
-			//                    .RemoveMethod.Invoke( //Try and remove a method from the event
-			//		                    null,         //The event is static so it doesn't have a target
-			//		                    new object[]{
-			//				                    typeof(GlobalLogger).GetField(nameof(GlobalLogger.GlobalMessageLogged), BindingFlags.Static | BindingFlags.NonPublic)!.GetValue(null) //Try and remove the action that is currently
-			//		                    }
-			//                    )
+
+			Log.Information("Hooking and disabling stride console logging system");
+
 			//Get the event info that corresponds to the event called when a message is logged (the one we want to modify)
 			EventInfo? eventInfo = typeof(GlobalLogger).GetEvent(nameof(GlobalLogger.GlobalMessageLogged));
 			if (eventInfo is null)

@@ -15,7 +15,7 @@ namespace StrideSaber.EventManagement
 	/// <summary>
 	///  A manager class that manages all <see cref="Event">events</see> for the program
 	/// </summary>
-	public static class EventManager
+	public static partial class EventManager
 	{
 		/// <summary>
 		///  The map of methods to their events. Use a <see cref="Type"/> (that inherits from <see cref="Event"/>) as the key to access all methods subscribed to
@@ -80,8 +80,8 @@ namespace StrideSaber.EventManagement
 					foreach (MethodInfo method in methods)
 					{
 						methodScanCount++;
-						var attributes = method.GetCustomAttributes<EventMethodAttribute>().ToArray();
-						if (attributes.Length == 0) continue;
+						var eventAttributes = method.GetCustomAttributes<EventMethodAttribute>().ToArray();
+						if (eventAttributes.Length == 0) continue;
 
 						if (method.IsStatic == false)
 						{
@@ -107,8 +107,8 @@ namespace StrideSaber.EventManagement
 							continue;
 						}
 
-						var eventTypes = attributes.Select(a => a.EventType).ToArray();
-						Log.Verbose("Method {$Method} has {Count} event target attributes", method, attributes.Length);
+						var eventTypes = eventAttributes.Select(a => a.EventType).ToArray();
+						Log.Verbose("Method {$Method} has {Count} event target attributes", method, eventAttributes.Length);
 						Action<Event> action;
 						//Methods that return void are easy for us
 						if (method.ReturnType == typeof(void))
@@ -154,6 +154,8 @@ namespace StrideSaber.EventManagement
 			Log.Debug("Total method count: {ActualMethodsCount:n0} (distinct) subscribed, {DuplicateMethodsCount:n0} (duplicate) subscribed, {InvalidMethodsCount:n0} invalid", actualMethodsCount, duplicateMethodsCount, invalidMethodsCount);
 			Log.Debug("Total: {TypeCount:n0} event types, {MethodCount:n0} methods", EventMethods.Count, EventMethods.Values.Sum(s => s.Count));
 		}
+
+		#region Event storage and invocation
 
 		private static void AddMethod(Type eventType, Action<Event> action)
 		{
@@ -208,5 +210,7 @@ namespace StrideSaber.EventManagement
 
 			return exceptions;
 		}
+
+		#endregion
 	}
 }

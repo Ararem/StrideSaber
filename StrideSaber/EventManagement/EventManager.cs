@@ -1,4 +1,5 @@
 ﻿using ConcurrentCollections;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Serilog;
 using Serilog.Context;
 using Stride.Core.Extensions;
@@ -21,7 +22,7 @@ namespace StrideSaber.EventManagement
 		///  The map of methods to their events. Use a <see cref="Type"/> (that inherits from <see cref="Event"/>) as the key to access all methods subscribed to
 		///  that type of event.
 		/// </summary>
-		private static readonly ConcurrentDictionary<Type, ConcurrentHashSet<Action<Event>>> EventMethods = new();
+		private static readonly ConcurrentDictionary<Type, ConcurrentHashSet<EventWrapper>> EventMethods = new();
 
 		internal static void Init()
 		{
@@ -108,27 +109,14 @@ namespace StrideSaber.EventManagement
 						}
 
 						var eventTypes = eventAttributes.Select(a => a.EventType).ToArray();
-						Log.Verbose("Method {$Method} has {Count} event target attributes", method, eventAttributes.Length);
-						Action<Event> action;
-						//Methods that return void are easy for us
-						if (method.ReturnType == typeof(void))
-						{
-							action = method.CreateDelegate<Action<Event>>();
-						}
-						//For a non-void method, we need to wrap the function into an action that ignores the result
-						else
-						{
-							Func<Event, object> methodFunc = method.CreateDelegate<Func<Event, object>>();
-							action = evt => methodFunc(evt);
-						}
-
+						Log.Verbose("Method {$Method} has {Count} event targets: {EventTypeTargets}", method, eventTypes.Length, eventTypes);
 						//True/false if at least one of the event attributes on the method was valid
 						//Only reason it's needed is because otherwise the tracking numbers are funky and don't match what actually happens
 						bool success = false;
 						foreach (Type eventType in eventTypes)
 							if (eventType.IsAssignableTo(typeof(Event)))
 							{
-								AddMethod(eventType, action);
+								AddMethod(eventType, method);
 								success = true;
 								duplicateMethodsCount++;
 							}
@@ -157,16 +145,50 @@ namespace StrideSaber.EventManagement
 
 		#region Event storage and invocation
 
-		private static void AddMethod(Type eventType, Action<Event> action)
+		private static void AddMethod(Type eventType, MethodInfo method)
 		{
-			Log.Verbose("Adding method {@Method} for event {Event}", action, eventType);
+			Log.Verbose("Adding method {@Delegate} for event {Event}", method, eventType);
 			//I don't know how to explain this, but I'll try
 			//Here, we ensure that the dictionary has a set for us to store actions in.
 			//If the event type already has a set to store in, that's what is returned, otherwise we make a new one.
 			//I'm passing in a delegate instead of instantiating a new set so that we only allocate memory if we actually need it
-			var set = EventMethods.GetOrAdd(eventType, _ => new ConcurrentHashSet<Action<Event>>());
-			//Now add the action into the bag
-			set.Add(action);
+			var set = EventMethods.GetOrAdd(eventType, _ => new ConcurrentHashSet<EventWrapper>());
+			//Now create the wrapper and add it the set
+			EventWrapper wrapper;
+			//No params and void, easy peasy
+			if ((method.ReturnType == typeof(void)) && (method.GetParameters().Length == 0))
+			{
+				wrapper = new Void_NoParams_EventWrapper(method.CreateDelegate<Action>());
+			}
+			//No params but returns, also easy
+			else if ((method.GetParameters().Length == 0) && (method.ReturnType != typeof(void)))
+			{
+				wrapper = new Returns_NoParams_EventWrapper(method.CreateDelegate<Func<object>>());
+			}
+			//Here's where it gets tricky...
+			else
+			{
+				//Check here what type of parameter it requires
+				//This is also the type of the argument we need to pass in as a generic type arg
+				Type paramType = method.GetParameters()[0].ParameterType;
+				//Create a delegate without specifying which type it is
+				Delegate del = method.CreateDelegate<Delegate>();
+				if (method.ReturnType == typeof(void))
+				{
+					//It's a void returning method, wrap it into a Void_Param_EventWrapper<TEvent>
+					Type wrapperType = typeof(Void_Param_EventWrapper<>)
+							.MakeGenericType(paramType); //Have to pass in the generic type arg
+					wrapper = (EventWrapper) Activator.CreateInstance(wrapperType, del)!; //The constructor should have an appropriate input type (I hope)
+				}
+				else
+				{
+					//It's an object returning method, wrap it into a Returns_Param_EventWrapper<TEvent>
+					Type wrapperType = typeof(Returns_Param_EventWrapper<>)
+							.MakeGenericType(paramType);                                  //Have to pass in the generic type arg
+					wrapper = (EventWrapper) Activator.CreateInstance(wrapperType, del)!; //The constructor should have an appropriate input type (I hope)
+				}
+			}
+			set.Add(wrapper);
 		}
 
 		/// <summary>
@@ -187,20 +209,20 @@ namespace StrideSaber.EventManagement
 		/// <param name="evt">The <see cref="Event"/> to fire</param>
 		public static List<Exception> FireEventSafe<T>(T evt) where T : Event
 		{
-			EventMethods.TryGetValue(typeof(T), out var methods);
+			EventMethods.TryGetValue(typeof(T), out var events);
 			//Here we catch any exceptions the code might throw
 			List<Exception> exceptions = new(1);
 			bool log = evt.FiringLogLevel is not null;
 			//TODO: Yeah how thread-safe is this?
-			if (log) Log.Write(evt.FiringLogLevel!.Value, "Firing event {EventId} for {Count} subscribers: {Event}", evt.Id, methods?.Count ?? 0, evt);
-			if (methods != null)
-				foreach (Action<Event> m in methods)
+			if (log) Log.Write(evt.FiringLogLevel!.Value, "Firing event {EventId} for {Count} subscribers: {Event}", evt.Id, events?.Count ?? 0, evt);
+			if (events != null)
+				foreach (EventWrapper wrapper in events)
 				{
 					if (log) //I only want this to be logged in very rare circumstances
-						Log.Verbose("[{EventId}]: Invoking method {@Method}", evt.Id, m);
+						Log.Verbose("[{EventId}]: Invoking event {@Event}", evt.Id, wrapper);
 					try
 					{
-						m.Invoke(evt);
+						wrapper.Invoke(evt);
 					}
 					catch (Exception e)
 					{

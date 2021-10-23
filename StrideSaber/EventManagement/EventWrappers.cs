@@ -1,5 +1,5 @@
-﻿using SmartFormat;
-using System;
+﻿using System;
+// ReSharper disable InconsistentNaming
 
 namespace StrideSaber.EventManagement
 {
@@ -14,72 +14,77 @@ namespace StrideSaber.EventManagement
 			/// Invokes the wrapped event
 			/// </summary>
 			public abstract void Invoke(Event e);
+
+			public abstract Delegate Delegate { get; }
+
+			//This is here so Serilog picks it up and formats it nicely
+			public Type Type => GetType();
 		}
 
 		private sealed class Void_Param_EventWrapper<TEvent> : EventWrapper where TEvent : Event
 		{
-			public Void_Param_EventWrapper(Action<TEvent> action)
+			public Void_Param_EventWrapper(Action<TEvent> @delegate)
 			{
-				Action = action;
+				Delegate = @delegate;
 			}
 
-			public Action<TEvent> Action { get; }
+			public override Action<TEvent> Delegate { get; }
 
 			/// <inheritdoc/>
 			public override void Invoke(Event e)
 			{
 				//This isn't safe to cast but that's okay, everything should be managed by the EventManager
 				//and it's his fault if the wrong event type is passed in
-				Action((TEvent)e);
+				Delegate((TEvent)e);
 			}
 		}
 
 		private sealed class Returns_Param_EventWrapper<TEvent> : EventWrapper where TEvent : Event
 		{
-			public Returns_Param_EventWrapper(Func<TEvent, object> action)
+			public Returns_Param_EventWrapper(Func<TEvent, object> @delegate)
 			{
-				Action = action;
+				Delegate = @delegate;
 			}
 
-			public Func<TEvent, object> Action { get; }
+			public override Func<TEvent, object> Delegate { get; }
 
 			/// <inheritdoc/>
 			public override void Invoke(Event e)
 			{
 				//This isn't safe to cast but that's okay, everything should be managed by the EventManager
 				//and it's his fault if the wrong event type is passed in
-				_ = Action((TEvent)e);
+				_ = Delegate((TEvent)e);
 			}
 		}
 		private sealed class Void_NoParams_EventWrapper : EventWrapper
 		{
-			public Void_NoParams_EventWrapper(Action action)
+			public Void_NoParams_EventWrapper(Action @delegate)
 			{
-				Action = action;
+				Delegate = @delegate;
 			}
 
-			public Action Action { get; }
+			public override Action Delegate { get; }
 
 			/// <inheritdoc/>
 			public override void Invoke(Event e)
 			{
-				Action();
+				Delegate();
 			}
 		}
 
 		private sealed class Returns_NoParams_EventWrapper : EventWrapper
 		{
-			public Returns_NoParams_EventWrapper(Func<object> action)
+			public Returns_NoParams_EventWrapper(Func<object> @delegate)
 			{
-				Action = action;
+				Delegate = @delegate;
 			}
 
-			public Func<object> Action { get; }
+			public override Func<object> Delegate { get; }
 
 			/// <inheritdoc/>
 			public override void Invoke(Event e)
 			{
-				_ = Action();
+				_ = Delegate();
 			}
 		}
 	}

@@ -115,7 +115,7 @@ namespace StrideSaber.EventManagement
 						foreach (Type eventType in eventTypes)
 							if (eventType.IsAssignableTo(typeof(Event)))
 							{
-								AddMethod(eventType, method);
+								AddMethodInfo(eventType, method);
 								success = true;
 								duplicateMethodsCount++;
 							}
@@ -144,7 +144,7 @@ namespace StrideSaber.EventManagement
 
 	#region Event storage and invocation
 
-		private static void AddMethod(Type eventType, MethodInfo method)
+		private static void AddMethodInfo(Type eventType, MethodInfo method)
 		{
 			Log.Verbose("Adding method {@Delegate} for event {Event}", method, eventType);
 			//I don't know how to explain this, but I'll try
@@ -170,21 +170,21 @@ namespace StrideSaber.EventManagement
 				//Check here what type of parameter it requires
 				//This is also the type of the argument we need to pass in as a generic type arg
 				Type paramType = method.GetParameters()[0].ParameterType;
-				//Create a delegate without specifying which type it is
-				Delegate del = method.CreateDelegate<Delegate>();
 				if (method.ReturnType == typeof(void))
 				{
 					//It's a void returning method, wrap it into a Void_Param_EventWrapper<TEvent>
 					Type wrapperType = typeof(Void_Param_EventWrapper<>)
-							.MakeGenericType(paramType);                                 //Have to pass in the generic type arg
-					wrapper = (EventWrapper)Activator.CreateInstance(wrapperType, del)!; //The constructor should have an appropriate input type (I hope)
+							.MakeGenericType(paramType);                                               //Have to pass in the generic type arg
+					Delegate del = method.CreateDelegate(typeof(Action<>).MakeGenericType(paramType)); //Generic-ise the action type for our parameter
+					wrapper = (EventWrapper)Activator.CreateInstance(wrapperType, del)!;               //The constructor should have an appropriate input type (I hope)
 				}
 				else
 				{
 					//It's an object returning method, wrap it into a Returns_Param_EventWrapper<TEvent>
 					Type wrapperType = typeof(Returns_Param_EventWrapper<>)
-							.MakeGenericType(paramType);                                 //Have to pass in the generic type arg
-					wrapper = (EventWrapper)Activator.CreateInstance(wrapperType, del)!; //The constructor should have an appropriate input type (I hope)
+							.MakeGenericType(paramType);                                                             //Have to pass in the generic type arg
+					Delegate del = method.CreateDelegate(typeof(Func<>).MakeGenericType(paramType, typeof(object))); //Generalise the func delegate type. We can safely cast the return 'down' to object, but we mustn't do so for the event type
+					wrapper = (EventWrapper)Activator.CreateInstance(wrapperType, del)!;                             //The constructor should have an appropriate input type (I hope)
 				}
 			}
 
@@ -219,7 +219,7 @@ namespace StrideSaber.EventManagement
 				foreach (EventWrapper wrapper in events)
 				{
 					if (log) //I only want this to be logged in very rare circumstances
-						Log.Verbose("[{EventId}]: Invoking event {@Event}", evt.Id, wrapper);
+						Log.Verbose("[{EventId}]: Invoking method {Delegate} (Wrapper={Type})", evt.Id, wrapper.Delegate, wrapper.GetType());
 					try
 					{
 						wrapper.Invoke(evt);

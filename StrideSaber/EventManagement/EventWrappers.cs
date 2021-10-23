@@ -13,9 +13,6 @@ namespace StrideSaber.EventManagement
 		{
 			public abstract Delegate Delegate { get; }
 
-			//This is here so Serilog picks it up and formats it nicely
-			public Type Type => GetType();
-
 			/// <summary>
 			///  Invokes the wrapped event
 			/// </summary>

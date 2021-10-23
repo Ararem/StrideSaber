@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace StrideSaber.EventManagement
 {
@@ -219,7 +220,7 @@ namespace StrideSaber.EventManagement
 				foreach (EventWrapper wrapper in events)
 				{
 					if (log) //I only want this to be logged in very rare circumstances
-						Log.Verbose("[{EventId}]: Invoking method {Delegate} (Wrapper={Type})", evt.Id, wrapper.Delegate, wrapper.GetType());
+						Log.Verbose("[{EventId}]: Invoking method {@Delegate} (Wrapper={$Wrapper})", evt.Id, wrapper.Delegate, wrapper);
 					try
 					{
 						wrapper.Invoke(evt);

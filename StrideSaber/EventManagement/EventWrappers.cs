@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LibEternal.ObjectPools;
+using System;
+using System.Diagnostics;
 
 // ReSharper disable InconsistentNaming
 
@@ -17,6 +19,12 @@ namespace StrideSaber.EventManagement
 			///  Invokes the wrapped event
 			/// </summary>
 			public abstract void Invoke(Event e);
+
+			/// <inheritdoc />
+			public override string ToString()
+			{
+				return StringBuilderPool.BorrowInline(sb => sb.AppendTypeDisplayName(GetType(), false, true));
+			}
 		}
 
 		private sealed class Void_Param_EventWrapper<TEvent> : EventWrapper where TEvent : Event

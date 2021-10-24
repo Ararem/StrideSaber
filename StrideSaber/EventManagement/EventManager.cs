@@ -1,4 +1,4 @@
-using ConcurrentCollections;
+﻿using ConcurrentCollections;
 using Serilog;
 using Serilog.Context;
 using Stride.Core.Extensions;
@@ -117,7 +117,7 @@ namespace StrideSaber.EventManagement
 				//Ensure that it inherits from event
 				if (!parameter.ParameterType.IsAssignableTo(typeof(Event)))
 				{
-					Log.Verbose("Method {$Method} has incorrect parameter type {Type} (must inherit from {EventBaseType}", method, parameter.ParameterType, typeof(Event));
+					Log.Warning("Method {$Method} has incorrect parameter type {Type} (must inherit from {EventBaseType})", method, parameter.ParameterType, typeof(Event));
 					stats.InvalidMethodCount++;
 					return;
 				}
@@ -170,7 +170,7 @@ namespace StrideSaber.EventManagement
 				//Need to ensure that the EventType can be casted into the ParamType
 				if (!eventType.IsAssignableTo(paramType))
 				{
-					Log.Warning("Cannot cast from attribute event type {EventType} to parameter type {ParamType}", eventType, paramType);
+					Log.Warning("Cannot cast from attribute event type {EventType} to parameter type {ParamType} for method {Method}", eventType, paramType, method);
 					return false;
 				}
 

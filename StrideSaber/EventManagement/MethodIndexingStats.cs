@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Reflection;
 
 namespace StrideSaber.EventManagement
@@ -7,6 +8,7 @@ namespace StrideSaber.EventManagement
 	/// A struct that stores statistical information about method indexing
 	/// </summary>
 	/// <seealso cref="EventManager.IndexEventMethods"/>
+	[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 	public struct MethodIndexingStats
 	{
 		/// <summary>

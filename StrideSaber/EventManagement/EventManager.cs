@@ -117,7 +117,7 @@ namespace StrideSaber.EventManagement
 				//Ensure that it inherits from event
 				if (!parameter.ParameterType.IsAssignableTo(typeof(Event)))
 				{
-					Log.Verbose("Method {$Method} has incorrect parameter type ({Type})", method, parameter.ParameterType);
+					Log.Verbose("Method {$Method} has incorrect parameter type {Type} (must inherit from {EventBaseType}", method, parameter.ParameterType, typeof(Event));
 					stats.InvalidMethodCount++;
 					return;
 				}

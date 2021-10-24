@@ -31,7 +31,7 @@ namespace StrideSaber.EventManagement.Events
 		public override LogEventLevel? FiringLogLevel => LogEventLevel.Information;
 
 		/// <inheritdoc/>
-		public override string ToString()
+		public override string? ToString()
 		{
 			return $"Game loaded at {LoadTime}";
 		}

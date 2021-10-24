@@ -211,7 +211,6 @@ namespace StrideSaber.EventManagement
 			foreach (Exception exception in exceptions) Log.Verbose(exception, "[{Event}]: Caught exception", e);
 		}
 
-		//TODO: Make the event methods be able to handle a more specific/inherited type than plain old Event
 		/// <summary>
 		///  Fires (invokes) an <see cref="Event"/> of type <typeparamref name="T"/>, catching and returning any <see cref="Exception">Exceptions</see>
 		/// </summary>

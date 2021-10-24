@@ -41,6 +41,11 @@ namespace StrideSaber.Hacks
 		private static void Fail_CannotCastAttributeToParam(GameLoadEvent e)
 		{
 		}
+		
+		[EventMethod(typeof(Event))]
+		private static void Fail_CannotCastReverse(GameLoadEvent e)
+		{
+		}
 
 		[EventMethod(typeof(TestEvent))]
 		private static void Success_Void_BaseEventParam(Event e)
@@ -59,7 +64,7 @@ namespace StrideSaber.Hacks
 		}
 
 		[EventMethod(typeof(TestEvent))]
-		private static object? Success_ReturnObject_InheritedEventParam(TestEvent e)
+		private static string? Success_ReturnObject_InheritedEventParam(TestEvent e)
 		{
 			return null;
 		}

@@ -27,13 +27,13 @@ namespace StrideSaber.Logging
 		///  A message template that prints lots of information to help with debugging
 		/// </summary>
 		private const string DebugTemplate =
-				"[{Timestamp:HH:mm:ss} {" + EventNumberProp + ",-5:'#'####} {Level:t3}] [{" + ThreadNameProp + ",-20} {" + ThreadIdProp + ",-3:'#'##} ({" + ThreadTypeProp /*Always 11 chars (from enricher)*/+ "})]\t[{" + CallingTypeProp + "}/{" + CallingMethodProp + "}]:\t{Message:lj}{NewLine}{Exception}{" + StackTraceProp + "}{NewLine}{NewLine}";
+				"[{Timestamp:HH:mm:ss} {" + EventNumberProp + ",-5:'#'####} {Level:t3}] [{" + ThreadNameProp + ",-20} {" + ThreadIdProp + ",-3:'#'##} ({" + ThreadTypeProp /*Always 11 chars (from enricher)*/+ "})]\t[{" + CallingTypeProp + "}/{" + CallingMethodProp + "}]:\t{Message:l}{NewLine}{Exception}{" + StackTraceProp + "}{NewLine}{NewLine}";
 
 		/// <summary>
 		///  A message template that prints simple information
 		/// </summary>
 		private const string SimpleTemplate =
-				"[{Timestamp:HH:mm:ss} {" + EventNumberProp + ",-5:'#'####} {Level:t3}] [{" + ThreadNameProp + ",-20} {" + ThreadIdProp + ",-3:'#'##}] [{" + CallingTypeProp + "}/{" + CallingMethodProp + "}]:\t{Message:lj}{NewLine}{Exception}";
+				"[{Timestamp:HH:mm:ss} {" + EventNumberProp + ",-5:'#'####} {Level:t3}] [{" + ThreadNameProp + ",-20} {" + ThreadIdProp + ",-3:'#'##}] [{" + CallingTypeProp + "}/{" + CallingMethodProp + "}]:\t{Message:l}{NewLine}{Exception}";
 
 		/// <summary>
 		///  Here so I can guarantee thread-safety when init-ing/shutting down

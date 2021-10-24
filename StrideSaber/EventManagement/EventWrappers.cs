@@ -23,7 +23,7 @@ namespace StrideSaber.EventManagement
 			/// <inheritdoc />
 			public override string ToString()
 			{
-				return StringBuilderPool.BorrowInline(sb => sb.AppendTypeDisplayName(GetType(), false, true));
+				return StringBuilderPool.BorrowInline(static (sb, wrapper) => sb.AppendTypeDisplayName(wrapper.GetType(), false, true), this);
 			}
 		}
 

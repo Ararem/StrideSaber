@@ -147,6 +147,7 @@ namespace StrideSaber.EventManagement
 
 		private static void AddMethodInfo(Type eventType, MethodInfo method)
 		{
+			//TODO: Check for failures nad type conversions
 			Log.Verbose("Adding method {@Delegate} for event {Event}", method, eventType);
 			//I don't know how to explain this, but I'll try
 			//Here, we ensure that the dictionary has a set for us to store actions in.

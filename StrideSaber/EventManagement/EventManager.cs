@@ -51,7 +51,7 @@ namespace StrideSaber.EventManagement
 			//Everything done, stop the clock
 			sw.Stop();
 			Log.Debug("Indexed event methods in {Elapsed:g}", sw.Elapsed);
-			Log.Debug("Indexing Statistics: {IndexingStats}", stats);
+			Log.Debug("Indexing Statistics: {@IndexingStats}", stats);
 		}
 
 		private static void IndexAssembly(Assembly assembly, ref MethodIndexingStats stats)

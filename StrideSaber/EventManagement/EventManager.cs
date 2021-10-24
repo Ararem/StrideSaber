@@ -1,4 +1,4 @@
-﻿using ConcurrentCollections;
+using ConcurrentCollections;
 using Serilog;
 using Serilog.Context;
 using Stride.Core.Extensions;
@@ -187,7 +187,7 @@ namespace StrideSaber.EventManagement
 					//It's an object returning method, wrap it into a Returns_Param_EventWrapper<TEvent>
 					Type wrapperType = typeof(Returns_Param_EventWrapper<>)
 							.MakeGenericType(paramType);                                                             //Have to pass in the generic type arg
-					Delegate del = method.CreateDelegate(typeof(Func<>).MakeGenericType(paramType, typeof(object))); //Generalise the func delegate type. We can safely cast the return 'down' to object, but we mustn't do so for the event type
+					Delegate del = method.CreateDelegate(typeof(Func<,>).MakeGenericType(paramType, typeof(object))); //Generalise the func delegate type. We can safely cast the return 'down' to object, but we mustn't do so for the event type
 					wrapper = (EventWrapper)Activator.CreateInstance(wrapperType, del)!;                             //The constructor should have an appropriate input type (I hope)
 				}
 			}

@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace StrideSaber.EventManagement
 {
@@ -37,124 +36,119 @@ namespace StrideSaber.EventManagement
 
 		private static void IndexEventMethods()
 		{
-			//These numbers are for how many assemblies/types/methods we scanned
-			//This includes ones we skipped/were invalid
-			uint assemblyScanCount = 0, typeScanCount = 0, methodScanCount = 0;
-			//These are method counters
-			//invalidMethodsCount is how many methods we found that were invalid (e.g. instance, non-void etc)
-			//actualMethodsCount is how many methods we found, not including methods that were subscribed to multiple events (e.g. 3 methods marked twice = 3)
-			//duplicateMethodsCount is how many methods we found, including duplicates (e.g. 3 methods marked twice = 6)
-			uint invalidMethodsCount = 0, actualMethodsCount = 0, duplicateMethodsCount = 0;
 			Log.Debug("Indexing event methods");
+
+			MethodIndexingStats stats = new();
+			Stopwatch sw = Stopwatch.StartNew();
+
 			//Clear the event methods. To avoid wasting memory, just reuse the old hashsets we already have, but remove any items from them
 			//(Instead of removing all the sets from the dictionary and wasting all that precious memory)
-			EventMethods.Values.ForEach(s => s.Clear());
-			var sw = Stopwatch.StartNew();
+			EventMethods.Values.ForEach(set => set.Clear());
 
-			//Loop through all the assemblies we have
+			//Loop over all the assemblies we have
 			foreach (Assembly assembly in AssemblyManager.GetAllExternalAssemblies())
-			{
-				//For debugging purposes
-				using IDisposable _ = LogContext.PushProperty("Assembly", assembly);
-				Log.Debug("Scanning assembly {Assembly}", assembly);
-
-				Type[] types;
-				//Yeah so sometimes this fails
-				try
-				{
-					types = assembly.GetTypes();
-				}
-				catch (ReflectionTypeLoadException ex)
-				{
-					types = ex.Types.Where(t => t is not null).ToArray()!;
-					Log.Warning(ex, "Could not load all types from assembly {Assembly}", assembly);
-				}
-
-				Log.Debug("Got {Count} types from assembly {Assembly}", types.Length, assembly);
-
-				foreach (Type type in types)
-				{
-					using IDisposable __ = LogContext.PushProperty("Type", type);
-					Log.Verbose("Scanning type {Type}", type);
-					var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-					//I'm SICK OF ALL THESE GODDAMN LOOPS!!!!!!!!!!!!!!
-					foreach (MethodInfo method in methods)
-					{
-						methodScanCount++;
-						var eventAttributes = method.GetCustomAttributes<EventMethodAttribute>().ToArray();
-						if (eventAttributes.Length == 0) continue;
-
-						if (method.IsStatic == false)
-						{
-							Log.Verbose("Method {$Method} is non-static (instance)", method);
-							invalidMethodsCount++;
-							continue; //Skip to the next method
-						}
-
-						var methodParams = method.GetParameters();
-						if (methodParams.Length != 1)
-						{
-							Log.Verbose("Method {$Method} has invalid parameter count ({ParameterCount})", method, methodParams.Length);
-							invalidMethodsCount++;
-							continue;
-						}
-
-						//TODO: Allow for 0 params
-						ParameterInfo parameter = methodParams[0];
-						if (parameter.ParameterType != typeof(Event))
-						{
-							Log.Verbose("Method {$Method} has incorrect parameter type ({Type})", method, parameter.ParameterType);
-							invalidMethodsCount++;
-							continue;
-						}
-
-						var eventTypes = eventAttributes.Select(a => a.EventType).ToArray();
-						Log.Verbose("Method {$Method} has {Count} event targets: {EventTypeTargets}", method, eventTypes.Length, eventTypes);
-						//True/false if at least one of the event attributes on the method was valid
-						//Only reason it's needed is because otherwise the tracking numbers are funky and don't match what actually happens
-						bool success = false;
-						foreach (Type eventType in eventTypes)
-							if (eventType.IsAssignableTo(typeof(Event)))
-							{
-								AddMethodInfo(eventType, method);
-								success = true;
-								duplicateMethodsCount++;
-							}
-							else
-							{
-								Log.Warning("Invalid event type ({Type}) for method {$Method} (Does not inherit from {EventBaseType})", eventType, method, typeof(Event));
-								invalidMethodsCount++;
-							}
-
-						if (success)
-							actualMethodsCount++;
-					}
-
-					typeScanCount++;
-				}
-
-				assemblyScanCount++;
-			}
-
+				IndexAssembly(assembly, ref stats);
+			//Everything done, stop the clock
 			sw.Stop();
 			Log.Debug("Indexed event methods in {Elapsed:g}", sw.Elapsed);
-			Log.Debug("Scanned {AssembliesCount:n0} assemblies, {TypesCount:n0} types, {MethodsCount:n0} methods", assemblyScanCount, typeScanCount, methodScanCount);
-			Log.Debug("Total method count: {ActualMethodsCount:n0} (distinct) subscribed, {DuplicateMethodsCount:n0} (duplicate) subscribed, {InvalidMethodsCount:n0} invalid", actualMethodsCount, duplicateMethodsCount, invalidMethodsCount);
-			Log.Debug("Total: {TypeCount:n0} event types, {MethodCount:n0} methods", EventMethods.Count, EventMethods.Values.Sum(s => s.Count));
+			Log.Debug("Indexing Statistics: {IndexingStats}", stats);
 		}
 
-	#region Event storage and invocation
-
-		private static void AddMethodInfo(Type eventType, MethodInfo method)
+		private static void IndexAssembly(Assembly assembly, ref MethodIndexingStats stats)
 		{
-			//TODO: Check for failures nad type conversions
-			Log.Verbose("Adding method {@Delegate} for event {Event}", method, eventType);
-			//I don't know how to explain this, but I'll try
+			stats.AssemblyScanCount++;
+			//For debugging purposes
+			Log.Debug("Scanning assembly {Assembly}", assembly);
+			using IDisposable _ = LogContext.PushProperty("Assembly", assembly);
+
+			Type[] types;
+			//Yeah so sometimes this fails
+			try
+			{
+				types = assembly.GetTypes();
+			}
+			catch (ReflectionTypeLoadException ex)
+			{
+				types = ex.Types.Where(t => t is not null).ToArray()!;
+				Log.Warning(ex, "Could not load all types from assembly {Assembly}", assembly);
+			}
+
+			Log.Debug("Got {Count} types from assembly {Assembly}", types.Length, assembly);
+			foreach (Type type in types) IndexType(type, ref stats);
+		}
+
+		private static void IndexType(Type type, ref MethodIndexingStats stats)
+		{
+			stats.TypeScanCount++;
+			Log.Verbose("Scanning type {Type}", type);
+			using IDisposable _ = LogContext.PushProperty("Type", type);
+
+			//Grab all the methods, well sort out the invalid ones later
+			MethodInfo[] methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+			foreach (MethodInfo method in methods) IndexRawMethod(method, ref stats);
+		}
+
+		private static void IndexRawMethod(MethodInfo method, ref MethodIndexingStats stats)
+		{
+			stats.MethodScanCount++;
+
+			EventMethodAttribute[] eventAttributes = method.GetCustomAttributes<EventMethodAttribute>().ToArray();
+			if (eventAttributes.Length == 0) return; //Skip the method if it's not marked
+
+			if (!method.IsStatic)
+			{
+				Log.Warning("Method {$Method} is non-static (instance)", method);
+				stats.InvalidMethodCount++;
+				return;
+			}
+
+			ParameterInfo[] parameters = method.GetParameters();
+			if (parameters.Length > 1) //We only allow 0 or 1 parameters
+			{
+				Log.Warning("Method {$Method} has invalid parameter count of {Count}. Must be <= 1", method, parameters.Length);
+				stats.InvalidMethodCount++;
+				return;
+			}
+
+			//If it takes in a parameter
+			if (parameters.Length == 1)
+			{
+				ParameterInfo parameter = parameters[0];
+				//Ensure that it inherits from event
+				if (!parameter.ParameterType.IsAssignableTo(typeof(Event)))
+				{
+					Log.Verbose("Method {$Method} has incorrect parameter type ({Type})", method, parameter.ParameterType);
+					stats.InvalidMethodCount++;
+					return;
+				}
+			}
+
+			Type[] eventTypes = eventAttributes.Select(static a => a.EventType).ToArray();
+			bool anySuccessful = false;
+			foreach (Type eventType in eventTypes)
+			{
+				//Was this target successful?
+				bool success = IndexMethodForEventType(method, eventType);
+				if (success)
+					stats.DuplicateMethodCount++;
+				else
+					stats.InvalidMethodCount++;
+				//OR it so that if any of the targets succeeded, the 'any' flag is true
+				anySuccessful |= success;
+			}
+
+			//Mark it *once* if any targets were valid
+			if (anySuccessful)
+				stats.ActualMethodCount++;
+		}
+
+		//We don't have to pass in the 'ref stats', because we return true/false to indicate success or failure
+		private static bool IndexMethodForEventType(MethodInfo method, Type eventType)
+		{
 			//Here, we ensure that the dictionary has a set for us to store actions in.
 			//If the event type already has a set to store in, that's what is returned, otherwise we make a new one.
 			//I'm passing in a delegate instead of instantiating a new set so that we only allocate memory if we actually need it
-			var set = EventMethods.GetOrAdd(eventType, _ => new ConcurrentHashSet<EventWrapper>());
-			//Now create the wrapper and add it the set
+			var set = EventMethods.GetOrAdd(eventType, static _ => new ConcurrentHashSet<EventWrapper>());
 			EventWrapper wrapper;
 			//No params and void, easy peasy
 			if ((method.ReturnType == typeof(void)) && (method.GetParameters().Length == 0))
@@ -172,12 +166,20 @@ namespace StrideSaber.EventManagement
 				//Check here what type of parameter it requires
 				//This is also the type of the argument we need to pass in as a generic type arg
 				Type paramType = method.GetParameters()[0].ParameterType;
+				//Here we need to validate that the parameter matches the type for the event
+				//Need to ensure that the EventType can be casted into the ParamType
+				if (!eventType.IsAssignableTo(paramType))
+				{
+					Log.Warning("Cannot cast from attribute event type {EventType} to parameter type {ParamType}", eventType, paramType);
+					return false;
+				}
+
 				if (method.ReturnType == typeof(void))
 				{
 					//It's a void returning method, wrap it into a Void_Param_EventWrapper<TEvent>
 					Type wrapperType = typeof(Void_Param_EventWrapper<>)
 							.MakeGenericType(paramType);                                               //Have to pass in the generic type arg
-					Delegate del = method.CreateDelegate(typeof(Action<>).MakeGenericType(paramType)); //Generic-ise the action type for our parameter
+					Delegate del = method.CreateDelegate(typeof(Action<>).MakeGenericType(paramType)); //Generalise the action type for our parameter
 					wrapper = (EventWrapper)Activator.CreateInstance(wrapperType, del)!;               //The constructor should have an appropriate input type (I hope)
 				}
 				else
@@ -191,7 +193,11 @@ namespace StrideSaber.EventManagement
 			}
 
 			set.Add(wrapper);
+			Log.Verbose("Added method {Method} for event type {Type} (Wrapper={$Wrapper})", method, eventType, wrapper);
+			return true;
 		}
+
+	#region Event storage and invocation
 
 		/// <summary>
 		///  Fires (invokes) an <see cref="Event"/> of type <typeparamref name="T"/>, catching and logging any <see cref="Exception">Exceptions</see>

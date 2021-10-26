@@ -60,7 +60,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			int i = 0;
 			while (true)
 			{
-				int delay = r.Next(1000, 7000);
+				int delay = r.Next(5000, 10000);
 				await Task.Delay(delay);
 				if (TrackedTask.UnsafeInstances.Count < 10)
 					_ = new TrackedTask($"Test task {++i}", AsyncTaskTest);

@@ -12,12 +12,12 @@ namespace StrideSaber.Benchmarks
 	[SimpleJob, MemoryDiagnoser]
 	public sealed class BackgroundTaskToStringBenchmarks
 	{
-		private BackgroundTask task = null!;
+		private TrackedTask task = null!;
 
 		[GlobalSetup]
 		public void Setup()
 		{
-			task = new BackgroundTask("Test task with a long name for benchmarking", _ => System.Threading.Tasks.Task.CompletedTask);
+			task = new TrackedTask("Test task with a long name for benchmarking", _ => System.Threading.Tasks.Task.CompletedTask);
 			namedToString = Smart.Default.Parser.ParseFormat("BackgroundTask \"{Name}\" Id {Id} ({Progress:p0})");
 			positionalToString = Smart.Default.Parser.ParseFormat("BackgroundTask \"{0}\" Id {1} ({2:p0})");
 		}

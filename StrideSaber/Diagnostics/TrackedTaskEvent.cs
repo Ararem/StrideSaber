@@ -3,27 +3,27 @@
 namespace StrideSaber.Diagnostics
 {
 	/// <summary>
-	/// An enum that specifies events that can happen in the lifetime of a <see cref="BackgroundTask"/>
+	/// An enum that specifies events that can happen in the lifetime of a <see cref="TrackedTask"/>
 	/// </summary>
 	[Flags]
-	public enum BackgroundTaskEvent
+	public enum TrackedTaskEvent
 	{
 		/// <summary>
 		/// A flag that is used to signify that no events should be logged
 		/// </summary>
-		/// <seealso cref="BackgroundTask.EnabledLogEvents"/>
+		/// <seealso cref="TrackedTask.EnabledLogEvents"/>
 		None = 0,
 
 		/// <summary>
-		/// A <see cref="BackgroundTask"/> was created by calling <c>new()</c>
+		/// A <see cref="TrackedTask"/> was created by calling <c>new()</c>
 		/// </summary>
 		Created = 1,
 		/// <summary>
-		/// A call to <see cref="BackgroundTask.Dispose"/> was made
+		/// A call to <see cref="TrackedTask.Dispose"/> was made
 		/// </summary>
 		Disposed = 2,
 		/// <summary>
-		/// An exception was thrown during execution of the <see cref="BackgroundTaskDelegate"/>
+		/// An exception was thrown during execution of the <see cref="TrackedTaskDelegate"/>
 		/// </summary>
 		Error = 4,
 		/// <summary>
@@ -31,7 +31,7 @@ namespace StrideSaber.Diagnostics
 		/// </summary>
 		Success = 8,
 		/// <summary>
-		/// The <see cref="BackgroundTask.Progress"/> of the task was updated
+		/// The <see cref="TrackedTask.Progress"/> of the task was updated
 		/// </summary>
 		ProgressUpdated = 16,
 	}

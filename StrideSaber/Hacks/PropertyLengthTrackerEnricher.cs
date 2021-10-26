@@ -2,10 +2,11 @@
 using Serilog.Events;
 using System;
 using System.Collections.Concurrent;
+#pragma warning disable 1591
 
 namespace StrideSaber.Hacks
 {
-	public class PropertyLengthTrackerEnricher : ILogEventEnricher
+	public sealed class PropertyLengthTrackerEnricher : ILogEventEnricher
 	{
 		public readonly ConcurrentDictionary<string, int> Lengths = new();
 

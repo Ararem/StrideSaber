@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace StrideSaber.Diagnostics
 {
 	/// <summary>
-	/// A delegate type for a <see cref="BackgroundTask"/>
+	/// A delegate type for a <see cref="TrackedTask"/>
 	/// </summary>
 	/// <param name="updateProgress">A method to be called to update progress.</param>
 	/// <example>
@@ -26,5 +26,5 @@ namespace StrideSaber.Diagnostics
 	/// ]]>
 	/// </code>
 	/// </example>
-	public delegate Task BackgroundTaskDelegate(Action<float> updateProgress);
+	public delegate Task TrackedTaskDelegate(Action<float> updateProgress);
 }

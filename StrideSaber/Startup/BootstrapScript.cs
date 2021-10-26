@@ -137,8 +137,8 @@ namespace StrideSaber.Startup
 		{
 			SLog.Information("Continue() called");
 			//Swap scenes
-			await Content.UnloadSceneAsync(Entity.Scene);
-			await Content.LoadSceneAsync(MainMenuScene);
+			await SceneUtils.UnloadSceneAsync(Content, Entity.Scene);
+			await SceneUtils.LoadSceneAsync(Content, SceneSystem, MainMenuScene);
 		}
 
 		private async Task ContinueButtonOnClick()

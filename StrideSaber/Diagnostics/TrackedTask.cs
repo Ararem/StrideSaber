@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using static StrideSaber.Diagnostics.BackgroundTaskEvent;
+using static StrideSaber.Diagnostics.TrackedTaskEvent;
 
 namespace StrideSaber.Diagnostics
 {
@@ -16,12 +16,12 @@ namespace StrideSaber.Diagnostics
 	/// <summary>
 	/// A task-like type that can be used to create tasks whose progress can be tracked and displayed to the user
 	/// </summary>
-	public sealed class BackgroundTask : IFormattable
+	public sealed class TrackedTask : IFormattable
 	{
 		/// <summary>
 		/// What event types messages should be logged for
 		/// </summary>
-		public static BackgroundTaskEvent EnabledLogEvents { get; set; } =
+		public static TrackedTaskEvent EnabledLogEvents { get; set; } =
 			//Error | Success | Created | Disposed | ProgressUpdated;
 			ProgressUpdated;
 
@@ -31,18 +31,18 @@ namespace StrideSaber.Diagnostics
 		private static readonly object GlobalLock = new();
 
 		/// <summary>
-		/// A <see cref="IReadOnlyCollection{T}">collection</see> that encompasses all the currently running background task instances
+		/// A <see cref="IReadOnlyCollection{T}">collection</see> that encompasses all the currently running tracked task instances
 		/// </summary>
 		/// <remarks>This value should be considered mutable and may change while being accessed, so should not be accessed directly</remarks>
-		private static readonly ConcurrentHashSet<BackgroundTask> Instances = new();
+		private static readonly ConcurrentHashSet<TrackedTask> Instances = new();
 
 		/// <summary>
-		/// A <see cref="IReadOnlyCollection{T}">collection</see> that encompasses all the currently running background task instances
+		/// A <see cref="IReadOnlyCollection{T}">collection</see> that encompasses all the currently running tracked task instances
 		/// </summary>
 		/// <remarks>
 		/// This collection is guaranteed to not be mutated internally
 		/// </remarks>
-		public static IReadOnlyCollection<BackgroundTask> CloneAllInstances()
+		public static IReadOnlyCollection<TrackedTask> CloneAllInstances()
 		{
 			lock (GlobalLock)
 			{
@@ -51,7 +51,7 @@ namespace StrideSaber.Diagnostics
 		}
 
 		/// <inheritdoc cref="Instances"/>
-		public static IReadOnlyCollection<BackgroundTask> UnsafeInstances
+		public static IReadOnlyCollection<TrackedTask> UnsafeInstances
 		{
 			get
 			{
@@ -97,19 +97,18 @@ namespace StrideSaber.Diagnostics
 		}
 
 		/// <summary>
-		/// The name of this <see cref="BackgroundTask"/> instance
+		/// The name of this <see cref="TrackedTask"/> instance
 		/// </summary>
 		public string Name { get; }
 
 		/// <summary>
-		/// Constructs a new <see cref="BackgroundTask"/>, with a specified <paramref name="name"/>
+		/// Constructs a new <see cref="TrackedTask"/>, with a specified <paramref name="name"/>
 		/// </summary>
-		/// <param name="name">The name of this <see cref="BackgroundTask"/></param>
-		/// <param name="taskDelegate">The <see cref="BackgroundTaskDelegate"/> function to be executed</param>
-		public BackgroundTask(string name, BackgroundTaskDelegate taskDelegate)
+		/// <param name="name">The name of this <see cref="TrackedTask"/></param>
+		/// <param name="taskDelegate">The <see cref="TrackedTaskDelegate"/> function to be executed</param>
+		public TrackedTask(string name, TrackedTaskDelegate taskDelegate)
 		{
 			Name = name;
-			//awaiter = new BackgroundTaskAwaiter(this);
 			AddThis();
 			TaskDelegate = taskDelegate;
 			Task = Task.Run(TaskRunInternal);
@@ -151,7 +150,7 @@ namespace StrideSaber.Diagnostics
 		private static readonly int[] GuidByteOrder = { 15, 14, 13, 12, 11, 10, 9, 8, 6, 7, 4, 5, 0, 1, 2, 3 };
 
 		/// <summary>
-		/// 
+		/// The bytes that are used for creating task Guids
 		/// </summary>
 		private static readonly byte[] TaskCounterBytes = new byte[16];
 
@@ -197,9 +196,9 @@ namespace StrideSaber.Diagnostics
 		public Task Task { get; private set; }
 
 		/// <summary>
-		/// The <see cref="BackgroundTaskDelegate"/> that this instance is running
+		/// The <see cref="TrackedTaskDelegate"/> that this instance is running
 		/// </summary>
-		public BackgroundTaskDelegate TaskDelegate { get; private set; }
+		public TrackedTaskDelegate TaskDelegate { get; private set; }
 
 		/// <summary>
 		/// Returns the awaiter for this instance
@@ -213,7 +212,7 @@ namespace StrideSaber.Diagnostics
 		// /// <summary>
 		// /// The cached awaiter for this instance
 		// /// </summary>
-		// private readonly BackgroundTaskAwaiter awaiter;
+		// private readonly TrackedTaskAwaiter awaiter;
 
 		private bool isDisposed = false;
 
@@ -244,7 +243,7 @@ namespace StrideSaber.Diagnostics
 			}
 		}
 
-		private void RaiseEvent(BackgroundTaskEvent evt)
+		private void RaiseEvent(TrackedTaskEvent evt)
 		{
 			//If the flag is not enabled, do nothing
 			if ((EnabledLogEvents & evt) == 0) return;
@@ -279,7 +278,7 @@ namespace StrideSaber.Diagnostics
 		/// <summary>
 		/// A cached <see cref="Format"/> for default <see cref="ToString()"/> behaviour
 		/// </summary>
-		private static readonly Format DefaultToStringFormat = Smart.Default.Parser.ParseFormat("BackgroundTask \"{Name}\" Id {Id} ({Progress:p0})");
+		private static readonly Format DefaultToStringFormat = Smart.Default.Parser.ParseFormat("TrackedTask \"{Name}\" Id {Id} ({Progress:p0})");
 
 		/// <inheritdoc />
 		public override string ToString()
@@ -312,17 +311,17 @@ namespace StrideSaber.Diagnostics
 
 	// /// <summary>
 	// ReSharper disable CommentTypo
-	// /// An awaiter for the <see cref="BackgroundTask"/> type, allowing use of the <see langword="await"/> keyword
+	// /// An awaiter for the <see cref="TrackedTask"/> type, allowing use of the <see langword="await"/> keyword
 	// /// </summary>
-	// public readonly struct BackgroundTaskAwaiter : INotifyCompletion
+	// public readonly struct TrackedTaskAwaiter : INotifyCompletion
 	// {
-	// 	private readonly BackgroundTask instance;
+	// 	private readonly TrackedTask instance;
 	//
 	// 	/// <summary>
-	// 	/// Constructs a new <see cref="BackgroundTaskAwaiter"/> for the <see cref="BackgroundTask"/> <paramref name="instance"/>
+	// 	/// Constructs a new <see cref="TrackedTaskAwaiter"/> for the <see cref="TrackedTask"/> <paramref name="instance"/>
 	// 	/// </summary>
-	// 	/// <param name="instance">The <see cref="BackgroundTask"/> to create the awaiter for</param>
-	// 	public BackgroundTaskAwaiter(BackgroundTask instance)
+	// 	/// <param name="instance">The <see cref="TrackedTask"/> to create the awaiter for</param>
+	// 	public TrackedTaskAwaiter(TrackedTask instance)
 	// 	{
 	// 		this.instance = instance;
 	// 	}
@@ -346,7 +345,7 @@ namespace StrideSaber.Diagnostics
 	//
 	// 	// ReSharper disable once CompareOfFloatsByEqualityOperator
 	// 	/// <summary>
-	// 	/// Gets whether the <see cref="BackgroundTask"/> has completed
+	// 	/// Gets whether the <see cref="TrackedTask"/> has completed
 	// 	/// </summary>
 	// 	[PublicAPI]
 	// 	public bool IsCompleted => instance.Progress == 1f;

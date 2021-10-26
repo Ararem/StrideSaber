@@ -21,7 +21,7 @@ using SLog = Serilog.Log;
 namespace StrideSaber.SceneSpecific.Progress_Ui
 {
 	/// <summary>
-	/// A script that controls UI elements to display the progress of all the currently running <see cref="BackgroundTask"/> instances
+	/// A script that controls UI elements to display the progress of all the currently running <see cref="TrackedTask"/> instances
 	/// </summary>
 	[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 	public class ProgressUiController : SyncScript
@@ -56,14 +56,14 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 		[SuppressMessage("ReSharper", "All")]
 		private static async Task AsyncTaskCreator()
 		{
-			_ = new BackgroundTask("Fps", FpsTask) { Id = Guid.Empty };
+			_ = new TrackedTask("Fps", FpsTask) { Id = Guid.Empty };
 			int i = 0;
 			while (true)
 			{
 				int delay = r.Next(1000, 7000);
 				await Task.Delay(delay);
-				if (BackgroundTask.UnsafeInstances.Count < 10)
-					_ = new BackgroundTask($"Test task {++i}", AsyncTaskTest);
+				if (TrackedTask.UnsafeInstances.Count < 10)
+					_ = new TrackedTask($"Test task {++i}", AsyncTaskTest);
 			}
 		}
 
@@ -103,7 +103,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 		public override void Update()
 		{
 			//Get all the current tasks, ordered by ID
-			var tasks = BackgroundTask.UnsafeInstances
+			var tasks = TrackedTask.UnsafeInstances
 			                          .OrderBy(t => t.Id)
 			                          .ToArray();
 
@@ -111,7 +111,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			for (int i = 0; i < tasks.Length; i++)
 			{
 				UIElement indicator;
-				BackgroundTask task = tasks[i];
+				TrackedTask task = tasks[i];
 				//Reuse an old ui element if we have one
 				if (indicatorsPanel.Children.Count > i)
 				{

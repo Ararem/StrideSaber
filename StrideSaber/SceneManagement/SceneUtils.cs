@@ -15,15 +15,16 @@ namespace StrideSaber.SceneManagement
 		/// <summary>
 		/// Asynchronously loads the specified <paramref name="sceneReference"/>, tracking the load progress
 		/// </summary>
-		/// <param name="contentManager">The <see cref="ContentManager"/> that will be used to load the </param>
+		/// <param name="contentManager">The <see cref="ContentManager"/> that will be used to load the scene</param>
 		/// <param name="sceneSystem">The <see cref="SceneSystem"/> that the loaded scene will be attached to</param>
 		/// <param name="sceneReference">The reference to the <see cref="Scene"/> to load</param>
 		public static async Task LoadSceneAsync(ContentManager contentManager, SceneSystem sceneSystem, UrlReference<Scene> sceneReference)
 		{
 			Log.Information("Asynchronously loading scene at {SceneRef} ", sceneReference);
+			string sceneName = sceneReference.Url[(sceneReference.Url.LastIndexOf('/') + 1)..];
 			Task<Scene> sceneTask = null!;
 			TrackedTask trackedTask = new(
-					$"LoadSceneAsync {sceneReference.Url}",
+					$"LoadSceneAsync {sceneName}",
 					_ => sceneTask = contentManager.LoadAsync(sceneReference, ContentManagerLoaderSettings.Default)
 			);
 			//Wait for the task to complete
@@ -31,8 +32,8 @@ namespace StrideSaber.SceneManagement
 			//And pull out the resulting scene that was loaded
 			Scene newScene = await sceneTask;
 			//Gotta fix the name because stride doesn't for some reason
-			Log.Verbose("Fixing stride scene name for scene {SceneRef}", sceneReference.Url);
-			newScene.Name = sceneReference.Url[(sceneReference.Url.LastIndexOf('/') + 1)..];
+			Log.Verbose("Fixing stride scene name for scene {SceneRef} ({OldName} => {NewName})", sceneReference.Url, newScene.Name, sceneName);
+			newScene.Name = sceneName;
 			Log.Information("Asynchronously loaded Scene {SceneRef}: {Scene}", sceneReference, newScene);
 			//Add it to the hierarchy so that it's enabled and shown
 			Log.Information("Adding newly loaded {Scene} to hierarchy", newScene);
@@ -49,7 +50,7 @@ namespace StrideSaber.SceneManagement
 		{
 			Log.Information("Asynchronously unloading {Scene} ", scene);
 			TrackedTask trackedTask = new(
-					$"UnloadSceneAsync {scene}",
+					$"UnloadSceneAsync {scene.Name}",
 					_ =>
 					{
 						contentManager.Unload(scene);

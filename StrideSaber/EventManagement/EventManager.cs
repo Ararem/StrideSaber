@@ -21,6 +21,8 @@ namespace StrideSaber.EventManagement
 		///  The map of methods to their events. Use a <see cref="Type"/> (that inherits from <see cref="Event"/>) as the key to access all methods subscribed to
 		///  that type of event.
 		/// </summary>
+		//TODO: When subscribed to base type but inherited is fired
+		//E.g. attribute is Event but Fired is GameLoadedEvent
 		private static readonly ConcurrentDictionary<Type, ConcurrentHashSet<EventWrapper>> EventMethods = new();
 
 		internal static void Init()

@@ -96,10 +96,6 @@ namespace StrideSaber.Startup
 			//At the moment, they're in seconds
 			countdownSlider.Minimum = (float)TimeSpan.Zero.TotalSeconds;
 			countdownSlider.Maximum = (float)AutoStartWaitDuration.TotalSeconds;
-			//TODO: Make this scale properly with the wait duration
-			countdownSlider.Step = 1F;
-			countdownSlider.TickFrequency = 10F;
-			SLog.Verbose("Scroll tick frequency is {Frequency}", countdownSlider.TickFrequency);
 
 			Stopwatch sw = Stopwatch.StartNew();
 			TimeSpan remaining;

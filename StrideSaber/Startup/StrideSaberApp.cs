@@ -55,6 +55,10 @@ namespace StrideSaber.Startup
 
 			try
 			{
+				if (cmdOptions is DebugOptions { RunTestCommand: true })
+				{
+					TestCommand();
+				}
 				HandleRunMode(cmdOptions);
 			}
 			catch (Exception e)
@@ -66,6 +70,12 @@ namespace StrideSaber.Startup
 				//Do cleanup
 				CleanupAndExit();
 			}
+		}
+
+		private static void TestCommand()
+		{
+			Console.WriteLine("Test");
+			Console.ReadKey();
 		}
 
 		private static void HandleRunMode(OptionsBase? optionsBase)

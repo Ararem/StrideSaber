@@ -80,14 +80,14 @@ namespace StrideSaber.Startup
 		/// <summary>
 		/// If the debug template should be used for log messages
 		/// </summary>
-		[Option('t', nameof(DebugTemplate), Default = false, HelpText = "If the debug template should be used for log messages")]
+		[Option('d', nameof(DebugTemplate), Default = false, HelpText = "If the debug template should be used for log messages")]
 		public bool DebugTemplate { get; init; }
 
 		/// <summary>
 		/// Runs the secret test command (don't tell anyone about this ok?)
 		/// </summary>
 		/// <!--The first easter egg I ever made-->
-		[Option(nameof(RunTestCommand), Hidden = true, HelpText = "Runs the secret test command")]
+		[Option(longName: nameof(RunTestCommand), Hidden = true, HelpText = "Runs the secret test command")]
 		public bool RunTestCommand { get; init; }
 	}
 

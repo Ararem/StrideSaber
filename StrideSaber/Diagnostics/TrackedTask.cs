@@ -14,45 +14,65 @@ namespace StrideSaber.Diagnostics
 {
 	//TODO: IDisposable (or async)
 	/// <summary>
-	/// A task-like type that can be used to create tasks whose progress can be tracked and displayed to the user
+	///  A task-like type that can be used to create tasks whose progress can be tracked and displayed to the user
 	/// </summary>
 	public sealed class TrackedTask : IFormattable
 	{
 		/// <summary>
-		/// What event types messages should be logged for
-		/// </summary>
-		public static TrackedTaskEvent EnabledLogEvents { get; set; } = 0
-			| Error
-			| Success
-			| Created
-			// | Disposed
-			// | ProgressUpdated
-			;
-
-		/// <summary>
-		/// An object that can be locked upon for global (static) synchronisation
+		///  An object that can be locked upon for global (static) synchronisation
 		/// </summary>
 		private static readonly object GlobalLock = new();
 
 		/// <summary>
-		/// A <see cref="IReadOnlyCollection{T}">collection</see> that encompasses all the currently running tracked task instances
+		///  A <see cref="IReadOnlyCollection{T}">collection</see> that encompasses all the currently running tracked task instances
 		/// </summary>
 		/// <remarks>This value should be considered mutable and may change while being accessed, so should not be accessed directly</remarks>
 		private static readonly ConcurrentHashSet<TrackedTask> Instances = new();
 
 		/// <summary>
-		/// A <see cref="IReadOnlyCollection{T}">collection</see> that encompasses all the currently running tracked task instances
+		///  The order that bytes in a <see cref="Guid"/> are read from an array
 		/// </summary>
-		/// <remarks>
-		/// This collection is guaranteed to not be mutated internally
-		/// </remarks>
-		public static IReadOnlyCollection<TrackedTask> CloneAllInstances()
+		private static readonly int[] GuidByteOrder = { 15, 14, 13, 12, 11, 10, 9, 8, 6, 7, 4, 5, 0, 1, 2, 3 };
+
+		/// <summary>
+		///  The bytes that are used for creating task Guids
+		/// </summary>
+		private static readonly byte[] TaskCounterBytes = new byte[16];
+
+		// /// <summary>
+		// /// The cached awaiter for this instance
+		// /// </summary>
+		// private readonly TrackedTaskAwaiter awaiter;
+
+		private bool isDisposed = false;
+
+		private float progress;
+
+		/// <summary>
+		///  Constructs a new <see cref="TrackedTask"/>, with a specified <paramref name="name"/>
+		/// </summary>
+		/// <param name="name">The name of this <see cref="TrackedTask"/></param>
+		/// <param name="taskDelegate">The <see cref="TrackedTaskDelegate"/> function to be executed</param>
+		public TrackedTask(string name, TrackedTaskDelegate taskDelegate)
 		{
-			lock (GlobalLock)
-			{
-				return Instances.ToArray();
-			}
+			Name = name;
+			TaskDelegate = taskDelegate;
+			Id = GetNextId();
+
+			RaiseEvent(Created);
+			AddThis();
+			Task = Task.Run(TaskRunInternal);
 		}
+
+		/// <summary>
+		///  What event types messages should be logged for
+		/// </summary>
+		public static TrackedTaskEvent EnabledLogEvents { get; set; } = 0
+		                                                                | Error
+		                                                                | Success
+		                                                                | Created
+		                                                                // | Disposed
+		                                                                | ProgressUpdated;
 
 		/// <inheritdoc cref="Instances"/>
 		public static IReadOnlyCollection<TrackedTask> UnsafeInstances
@@ -67,16 +87,17 @@ namespace StrideSaber.Diagnostics
 		}
 
 		/// <summary>
-		/// Gets the id of this instance
+		///  Gets the id of this instance
 		/// </summary>
 		public Guid Id { get; init; }
 
-		private float progress;
-
 		/// <summary>
-		/// How far the task has progressed
+		///  How far the task has progressed
 		/// </summary>
-		/// <remarks> 0 means 'just started', as no progress has been made, and 1 means 'complete', as all the operations have been executed. Values outside of this range should </remarks>
+		/// <remarks>
+		///  0 means 'just started', as no progress has been made, and 1 means 'complete', as all the operations have been executed. Values outside of this range
+		///  should
+		/// </remarks>
 		[ValueRange(0, 1)]
 		public float Progress
 		{
@@ -101,24 +122,32 @@ namespace StrideSaber.Diagnostics
 		}
 
 		/// <summary>
-		/// The name of this <see cref="TrackedTask"/> instance
+		///  The name of this <see cref="TrackedTask"/> instance
 		/// </summary>
 		public string Name { get; }
 
 		/// <summary>
-		/// Constructs a new <see cref="TrackedTask"/>, with a specified <paramref name="name"/>
+		///  The <see cref="System.Threading.Tasks.Task"/> that is associated with the current instance
 		/// </summary>
-		/// <param name="name">The name of this <see cref="TrackedTask"/></param>
-		/// <param name="taskDelegate">The <see cref="TrackedTaskDelegate"/> function to be executed</param>
-		public TrackedTask(string name, TrackedTaskDelegate taskDelegate)
-		{
-			Name = name;
-			TaskDelegate = taskDelegate;
-			Id = GetNextId();
+		public Task Task { get; private set; }
 
-			RaiseEvent(Created);
-			AddThis();
-			Task = Task.Run(TaskRunInternal);
+		/// <summary>
+		///  The <see cref="TrackedTaskDelegate"/> that this instance is running
+		/// </summary>
+		public TrackedTaskDelegate TaskDelegate { get; }
+
+		/// <summary>
+		///  A <see cref="IReadOnlyCollection{T}">collection</see> that encompasses all the currently running tracked task instances
+		/// </summary>
+		/// <remarks>
+		///  This collection is guaranteed to not be mutated internally, as it clones the <see cref="UnsafeInstances"/> collection
+		/// </remarks>
+		public static IReadOnlyCollection<TrackedTask> CloneAllInstances()
+		{
+			lock (GlobalLock)
+			{
+				return Instances.ToArray();
+			}
 		}
 
 		private static Guid GetNextId()
@@ -148,16 +177,6 @@ namespace StrideSaber.Diagnostics
 				return new Guid(TaskCounterBytes);
 			}
 		}
-
-		/// <summary>
-		/// The order that bytes in a <see cref="Guid"/> are read from an array
-		/// </summary>
-		private static readonly int[] GuidByteOrder = { 15, 14, 13, 12, 11, 10, 9, 8, 6, 7, 4, 5, 0, 1, 2, 3 };
-
-		/// <summary>
-		/// The bytes that are used for creating task Guids
-		/// </summary>
-		private static readonly byte[] TaskCounterBytes = new byte[16];
 
 		private async Task TaskRunInternal()
 		{
@@ -196,30 +215,13 @@ namespace StrideSaber.Diagnostics
 		}
 
 		/// <summary>
-		/// The <see cref="System.Threading.Tasks.Task"/> that is associated with the current instance
-		/// </summary>
-		public Task Task { get; private set; }
-
-		/// <summary>
-		/// The <see cref="TrackedTaskDelegate"/> that this instance is running
-		/// </summary>
-		public TrackedTaskDelegate TaskDelegate { get; private set; }
-
-		/// <summary>
-		/// Returns the awaiter for this instance
+		///  Returns the awaiter for this instance
 		/// </summary>
 		[PublicAPI]
 		public TaskAwaiter GetAwaiter()
 		{
 			return Task.GetAwaiter();
 		}
-
-		// /// <summary>
-		// /// The cached awaiter for this instance
-		// /// </summary>
-		// private readonly TrackedTaskAwaiter awaiter;
-
-		private bool isDisposed = false;
 
 		private void Dispose()
 		{
@@ -255,19 +257,19 @@ namespace StrideSaber.Diagnostics
 			switch (evt)
 			{
 				case Created:
-					Log.Verbose("{Task} created", this);
+					Log.Verbose("{Task:NoProgress} created", this);
 					break;
 				case Disposed:
-					Log.Verbose("{Task} disposed", this);
+					Log.Verbose("{Task:NoProgress} disposed", this);
 					break;
 				case Error:
-					Log.Warning(Task.Exception, "{Task} threw exception", this);
+					Log.Warning(Task.Exception, "{Task:NoProgress} threw exception", this);
 					break;
 				case Success:
-					Log.Verbose("{Task} completed successfully", this);
+					Log.Verbose("{Task:NoProgress} completed successfully", this);
 					break;
 				case ProgressUpdated:
-					Log.Verbose("{Task:'Name'} progress update", this);
+					Log.Verbose("{Task:NoProgress} progress update ({Progress:p0})", this, Progress);
 					break;
 				case None:
 					break;
@@ -281,34 +283,40 @@ namespace StrideSaber.Diagnostics
 	#region ToString()
 
 		/// <summary>
-		/// A cached <see cref="Format"/> for default <see cref="ToString()"/> behaviour
+		///  A cached <see cref="Format"/> for default <see cref="ToString()"/> behaviour
 		/// </summary>
-		private static readonly Format DefaultToStringFormat = Smart.Default.Parser.ParseFormat("TrackedTask \"{Name}\" Id {Id} ({Progress:p0})");
+		private static readonly Format DefaultToStringFormat = Smart.Default.Parser.ParseFormat("TrackedTask {Name,20:quoted} Id {Id} ({Progress:p0})");
 
-		/// <inheritdoc />
+		/// <summary>
+		///  A cached <see cref="Format"/> for <see cref="ToString()"/> behaviour without specifying the progress of the task
+		/// </summary>
+		private static readonly Format NoProgressToStringFormat = Smart.Default.Parser.ParseFormat("TrackedTask ==={Name,20:quoted}=== Id {Id}");
+
+		/// <inheritdoc/>
 		public override string ToString()
 		{
 			return ToString(DefaultToStringFormat);
 		}
 
-		/// <inheritdoc />
-		public string ToString(string? format, IFormatProvider? formatProvider)
+		/// <inheritdoc/>
+		/// <remarks>
+		///  Uses <see cref="SmartFormat"/> format strings for formatting. If the specified <paramref name="format"/> is equal to "NoProgress", the progress will
+		///  not be included when formatting
+		/// </remarks>
+		public string ToString(string? format, IFormatProvider? formatProvider = null)
 		{
-			return format is null ? ToString() : ToString(format);
+			return format switch
+			{
+					null         => ToString(DefaultToStringFormat, formatProvider),
+					"NoProgress" => ToString(NoProgressToStringFormat, formatProvider),
+					_            => ToString(Smart.Default.Parser.ParseFormat(format), formatProvider)
+			};
 		}
 
 		/// <inheritdoc cref="ToString()"/>
-		/// <remarks>Uses <see cref="SmartFormat"/> format strings</remarks>
-		public string ToString(string format)
+		public string ToString(Format format, IFormatProvider? formatProvider = null)
 		{
-			return ToString(Smart.Default.Parser.ParseFormat(format));
-		}
-
-		/// <inheritdoc cref="ToString()"/>
-		/// <remarks>Uses <see cref="SmartFormat"/> format strings</remarks>
-		public string ToString(Format format)
-		{
-			return Smart.Default.Format(format, this);
+			return Smart.Default.Format(formatProvider, format, this);
 		}
 
 	#endregion

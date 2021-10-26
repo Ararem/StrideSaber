@@ -73,7 +73,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			while (true)
 			{
 				updateProgress(StrideSaberApp.CurrentGame.UpdateTime.FramePerSecond / 100);
-				await Task.Delay(1);
+				await Task.Delay(100);
 			}
 		}
 
@@ -84,7 +84,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			DateTime end = start + TimeSpan.FromMilliseconds(r.Next(0, 15000));
 			while (DateTime.Now < end)
 			{
-				await Task.Delay(1);
+				await Task.Delay(50);
 				updateProgress((float)((DateTime.Now - start) / (end - start)));
 			}
 

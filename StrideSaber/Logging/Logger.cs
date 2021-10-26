@@ -4,9 +4,12 @@ using Serilog;
 using Serilog.Debugging;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
+using SmartFormat;
 using Stride.Core.Diagnostics;
+using StrideSaber.Diagnostics;
 using StrideSaber.EventManagement;
 using StrideSaber.EventManagement.Events;
+using StrideSaber.Extensions.SmartFormat;
 using StrideSaber.Hacks;
 using StrideSaber.Startup;
 using System;
@@ -66,6 +69,7 @@ namespace StrideSaber.Logging
 				                              .Enrich.With<EventLevelIndentEnricher>()
 				                              .Enrich.With<StrideThreadInfoEnricher>()
 				                              .Enrich.With<PropertyLengthTrackerEnricher>()
+				                              .Destructure.AsScalar<TrackedTask>()
 				                              .Destructure.With<DelegateDestructurer>()
 				                              .Destructure.With<StrideObjectDestructurer>();
 
@@ -77,6 +81,9 @@ namespace StrideSaber.Logging
 					Log.Logger = config
 					             .WriteTo.Console(outputTemplate: template, applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate)
 					             .CreateLogger();
+
+				//Also set up the smart format stuff I like
+				Smart.Default.AddExtensions(new QuotedStringFormatter());
 				Log.Information("Logger initialized");
 				initialized = true;
 			}

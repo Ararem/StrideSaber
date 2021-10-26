@@ -285,12 +285,12 @@ namespace StrideSaber.Diagnostics
 		/// <summary>
 		///  A cached <see cref="Format"/> for default <see cref="ToString()"/> behaviour
 		/// </summary>
-		private static readonly Format DefaultToStringFormat = Smart.Default.Parser.ParseFormat("TrackedTask {Name,20:quoted} Id {Id} ({Progress:p0})");
+		private static readonly Format DefaultToStringFormat = Smart.Default.Parser.ParseFormat("TrackedTask {Name,20:quoted()} Id {Id} ({Progress,6:P1})");
 
 		/// <summary>
 		///  A cached <see cref="Format"/> for <see cref="ToString()"/> behaviour without specifying the progress of the task
 		/// </summary>
-		private static readonly Format NoProgressToStringFormat = Smart.Default.Parser.ParseFormat("TrackedTask ==={Name,20:quoted}=== Id {Id}");
+		private static readonly Format NoProgressToStringFormat = Smart.Default.Parser.ParseFormat("TrackedTask {Name,20:quoted()} Id {Id}");
 
 		/// <inheritdoc/>
 		public override string ToString()

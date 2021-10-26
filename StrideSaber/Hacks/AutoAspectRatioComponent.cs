@@ -52,7 +52,7 @@ namespace StrideSaber.Hacks
 			{
 				//Remove any invalid instances
 				//Do this by checking if the weak reference no longer points to an object
-				Instances.RemoveWhere(w => w.TryGetTarget(out var c) == false);
+				Instances.RemoveWhere(w => w.TryGetTarget(out var _) == false);
 				foreach (WeakReference<AutoAspectRatioComponent> weakRef in Instances)
 					if (weakRef.TryGetTarget(out var component))
 						SetCorrectAspect((GameWindow) sender!, component.ui);

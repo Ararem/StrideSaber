@@ -304,11 +304,7 @@ namespace StrideSaber.Diagnostics
 		/// <remarks>Uses <see cref="SmartFormat"/> format strings</remarks>
 		public string ToString(Format format)
 		{
-			#warning HACK - SmartFormat is not thread-safe
-			lock(GlobalLock)
-			{
-				return Smart.Default.Format(format, this);
-			}
+			return Smart.Default.Format(format, this);
 		}
 
 	#endregion

@@ -1,6 +1,4 @@
 ﻿using Serilog;
-using Serilog.Context;
-using Stride.Core;
 using Stride.Core.Serialization;
 using Stride.Core.Serialization.Contents;
 using Stride.Engine;

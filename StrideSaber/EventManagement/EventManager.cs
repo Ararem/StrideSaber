@@ -2,7 +2,6 @@
 using Serilog;
 using Serilog.Context;
 using Stride.Core.Extensions;
-using StrideSaber.EventManagement.Events;
 using StrideSaber.Modding;
 using System;
 using System.Collections.Concurrent;

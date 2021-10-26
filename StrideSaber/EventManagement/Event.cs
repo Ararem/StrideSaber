@@ -34,6 +34,6 @@ namespace StrideSaber.EventManagement
 
 		/// <inheritdoc/>
 		[Pure]
-		public abstract override string? ToString();
+		public abstract override string ToString();
 	}
 }

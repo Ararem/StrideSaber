@@ -5,8 +5,9 @@ using Stride.Engine.Design;
 using Stride.Games;
 using StrideSaber.EventManagement;
 using StrideSaber.EventManagement.Events;
+using StrideSaber.Startup;
 
-namespace StrideSaber.Startup
+namespace StrideSaber.Hacks
 {
 	/// <summary>
 	///  Handles hacks that need to wait until after the <see cref="Game.GameStarted">game is started</see>

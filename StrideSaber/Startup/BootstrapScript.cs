@@ -5,7 +5,6 @@ using Stride.Core.Serialization;
 using Stride.Engine;
 using Stride.UI;
 using Stride.UI.Controls;
-using Stride.UI.Events;
 using StrideSaber.SceneManagement;
 using System;
 using System.Diagnostics;

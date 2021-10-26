@@ -1,15 +1,18 @@
 ﻿using CommandLine;
-using JetBrains.Annotations;
 using Serilog.Events;
 using SmartFormat;
+using Stride.Core;
+using System;
 using System.Collections.Generic;
+
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
 namespace StrideSaber.Startup
 {
 	/// <summary>
 	/// A record class that is used as the base for command-line option parsing
 	/// </summary>
-	[UsedImplicitly(ImplicitUseTargetFlags.WithMembers | ImplicitUseTargetFlags.WithInheritors)]
 	public abstract record OptionsBase
 	{
 		/// <inheritdoc />
@@ -42,6 +45,30 @@ namespace StrideSaber.Startup
 		/// </summary>
 		[Option('s', nameof(NoSplash), Default = false, HelpText = "A flag that disables the splash screen")]
 		public bool NoSplash { get; init; }
+
+		/// <summary>
+		/// The minimum time allowed between frames
+		/// </summary>
+		/// <remarks>Mutually exclusive with <see cref="MaxFps"/></remarks>
+		/// <seealso cref="MaxFps"/>
+		/// <seealso cref="ThreadThrottler.MinimumElapsedTime"/>
+		[Option('t', nameof(MinimumFrameTime), SetName = "MaxFps", Default = null, HelpText = "The minimum amount of time each frame should take")]
+		public TimeSpan? MinimumFrameTime { get; init; }
+
+		/// <summary>
+		/// The maximum framerate the application can run at
+		/// </summary>
+		/// <remarks>Mutually exclusive with <see cref="MinimumFrameTime"/></remarks>
+		/// <seealso cref="MinimumFrameTime"/>
+		/// <seealso cref="ThreadThrottler.SetMaxFrequency"/>
+		[Option('f', nameof(MaxFps), SetName = "MaxFps", Default = null, HelpText = "The maximum amount of frames that should be rendered/displayed per second")]
+		public ushort? MaxFps { get; init; }
+
+		/// <summary>
+		/// Whether VSync should be enabled
+		/// </summary>
+		[Option('v', nameof(VSync), Default = false, HelpText = "Whether VSync should be enabled")]
+		public bool VSync { get; init; }
 	}
 
 	/// <summary>
@@ -55,6 +82,13 @@ namespace StrideSaber.Startup
 		/// </summary>
 		[Option('t', nameof(DebugTemplate), Default = false, HelpText = "If the debug template should be used for log messages")]
 		public bool DebugTemplate { get; init; }
+
+		/// <summary>
+		/// Runs the secret test command (don't tell anyone about this ok?)
+		/// </summary>
+		/// <!--The first easter egg I ever made-->
+		[Option(nameof(RunTestCommand), Hidden = true, HelpText = "Runs the secret test command")]
+		public bool RunTestCommand { get; init; }
 	}
 
 	/// <summary>

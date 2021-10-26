@@ -5,7 +5,6 @@ using JetBrains.Annotations;
 using Serilog;
 using SmartFormat;
 #if DEBUG
-using SmartFormat;
 #endif
 using Stride.Core.Diagnostics;
 using Stride.Engine;
@@ -47,25 +46,20 @@ namespace StrideSaber.Startup
 
 			//First thing to do is parse the options
 			OptionsBase? cmdOptions = ParseCommandLine(args);
-			//If they're null, that means some error happened, so we assume invalid state and don't bother running the game
-			if (cmdOptions is null)
-			{
-				//Do cleanup and quit
-				CleanupAndExit();
-				return;
-			}
-
-			CmdOptions = cmdOptions;
+			//Yes I know i'm possibly passing in null here, but that's fine because the null should never be propagated
+			//Because it's only even null when an error happens
+			//And if an error happens we don't run the game
+			CmdOptions = cmdOptions!;
 			//Rename the main thread
 			Thread.CurrentThread.Name = "Main Thread";
 
 			try
 			{
-				HandleRunMode(CmdOptions);
+				HandleRunMode(cmdOptions);
 			}
 			catch (Exception e)
 			{
-				OnUnhandledException(e);
+				Log.Fatal(e, "Fatal Exception thrown");
 			}
 			finally
 			{
@@ -74,12 +68,12 @@ namespace StrideSaber.Startup
 			}
 		}
 
-		private static void HandleRunMode(OptionsBase optionsBase)
+		private static void HandleRunMode(OptionsBase? optionsBase)
 		{
 			switch (optionsBase)
 			{
-				//Run the game as usual
 				case DefaultOptions options:
+				{
 					//Break or launch the debugger if running debug verb
 					if (options is DebugOptions)
 					{
@@ -95,8 +89,13 @@ namespace StrideSaber.Startup
 
 					using (Game game = CurrentGame = new Game())
 					{
-						game.WindowMinimumUpdateRate.SetMaxFrequency(120 /*fps*/);         //Cap the max fps
-						game.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false; //No VSync
+						//Apply the commandline settings
+						if (options.MaxFps is { } maxFps)
+							game.WindowMinimumUpdateRate.SetMaxFrequency(maxFps);
+						else if (options.MinimumFrameTime is { } minimumFrameTime)
+							game.WindowMinimumUpdateRate.MinimumElapsedTime = minimumFrameTime;
+						game.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = options.VSync;
+
 						EventManager.FireEventSafeLogged(new GameLoadEvent(CurrentGame));
 
 						//By the way, even though this isn't in the docs, the sender is the `Game` instance, and eventArgs will always be null
@@ -106,11 +105,15 @@ namespace StrideSaber.Startup
 					}
 
 					break;
-
-				//Let BenchmarkDotNet do it's thing
+				}
 				case BenchmarkDotNetOptions benchOpt:
 					BenchmarkSwitcher.FromAssembly(typeof(StrideSaberApp).Assembly).Run(benchOpt.Options?.ToArray() ?? Array.Empty<string>());
 					break;
+				//Something messed up, dont do anything and return
+				case null:
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(optionsBase), optionsBase, $"Invalid option type {optionsBase.GetType()}");
 			}
 		}
 
@@ -131,47 +134,6 @@ namespace StrideSaber.Startup
 		}
 
 		//TODO: Fix cleanup and exception handling
-		/// <summary>
-		///  Called whenever there is an unhandled exception
-		/// </summary>
-		private static void OnUnhandledException(Exception e)
-		{
-			ConsoleLogListener.ShowConsole();
-
-			//Log the exception
-			Log.Fatal(e, "Unhandled Exception");
-
-			// SDL.SDL_MessageBoxData data = new()
-			// {
-			// 		flags = SDL.SDL_MessageBoxFlags.SDL_MESSAGEBOX_ERROR,
-			// 		title = "Unhandled Exception",
-			// 		message = $"Unhandled Exception Caught:\n{e.ToStringDemystified()}",
-			// 		buttons = new[]
-			// 		{
-			// 				new SDL.SDL_MessageBoxButtonData {text = "Ok", buttonid = 0, flags = SDL.SDL_MessageBoxButtonFlags.SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT | SDL.SDL_MessageBoxButtonFlags.SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT}
-			// 		},
-			// 		numbuttons = 1,
-			// 		colorScheme = new SDL.SDL_MessageBoxColorScheme
-			// 		{
-			// 				colors = new[]
-			// 				{
-			// 						// .colors (.r, .g, .b)
-			// 						// [SDL_MESSAGEBOX_COLOR_BACKGROUND]
-			// 						new SDL.SDL_MessageBoxColor {r = 255, g = 0, b = 0},
-			// 						// [SDL_MESSAGEBOX_COLOR_TEXT]
-			// 						new SDL.SDL_MessageBoxColor {r = 0, g = 255, b = 0},
-			// 						// [SDL_MESSAGEBOX_COLOR_BUTTON_BORDER]
-			// 						new SDL.SDL_MessageBoxColor {r = 255, g = 255, b = 0},
-			// 						// [SDL_MESSAGEBOX_COLOR_BUTTON_BACKGROUND]
-			// 						new SDL.SDL_MessageBoxColor {r = 0, g = 0, b = 255},
-			// 						// [SDL_MESSAGEBOX_COLOR_BUTTON_SELECTED]
-			// 						new SDL.SDL_MessageBoxColor {r = 255, g = 0, b = 255},
-			// 				}
-			// 		}
-			// };
-			// SDL.SDL_ShowMessageBox(ref data, out int _);
-		}
-
 		private static OptionsBase? ParseCommandLine(IEnumerable<string> args)
 		{
 			//By the way, the logging system doesn't exist as of yet so we can't write to it

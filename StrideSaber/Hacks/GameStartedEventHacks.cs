@@ -22,7 +22,7 @@ namespace StrideSaber.Hacks
 		/// <seealso cref="SceneSystem.SplashScreenEnabled"/>
 		/// <seealso cref="SceneSystem.SplashScreenUrl"/>
 		[EventMethod(typeof(GameStartedEvent))]
-		private static void MaybeDisableSplash(Event e)
+		private static void MaybeDisableSplash()
 		{
 			//Have to do this here because the bloody thing resets it when the game is started
 			if(StrideSaberApp.CmdOptions is DefaultOptions { NoSplash: true})
@@ -41,10 +41,10 @@ namespace StrideSaber.Hacks
 		/// <seealso cref="GameWindow.Position"/>
 		/// <seealso cref="GameWindow.AllowUserResizing"/>
 		[EventMethod(typeof(GameStartedEvent))]
-		private static void SetWindowProperties(Event e)
+		private static void SetWindowProperties(GameStartedEvent e)
 		{
 			Log.Debug("Enabling resizing of window");
-			Game game = ((GameStartedEvent) e).Game;
+			Game game = e.Game;
 			GameWindow window = game.Window;
 			window.AllowUserResizing = true;
 

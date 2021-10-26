@@ -100,7 +100,7 @@ namespace StrideSaber.Logging
 		//     }
 		//Which means I have to call this after the constructor, so we use an event instead of doing it manually
 		[EventMethod(typeof(GameLoadEvent))]
-		private static void HookAndDisableStrideConsoleLogger(Event? _)
+		private static void HookAndDisableStrideConsoleLogger()
 		{
 			//Here I'm clearing the event because stride sets up it's own handler which I don't want
 			//(Otherwise you would get duped logs when debugging which is annoying)

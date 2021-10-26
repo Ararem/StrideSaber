@@ -44,9 +44,9 @@ namespace StrideSaber.Hacks
 		}
 
 		[EventMethod(typeof(GameStartedEvent))]
-		private static void AllowAutoAspect(Event e)
+		private static void AllowAutoAspect(GameStartedEvent e)
 		{
-			Game g = ((GameStartedEvent) e).Game;
+			Game g = e.Game;
 			//Whenever our game window has it's size changed
 			g.Window.ClientSizeChanged += (sender, _) =>
 			{

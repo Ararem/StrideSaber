@@ -49,10 +49,6 @@ Hierarchy:
                         Projection: Perspective
                         VerticalFieldOfView: 90.0
                         Slot: 83d9443f-d721-4937-8cff-f193eadd74f8
-            Base:
-                BasePartAsset: 4d4aad72-3e6d-47eb-8be0-8e02f05d7c82:Shared/Prefabs/Camera
-                BasePartId: 75a53506-1488-49f0-88e8-6ca8bd330bad
-                InstanceId: 557e4886-cb22-4704-980d-6174fc6ac3af
         -   Entity:
                 Id: e30c1b1a-8bcd-4e96-89bc-9751736472c5
                 Name: Bootstrap Script
@@ -67,7 +63,7 @@ Hierarchy:
                         Id: 1720e66a-6a95-4155-83f4-65fe11552c4b
                         AutoStart: true
                         AutoStartWaitDuration: 0:00:00:05.0000000
-                        Ui: ref!! b5751c8d-a8ea-4b8c-9ceb-ae00022d7f69
                         MainMenuScene: 5481ca0d-e173-467d-bd37-652c0601757e:Scenes/Main Menu/Main Menu Scene
-                        UpdateInterval: 1
                         ProgressUiScene: 1bf77dc4-8155-43c9-b50f-030b1b12ac00:Scenes/Progress Ui/Progress Ui Scene
+                        Ui: ref!! b5751c8d-a8ea-4b8c-9ceb-ae00022d7f69
+                        UpdateInterval: 1

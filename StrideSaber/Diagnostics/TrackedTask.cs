@@ -21,9 +21,13 @@ namespace StrideSaber.Diagnostics
 		/// <summary>
 		/// What event types messages should be logged for
 		/// </summary>
-		public static TrackedTaskEvent EnabledLogEvents { get; set; } =
-			//Error | Success | Created | Disposed | ProgressUpdated;
-			ProgressUpdated;
+		public static TrackedTaskEvent EnabledLogEvents { get; set; } = 0
+			| Error
+			| Success
+			| Created
+			// | Disposed
+			// | ProgressUpdated
+			;
 
 		/// <summary>
 		/// An object that can be locked upon for global (static) synchronisation
@@ -109,11 +113,12 @@ namespace StrideSaber.Diagnostics
 		public TrackedTask(string name, TrackedTaskDelegate taskDelegate)
 		{
 			Name = name;
-			AddThis();
 			TaskDelegate = taskDelegate;
-			Task = Task.Run(TaskRunInternal);
 			Id = GetNextId();
+
 			RaiseEvent(Created);
+			AddThis();
+			Task = Task.Run(TaskRunInternal);
 		}
 
 		private static Guid GetNextId()

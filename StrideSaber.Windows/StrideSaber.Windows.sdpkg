@@ -14,4 +14,6 @@ OutputGroupDirectories: {}
 ExplicitFolders: []
 Bundles: []
 TemplateFolders: []
-RootAssets: []
+RootAssets:
+    - 2e4a7adc-eb5e-4953-a1db-9250f7c925c3:Scenes/Bootstrap/Bootstrap UI
+    - bb9f4b14-8c9c-41a0-b51a-f9390c6bf9a2:Scenes/Bootstrap/Bootstrap Scene

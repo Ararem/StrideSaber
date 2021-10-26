@@ -20,7 +20,7 @@ namespace StrideSaber.SceneManagement
 		/// <param name="sceneReference">The reference to the <see cref="Scene"/> to load</param>
 		public static async Task LoadSceneAsync(ContentManager contentManager, SceneSystem sceneSystem, UrlReference<Scene> sceneReference)
 		{
-			Log.Information("Asynchronously loading scene {Scene} ", sceneReference);
+			Log.Information("Asynchronously loading scene at {SceneRef} ", sceneReference);
 			Task<Scene> sceneTask = null!;
 			TrackedTask trackedTask = new(
 					$"LoadSceneAsync {sceneReference.Url}",
@@ -30,11 +30,14 @@ namespace StrideSaber.SceneManagement
 			await trackedTask;
 			//And pull out the resulting scene that was loaded
 			Scene newScene = await sceneTask;
+			//Gotta fix the name because stride doesn't for some reason
+			Log.Verbose("Fixing stride scene name for scene {SceneRef}", sceneReference.Url);
+			newScene.Name = sceneReference.Url[(sceneReference.Url.LastIndexOf('/') + 1)..];
 			Log.Information("Asynchronously loaded Scene {SceneRef}: {Scene}", sceneReference, newScene);
 			//Add it to the hierarchy so that it's enabled and shown
-			Log.Information("Adding newly loaded scene {Scene} to hierarchy", newScene);
+			Log.Information("Adding newly loaded {Scene} to hierarchy", newScene);
 			sceneSystem.SceneInstance.RootScene.Children.Add(newScene);
-			Log.Information("Added newly loaded scene {Scene} to hierarchy", newScene);
+			Log.Information("Added newly loaded {Scene} to hierarchy", newScene);
 		}
 
 		/// <summary>
@@ -44,7 +47,7 @@ namespace StrideSaber.SceneManagement
 		/// <param name="scene">The <see cref="Scene"/> to unload</param>
 		public static async Task UnloadSceneAsync(ContentManager contentManager, Scene scene)
 		{
-			Log.Information("Asynchronously unloading scene {Scene} ", scene);
+			Log.Information("Asynchronously unloading {Scene} ", scene);
 			TrackedTask trackedTask = new(
 					$"UnloadSceneAsync {scene}",
 					_ =>
@@ -53,12 +56,12 @@ namespace StrideSaber.SceneManagement
 						return Task.CompletedTask;
 					});
 			await trackedTask;
-			Log.Information("Asynchronously unloaded Scene {Scene}", scene);
+			Log.Information("Asynchronously unloaded {Scene}", scene);
 
 			//Now get rid of it in the hierarchy
-			Log.Information("Removing unloaded scene {Scene} from hierarchy", scene);
+			Log.Information("Removing unloaded {Scene} from hierarchy", scene);
 			scene.Parent.Children.Remove(scene);
-			Log.Information("Removed unloaded scene {Scene} from hierarchy", scene);
+			Log.Information("Removed unloaded {Scene} from hierarchy", scene);
 		}
 	}
 }

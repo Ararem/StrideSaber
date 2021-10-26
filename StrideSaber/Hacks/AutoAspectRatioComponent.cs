@@ -74,7 +74,7 @@ namespace StrideSaber.Hacks
 				ui.ResolutionStretch = ResolutionStretch.FixedWidthFixedHeight;
 			else if(windowAspect < uiAspect)
 				ui.ResolutionStretch = ResolutionStretch.FixedWidthAdaptableHeight;
-			Serilog.Log.Verbose("[Window {WindowName}] {WindowResolution}\t{WindowAspect}w/h\t[Ui {UiName}] {UiResolution}\t{UiAspect}w/h\tMode = {StretchMode}", window.Name, winSize, windowAspect, ui.Entity.Name, uiSize, uiAspect, ui.ResolutionStretch);
+			Serilog.Log.Verbose("[Window {WindowName}] {WindowResolution}\t{WindowAspect} w/h\t[Ui {UiName}] {UiResolution}\t{UiAspect} w/h\tMode = {StretchMode}", window.Name, winSize, windowAspect, ui.Entity.Name, uiSize, uiAspect, ui.ResolutionStretch);
 		}
 	}
 }

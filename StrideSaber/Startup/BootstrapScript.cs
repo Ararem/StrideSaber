@@ -51,16 +51,19 @@ namespace StrideSaber.Startup
 		/// <summary>
 		///  The time in milliseconds between updates of the <see cref="Ui"/>
 		/// </summary>
-		[DataMemberRange(1, 1000, 1, 50, 0)] public int UpdateInterval = 100;
+		[DataMemberRange(1, 1000, 1, 50, 0)] public int UpdateInterval = 500;
 
 		/// <inheritdoc/>
 		public override async Task Execute()
 		{
 			SLog.Debug("Bootstrap Script executing");
+			//First off, rename our scene
+			Entity.Scene.Name = "Bootstrap Scene";
 
 			SLog.Debug("Asynchronously loading Progress UI ({Scene})", ProgressUiScene);
-			Scene s = await Content.LoadAsync(ProgressUiScene);
-			SceneSystem.SceneInstance.RootScene.Children.Add(s);
+			Scene progressUiScene = await Content.LoadAsync(ProgressUiScene);
+			progressUiScene.Name = "Progress Ui";
+			SceneSystem.SceneInstance.RootScene.Children.Add(progressUiScene);
 			SLog.Debug("Asynchronously loaded Progress Ui ({Scene})", ProgressUiScene);
 
 			//Init stuff
@@ -132,8 +135,8 @@ namespace StrideSaber.Startup
 		private async Task Continue()
 		{
 			SLog.Information("Continue() called");
-			//Swap scenes
-			await SceneUtils.UnloadSceneAsync(Content, Entity.Scene);
+			//We can't swap scenes as this is the root scene, but we can get rid of the components in this one
+			Entity.Scene.Entities.Clear();
 			await SceneUtils.LoadSceneAsync(Content, SceneSystem, MainMenuScene);
 		}
 

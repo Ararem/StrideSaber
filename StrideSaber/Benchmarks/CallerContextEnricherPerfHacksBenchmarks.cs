@@ -1,7 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using LibEternal.Logging.Enrichers;
 using Serilog;
-using static LibEternal.Logging.Enrichers.CallerContextEnricher.PerfMode;
 
 namespace StrideSaber.Benchmarks
 {
@@ -12,7 +11,7 @@ namespace StrideSaber.Benchmarks
 		[ParamsAllValues]
 		public CallerContextEnricher.PerfMode PerfMode;
 
-		private ILogger logger;
+		private ILogger logger = null!;
 
 		[GlobalSetup]
 		public void Setup()

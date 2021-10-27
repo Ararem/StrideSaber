@@ -55,10 +55,7 @@ namespace StrideSaber.Startup
 
 			try
 			{
-				if (cmdOptions is DebugOptions { RunTestCommand: true })
-				{
-					TestCommand();
-				}
+				if (cmdOptions is DebugOptions { RunTestCommand: true }) TestCommand();
 				HandleRunMode(cmdOptions);
 			}
 			catch (Exception e)

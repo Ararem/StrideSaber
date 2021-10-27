@@ -6,11 +6,10 @@ using StrideSaber.Diagnostics;
 namespace StrideSaber.Benchmarks
 {
 	//Apparently string interpolation is faster lol
-	/*
-	 * 
-	 */
+	//And with less memory :(
 	[SimpleJob, MemoryDiagnoser]
-	public sealed class BackgroundTaskToStringBenchmarks
+	// ReSharper disable once ClassCanBeSealed.Global
+	public class BackgroundTaskToStringBenchmarks
 	{
 		private TrackedTask task = null!;
 

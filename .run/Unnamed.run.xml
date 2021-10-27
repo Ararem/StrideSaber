@@ -1,8 +1,8 @@
 ﻿<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="StrideSaber.Windows (Default)" type="DotNetProject" factoryName=".NET Project">
-    <option name="EXE_PATH" value="$PROJECT_DIR$/Bin/Windows/Debug/win-x64/StrideSaber.Windows.exe" />
+  <configuration default="false" name="StrideSaber.Windows (NoBuild)" type="DotNetProject" factoryName=".NET Project">
+    <option name="EXE_PATH" value="$PROJECT_DIR$/Bin/Windows/Release/win-x64/StrideSaber.Windows.exe" />
     <option name="PROGRAM_PARAMETERS" value="" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Bin/Windows/Debug/win-x64" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Bin/Windows/Release/win-x64" />
     <option name="PASS_PARENT_ENVS" value="1" />
     <option name="USE_EXTERNAL_CONSOLE" value="0" />
     <option name="USE_MONO" value="0" />
@@ -13,8 +13,6 @@
     <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
     <option name="PROJECT_KIND" value="DotNetCore" />
     <option name="PROJECT_TFM" value="net5.0-windows7.0" />
-    <method v="2">
-      <option name="Build Solution" enabled="true" />
-    </method>
+    <method v="2" />
   </configuration>
 </component>

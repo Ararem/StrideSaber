@@ -1,5 +1,6 @@
 ﻿using LibEternal.Logging.Destructurers;
 using LibEternal.Logging.Enrichers;
+using LibEternal.ObjectPools;
 using Serilog;
 using Serilog.Debugging;
 using Serilog.Events;
@@ -30,7 +31,7 @@ namespace StrideSaber.Logging
 		///  A message template that prints lots of information to help with debugging
 		/// </summary>
 		private const string DebugTemplate =
-				"[{Timestamp:HH:mm:ss} {" + EventNumberProp + ",-5:'#'####} {Level:t3}] [{" + ThreadNameProp + ",-20} {" + ThreadIdProp + ",-3:'#'##} ({" + ThreadTypeProp /*Always 11 chars (from enricher)*/+ "})]\t[{" + CallingTypeProp + "}/{" + CallingMethodProp + "}]:\t{Message:l}{NewLine}{Exception}{" + StackTraceProp + "}{NewLine}{NewLine}";
+				"[{Timestamp:HH:mm:ss} {" + EventNumberProp + ",-5:'#'####} {Level:t3}] [{" + ThreadNameProp + ",-20} {" + ThreadIdProp + ",-3:'#'##} ({" + ThreadTypeProp /*Always 11 chars (from enricher)*/ + "})]\t[{" + CallingTypeProp + "}/{" + CallingMethodProp + "}]:\t{Message:l}{NewLine}{Exception}{" + StackTraceProp + "}{NewLine}{NewLine}";
 
 		/// <summary>
 		///  A message template that prints simple information
@@ -57,26 +58,26 @@ namespace StrideSaber.Logging
 			{
 				if (initialized) return;
 
-				SelfLog.Enable(SelfLog_OnMessage);
+				Serilog.Debugging.SelfLog.Enable(SelfLog);
 				DefaultOptions cmdOptions = (DefaultOptions)StrideSaberApp.CmdOptions;
 				Stride.Core.Diagnostics.Logger.MinimumLevelEnabled = LogMessageType.Verbose;
 				LoggerConfiguration config = new LoggerConfiguration()
-				                              .MinimumLevel.Is(cmdOptions.LogLevel)
-				                              .Enrich.FromLogContext()
-				                              .Enrich.With<CallerContextEnricher>()
-				                              .Enrich.With<DemystifiedExceptionsEnricher>()
-				                              .Enrich.With<LogEventNumberEnricher>()
-				                              .Enrich.With<EventLevelIndentEnricher>()
-				                              .Enrich.With<StrideThreadInfoEnricher>()
-				                              .Enrich.With<PropertyLengthTrackerEnricher>()
-				                              .Destructure.AsScalar<TrackedTask>()
-				                              .Destructure.With<DelegateDestructurer>()
-				                              .Destructure.With<StrideObjectDestructurer>();
+				                             .MinimumLevel.Is(cmdOptions.LogLevel)
+				                             .Enrich.FromLogContext()
+				                             .Enrich.With<CallerContextEnricher>()
+				                             .Enrich.With<DemystifiedExceptionsEnricher>()
+				                             .Enrich.With<LogEventNumberEnricher>()
+				                             .Enrich.With<EventLevelIndentEnricher>()
+				                             .Enrich.With<StrideThreadInfoEnricher>()
+				                             .Enrich.With<PropertyLengthTrackerEnricher>()
+				                             .Destructure.AsScalar<TrackedTask>()
+				                             .Destructure.With<DelegateDestructurer>()
+				                             .Destructure.With<StrideObjectDestructurer>();
 
 				string template = (cmdOptions as DebugOptions)?.DebugTemplate == true ? DebugTemplate : SimpleTemplate;
 				if (cmdOptions.AsyncLog)
 					Log.Logger = config.WriteTo.Async(writeTo => writeTo.Console(outputTemplate: template, applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate)
-							                   ).CreateLogger();
+					).CreateLogger();
 				else
 					Log.Logger = config
 					             .WriteTo.Console(outputTemplate: template, applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate)
@@ -89,9 +90,13 @@ namespace StrideSaber.Logging
 			}
 		}
 
-		private static void SelfLog_OnMessage(string message)
+		private static void SelfLog(string message)
 		{
-			Console.Error.WriteLine(message);
+			Console.Error.WriteLine(StringBuilderPool.BorrowInline(static (sb, msg) =>
+							sb.Append("\u001b[31;1m") //Set colour to Bright Red
+							  .Append(msg)
+							  .Append("\u001b[0m") //Reset colour to default
+					, message));
 		}
 
 		/// <summary>
@@ -145,7 +150,7 @@ namespace StrideSaber.Logging
 
 			eventInfo.RemoveEventHandler(null, toRemoveDelegate);
 			//Hook our logger up to stride's system
-			GlobalLogger.GlobalMessageLogged += GlobalLogger_OnGlobalMessageLogged;
+			GlobalLogger.GlobalMessageLogged += Stride_GlobalLogger;
 			Log.Information("Stride log redirection complete");
 		}
 
@@ -154,7 +159,7 @@ namespace StrideSaber.Logging
 		/// </summary>
 		/// <remarks>Just passes it through to Serilog</remarks>
 		/// <param name="msg">The log message to log</param>
-		private static void GlobalLogger_OnGlobalMessageLogged(ILogMessage msg)
+		private static void Stride_GlobalLogger(ILogMessage msg)
 		{
 			//Convert it to serilog enum
 			LogEventLevel level = msg.Type switch

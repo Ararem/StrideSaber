@@ -126,10 +126,13 @@ namespace StrideSaber.Startup
 
 		private async Task Continue()
 		{
+			//TODO: Race conditions and calling multiple times
 			SLog.Information("Continue() called");
 			//We can't swap scenes as this is the root scene, but we can get rid of the components in this one
-			Entity.Scene.Entities.Clear();
 			await SceneUtils.LoadSceneAsync(Content, SceneSystem, MainMenuScene);
+			//We do need to wait till the new scene is properly loaded because otherwise we get missing component warnings
+			//Because of no camera existing and the like
+			Entity.Scene.Entities.Clear();
 		}
 
 		private async Task ContinueButtonOnClick()

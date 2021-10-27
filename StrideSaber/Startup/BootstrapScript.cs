@@ -116,15 +116,7 @@ namespace StrideSaber.Startup
 				countdownSlider.Value = (float)remaining.TotalSeconds;
 
 				await Task.Delay(UpdateInterval);
-
-				#if false
-				#warning LOOP: TESTING ONLY
-				if (remaining <= TimeSpan.Zero)
-					sw.Restart();
-			} while (true);
-				#else
 			} while (remaining > TimeSpan.Zero); //Loop until the time remaining is less than or equal to 0
-			#endif
 
 			//Once we get to here we know the `while()` has finished so we can continue
 			StringBuilderPool.ReturnPooled(sb);

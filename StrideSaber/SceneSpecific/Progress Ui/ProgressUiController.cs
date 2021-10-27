@@ -94,7 +94,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 	#endregion
 
 		private static Color
-				backgroundColour = Color.Red,
+				backgroundColour = Color.Gray,
 				foregroundColourStart = Color.Red,
 				foregroundColourEnd = Color.Green,
 				tickColour = Color.LightGray;

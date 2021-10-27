@@ -9,6 +9,7 @@ Hierarchy:
         - ref!! e30c1b1a-8bcd-4e96-89bc-9751736472c5
         - ref!! 42706429-7563-48b3-b79b-83c206e55f5c
         - ref!! 853e0a34-9ea7-47f4-a6ba-ba3ea53f09cd
+        - ref!! 825fbbf5-870a-4053-b247-ddc36f6e7acb
     Parts:
         -   Entity:
                 Id: 42706429-7563-48b3-b79b-83c206e55f5c
@@ -22,17 +23,36 @@ Hierarchy:
                         Children: {}
                     a520b3c64a489c04d0bfb3f1929a0ccb: !UIComponent
                         Id: b5751c8d-a8ea-4b8c-9ceb-ae00022d7f69
+                        Enabled*: true
                         Page*: 2e4a7adc-eb5e-4953-a1db-9250f7c925c3:Scenes/Bootstrap/Bootstrap UI
                         Resolution: {X: 1920.0, Y: 1080.0, Z: 1000.0}
                         Size: {X: 1.92, Y: 1.08, Z: 1.0}
                         ResolutionStretch: FixedHeightAdaptableWidth
-                        RenderGroup*: Group0
+                        RenderGroup*: Group31
                     976dd9e876e61ac41ab157cdf77d64a0: !StrideSaber.Hacks.AutoAspectRatioComponent,StrideSaber
                         Id: d75d6b89-37e3-4a3c-80ed-d6904ae6d641
             Base:
                 BasePartAsset: 4e4cb7df-17e2-46b2-955b-7613548fbcfd:Shared/Prefabs/Ui
                 BasePartId: 8a1d01ad-1c34-4e97-ada6-61b07205e3a2
                 InstanceId: 3580ff14-961e-4145-b21d-239ba631a2e5
+        -   Entity:
+                Id: 825fbbf5-870a-4053-b247-ddc36f6e7acb
+                Name: Sphere
+                Components:
+                    b2dcf5e10b18a575968c083890bda4ff: !TransformComponent
+                        Id: 48c020dd-2758-4946-a4b4-96f788a17f19
+                        Position: {X: 0.0, Y: 0.0, Z: -1.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    8414534d0bf537359b411556300db133: !ModelComponent
+                        Id: d74f43ef-7137-41b2-b203-6e87cec86a98
+                        Model: 994dd516-e5dd-4f39-82dd-6376b07873f8:Shared/Models/Basic/Sphere/Sphere
+                        Materials:
+                            128fc9fb7d6032ad0cdd1b04a3481909~0: 68116253-d1f2-4ba6-bffb-ee2db820c0b3:Shared/Models/Basic/Sphere/Sphere Material
+                    f95f3646f4bbb8c1ffb34761acbf2f1c: !StrideSaber.Hacks.NoteComponent,StrideSaber
+                        Id: 2c461b12-b91c-42e8-8ee3-3f1b0a7fbd21
+                        Note: DO NOT REMOVE THIS. It's here because for some reason stride doesn't render the UI if there's no components in the scene. So please, keep this here or we have no UI :(
         -   Entity:
                 Id: 853e0a34-9ea7-47f4-a6ba-ba3ea53f09cd
                 Name*: Bootstrap Camera

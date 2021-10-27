@@ -43,7 +43,7 @@ Hierarchy:
                         Resolution: {X: 1920.0, Y: 1080.0, Z: 1000.0}
                         Size: {X: 1.92, Y: 1.08, Z: 1.0}
                         ResolutionStretch: FixedHeightAdaptableWidth
-                        RenderGroup*: Group0
+                        RenderGroup*: Group31
                     976dd9e876e61ac41ab157cdf77d64a0: !StrideSaber.Hacks.AutoAspectRatioComponent,StrideSaber
                         Id: c6718cdb-fb42-484b-8612-0f7cfac607be
                     68c0469c7cb7756aee5e3239593f683a*: !StrideSaber.SceneSpecific.Progress_Ui.ProgressUiController,StrideSaber

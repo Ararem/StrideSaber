@@ -64,7 +64,7 @@ namespace StrideSaber.Startup
 			Scene progressUiScene = await Content.LoadAsync(ProgressUiScene);
 			progressUiScene.Name = "Progress Ui";
 			SceneSystem.SceneInstance.RootScene.Children.Add(progressUiScene);
-			SLog.Debug("Asynchronously loaded Progress Ui ({Scene})", ProgressUiScene);
+			SLog.Debug("Asynchronously loaded Progress Ui  ({Scene})", ProgressUiScene);
 
 			//Init stuff
 			UIElement root = Ui.Page.RootElement;
@@ -73,13 +73,13 @@ namespace StrideSaber.Startup
 			Slider countdownSlider = root.FindVisualChildOfType<Slider>();
 
 			//Log state info
-			SLog.Verbose("Continue button:		{@ContinueButton}", continueButton);
+			SLog.Verbose("Continue button:	{@ContinueButton}", continueButton);
 			SLog.Verbose("Countdown text:		{@CountdownText}", countdownText);
 			SLog.Verbose("Countdown scroll:	{@CountdownScroll}", countdownSlider);
-			SLog.Verbose("Auto Start:			{AutoStart}", AutoStart);
+			SLog.Verbose("Auto Start:		{AutoStart}", AutoStart);
 			SLog.Verbose("Wait Duration:		{AutoStartWaitDuration}", AutoStartWaitDuration);
-			SLog.Verbose("Update Interval:		{UpdateInterval}", UpdateInterval);
-			SLog.Verbose("Main Menu Scene :	{MainMenuScene}", MainMenuScene);
+			SLog.Verbose("Update Interval:	{UpdateInterval} ms", UpdateInterval);
+			SLog.Verbose("Main Menu Scene:	{MainMenuScene}", MainMenuScene);
 
 			//Get our button ready
 			continueButton.Click += (_, _) => Task.Run(ContinueButtonOnClick);

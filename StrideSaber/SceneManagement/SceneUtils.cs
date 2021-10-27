@@ -24,7 +24,7 @@ namespace StrideSaber.SceneManagement
 			string sceneName = sceneReference.Url[(sceneReference.Url.LastIndexOf('/') + 1)..];
 			Task<Scene> sceneTask = null!;
 			TrackedTask trackedTask = new(
-					$"LoadSceneAsync {sceneName}",
+					$"{sceneName} LoadAsync",
 					_ => sceneTask = contentManager.LoadAsync(sceneReference, ContentManagerLoaderSettings.Default)
 			);
 			//Wait for the task to complete
@@ -50,7 +50,7 @@ namespace StrideSaber.SceneManagement
 		{
 			Log.Information("Asynchronously unloading {Scene} ", scene);
 			TrackedTask trackedTask = new(
-					$"UnloadSceneAsync {scene.Name}",
+					$"{scene.Name} UnloadAsync",
 					_ =>
 					{
 						contentManager.Unload(scene);

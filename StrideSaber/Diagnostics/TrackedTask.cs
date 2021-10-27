@@ -269,7 +269,7 @@ namespace StrideSaber.Diagnostics
 					Log.Verbose("{Task:NoProgress} completed successfully", this);
 					break;
 				case ProgressUpdated:
-					Log.Verbose("{Task:NoProgress} progress update ({Progress:p0})", this, Progress);
+					Log.Verbose("{Task:NoProgress} progress update ({Progress,6:00.0%})", this, Progress);
 					break;
 				case None:
 					break;
@@ -285,12 +285,12 @@ namespace StrideSaber.Diagnostics
 		/// <summary>
 		///  A cached <see cref="Format"/> for default <see cref="ToString()"/> behaviour
 		/// </summary>
-		private static readonly Format DefaultToStringFormat = Smart.Default.Parser.ParseFormat("TrackedTask {Name,20:quoted()} Id {Id} ({Progress,6:P1})");
+		private static readonly Format DefaultToStringFormat = Smart.Default.Parser.ParseFormat("TrackedTask {Name,-20} Id {Id} ({Progress,6:00.0%})");
 
 		/// <summary>
 		///  A cached <see cref="Format"/> for <see cref="ToString()"/> behaviour without specifying the progress of the task
 		/// </summary>
-		private static readonly Format NoProgressToStringFormat = Smart.Default.Parser.ParseFormat("TrackedTask {Name,20:quoted()} Id {Id}");
+		private static readonly Format NoProgressToStringFormat = Smart.Default.Parser.ParseFormat("TrackedTask {Name,-20} Id {Id}");
 
 		/// <inheritdoc/>
 		public override string ToString()

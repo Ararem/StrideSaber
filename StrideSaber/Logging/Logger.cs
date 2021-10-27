@@ -2,7 +2,6 @@
 using LibEternal.Logging.Enrichers;
 using LibEternal.ObjectPools;
 using Serilog;
-using Serilog.Debugging;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using SmartFormat;
@@ -11,7 +10,6 @@ using StrideSaber.Diagnostics;
 using StrideSaber.EventManagement;
 using StrideSaber.EventManagement.Events;
 using StrideSaber.Extensions.SmartFormat;
-using StrideSaber.Hacks;
 using StrideSaber.Startup;
 using System;
 using System.Linq;
@@ -69,7 +67,6 @@ namespace StrideSaber.Logging
 				                             .Enrich.With<LogEventNumberEnricher>()
 				                             .Enrich.With<EventLevelIndentEnricher>()
 				                             .Enrich.With<StrideThreadInfoEnricher>()
-				                             .Enrich.With<PropertyLengthTrackerEnricher>()
 				                             .Destructure.AsScalar<TrackedTask>()
 				                             .Destructure.With<DelegateDestructurer>()
 				                             .Destructure.With<StrideObjectDestructurer>();

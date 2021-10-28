@@ -29,16 +29,6 @@ namespace StrideSaber.Diagnostics
 		/// <remarks>This value should be considered mutable and may change while being accessed, so should not be accessed directly</remarks>
 		private static readonly ConcurrentHashSet<TrackedTask> Instances = new();
 
-		/// <summary>
-		///  The order that bytes in a <see cref="Guid"/> are read from an array
-		/// </summary>
-		private static readonly int[] GuidByteOrder = { 15, 14, 13, 12, 11, 10, 9, 8, 6, 7, 4, 5, 0, 1, 2, 3 };
-
-		/// <summary>
-		///  The bytes that are used for creating task Guids
-		/// </summary>
-		private static readonly byte[] TaskCounterBytes = new byte[16];
-
 		// /// <summary>
 		// /// The cached awaiter for this instance
 		// /// </summary>
@@ -71,8 +61,9 @@ namespace StrideSaber.Diagnostics
 		                                                                | Error
 		                                                                | Success
 		                                                                | Created
-		                                                                // | Disposed
-		                                                                | ProgressUpdated;
+			// | Disposed
+			// | ProgressUpdated
+			;
 
 		/// <inheritdoc cref="Instances"/>
 		public static IReadOnlyCollection<TrackedTask> UnsafeInstances
@@ -150,6 +141,17 @@ namespace StrideSaber.Diagnostics
 			}
 		}
 
+		#if INCREMENT_ID
+		/// <summary>
+		///  The order that bytes in a <see cref="Guid"/> are read from an array
+		/// </summary>
+		private static readonly int[] GuidByteOrder = { 15, 14, 13, 12, 11, 10, 9, 8, 6, 7, 4, 5, 0, 1, 2, 3 };
+
+		/// <summary>
+		///  The bytes that are used for creating task Guids
+		/// </summary>
+		private static readonly byte[] TaskCounterBytes = new byte[16];
+
 		private static Guid GetNextId()
 		{
 			lock (TaskCounterBytes) //Thread safety
@@ -177,6 +179,12 @@ namespace StrideSaber.Diagnostics
 				return new Guid(TaskCounterBytes);
 			}
 		}
+		#else
+		private static Guid GetNextId()
+		{
+			return Guid.NewGuid();
+		}
+		#endif
 
 		private async Task TaskRunInternal()
 		{

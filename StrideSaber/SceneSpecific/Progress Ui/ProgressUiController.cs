@@ -94,18 +94,19 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 	#endregion
 
 		private static Color
-				backgroundColour = Color.Gray,
-				foregroundColourStart = Color.Red,
-				foregroundColourEnd = Color.Green,
-				tickColour = Color.LightGray;
+				backgroundColour = new(69, 69, 69, 255),
+				tickColour = new(211, 211, 211, 255),
+				lerpStartColour = new(128, 128, 128, 255);
+
+		private static float startScalar = 0.8f;
 
 		/// <inheritdoc />
 		public override void Update()
 		{
 			//Get all the current tasks, ordered by ID
 			var tasks = TrackedTask.UnsafeInstances
-			                          .OrderBy(t => t.Id)
-			                          .ToArray();
+			                       .OrderBy(static t => t.Id)
+			                       .ToArray();
 
 			StringBuilder sb = StringBuilderPool.GetPooled();
 			for (int i = 0; i < tasks.Length; i++)
@@ -132,11 +133,15 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				slider.Value = task.Progress;
 
 				//Try and give the task a nice little colour too
-				//This one is based on the progression of the task
-				Color progressColour = Color.Lerp(foregroundColourStart, foregroundColourEnd, task.Progress);
-				//And this one on the hash of the task ID
+				//This one is based on the hash of the task ID
 				Color uniqueTaskColour = Color.FromRgba(task.Id.GetHashCode());
 				uniqueTaskColour.A = 255;
+				//This one is based on the progression of the task
+				//TODO: This is decent for now, but maybe fix the tick lines, and make it HSL not RGB 
+				Color start = uniqueTaskColour, end = uniqueTaskColour;
+				start *= startScalar;
+				start.A = 1;
+				Color progressColour = Color.Lerp(start, end, task.Progress);
 
 				if (r.Equals(null))
 					throw new Exception("Test exception");

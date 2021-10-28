@@ -17,7 +17,7 @@ Hierarchy:
                 IsEnabled*: true
                 CanBeHitByUser: false
                 Height: 32.0
-                VerticalAlignment: Bottom
+                VerticalAlignment: Stretch
                 Margin: {}
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
@@ -30,7 +30,7 @@ Hierarchy:
                 TrackForegroundImage: !SpriteFromTexture
                     Texture: 68b46292-35ad-499c-9625-9056963c2ec0:Shared/UI/Textures/LightGrey_1x1
                     Center: {X: 0.0, Y: 0.0}
-                TrackStartingOffsets: {X: -1.0, Y: 0.0}
+                TrackStartingOffsets: {X: 0.0, Y: 0.0}
                 TickImage: !SpriteFromTexture
                     Texture: e5fd2076-8b3b-458f-9ec0-6dbbb30dce9c:Shared/UI/Textures/SemiLightGrey_1x1
                     PixelsPerUnit: 50.0
@@ -60,7 +60,7 @@ Hierarchy:
                 DrawLayerNumber: 5
                 CanBeHitByUser: false
                 Height: 32.0
-                VerticalAlignment: Bottom
+                VerticalAlignment: Stretch
                 Margin: {}
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
@@ -73,7 +73,7 @@ Hierarchy:
                 TrackForegroundImage: !SpriteFromTexture
                     Texture: 68b46292-35ad-499c-9625-9056963c2ec0:Shared/UI/Textures/LightGrey_1x1
                     Center: {X: 0.0, Y: 0.0}
-                TrackStartingOffsets: {X: -1.0, Y: 0.0}
+                TrackStartingOffsets: {X: 0.0, Y: 0.0}
                 TickImage: !SpriteFromTexture
                     Texture: e5fd2076-8b3b-458f-9ec0-6dbbb30dce9c:Shared/UI/Textures/SemiLightGrey_1x1
                     PixelsPerUnit: 50.0
@@ -91,7 +91,7 @@ Hierarchy:
                 DrawLayerNumber: 5
                 CanBeHitByUser: false
                 Height: 32.0
-                VerticalAlignment: Bottom
+                VerticalAlignment: Stretch
                 Margin: {}
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
@@ -104,7 +104,7 @@ Hierarchy:
                 TrackForegroundImage: !SpriteFromTexture
                     Texture: 68b46292-35ad-499c-9625-9056963c2ec0:Shared/UI/Textures/LightGrey_1x1
                     Center: {X: 0.0, Y: 0.0}
-                TrackStartingOffsets: {X: -1.0, Y: 0.0}
+                TrackStartingOffsets: {X: 0.0, Y: 0.0}
                 TickImage: !SpriteFromTexture
                     Texture: e5fd2076-8b3b-458f-9ec0-6dbbb30dce9c:Shared/UI/Textures/SemiLightGrey_1x1
                     PixelsPerUnit: 50.0
@@ -133,7 +133,7 @@ Hierarchy:
                 Id: 44c91d08-5c96-4e9b-a293-980876c97734
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
-                Margin: {Left: 4.0, Right: 2.0}
+                Margin: {Left: 2.0, Right: 2.0}
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
@@ -158,8 +158,8 @@ Hierarchy:
                 Name: Progress Indicator
                 Padding: {}
                 Content: !StackPanel ref!! 44c91d08-5c96-4e9b-a293-980876c97734
-                BorderColor: {R: 0, G: 0, B: 0, A: 255}
-                BorderThickness: {Left: 4.0, Top: 2.0, Right: 4.0, Bottom: 6.0}
+                BorderColor*: {R: 51, G: 255, B: 0, A: 255}
+                BorderThickness: {Left: 4.0, Top: 4.0, Right: 4.0, Bottom: 4.0}
             Base:
                 BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
                 BasePartId: bb190305-79b3-4f96-a5bd-afaca7e8cc43
@@ -188,7 +188,7 @@ Hierarchy:
                 Id: 56d1a826-0503-44e9-99e2-a0bf028d6f95
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
-                Margin: {Left: 4.0, Right: 2.0}
+                Margin: {Left: 2.0, Right: 2.0}
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
@@ -226,7 +226,7 @@ Hierarchy:
                 DrawLayerNumber: 5
                 CanBeHitByUser: false
                 Height: 32.0
-                VerticalAlignment: Bottom
+                VerticalAlignment: Stretch
                 Margin: {}
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
@@ -239,7 +239,7 @@ Hierarchy:
                 TrackForegroundImage: !SpriteFromTexture
                     Texture: 68b46292-35ad-499c-9625-9056963c2ec0:Shared/UI/Textures/LightGrey_1x1
                     Center: {X: 0.0, Y: 0.0}
-                TrackStartingOffsets: {X: -1.0, Y: 0.0}
+                TrackStartingOffsets: {X: 0.0, Y: 0.0}
                 TickImage: !SpriteFromTexture
                     Texture: e5fd2076-8b3b-458f-9ec0-6dbbb30dce9c:Shared/UI/Textures/SemiLightGrey_1x1
                     PixelsPerUnit: 50.0
@@ -263,8 +263,8 @@ Hierarchy:
                 Name: Progress Indicator
                 Padding: {}
                 Content: !StackPanel ref!! f73a3d6e-aa9c-46a3-b127-ef0b48267795
-                BorderColor: {R: 0, G: 0, B: 0, A: 255}
-                BorderThickness: {Left: 4.0, Top: 2.0, Right: 4.0, Bottom: 6.0}
+                BorderColor*: {R: 255, G: 0, B: 172, A: 255}
+                BorderThickness: {Left: 4.0, Top: 4.0, Right: 4.0, Bottom: 4.0}
             Base:
                 BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
                 BasePartId: bb190305-79b3-4f96-a5bd-afaca7e8cc43
@@ -273,7 +273,7 @@ Hierarchy:
                 Id: 836def08-16f6-4ca3-bd85-535164d8712d
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
-                Margin: {Left: 4.0, Right: 2.0}
+                Margin: {Left: 2.0, Right: 2.0}
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38
@@ -348,8 +348,8 @@ Hierarchy:
                 Name: Progress Indicator
                 Padding: {}
                 Content: !StackPanel ref!! 836def08-16f6-4ca3-bd85-535164d8712d
-                BorderColor: {R: 0, G: 0, B: 0, A: 255}
-                BorderThickness: {Left: 4.0, Top: 2.0, Right: 4.0, Bottom: 6.0}
+                BorderColor*: {R: 255, G: 0, B: 0, A: 255}
+                BorderThickness: {Left: 4.0, Top: 4.0, Right: 4.0, Bottom: 4.0}
             Base:
                 BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
                 BasePartId: bb190305-79b3-4f96-a5bd-afaca7e8cc43
@@ -367,8 +367,8 @@ Hierarchy:
                 Name: Progress Indicator
                 Padding: {}
                 Content: !StackPanel ref!! 56d1a826-0503-44e9-99e2-a0bf028d6f95
-                BorderColor: {R: 0, G: 0, B: 0, A: 255}
-                BorderThickness: {Left: 4.0, Top: 2.0, Right: 4.0, Bottom: 6.0}
+                BorderColor*: {R: 89, G: 0, B: 255, A: 255}
+                BorderThickness: {Left: 4.0, Top: 4.0, Right: 4.0, Bottom: 4.0}
             Base:
                 BasePartAsset: 64b39408-9f03-4e43-b866-680744349de5:Scenes/Progress Ui/Progress Ui Library
                 BasePartId: bb190305-79b3-4f96-a5bd-afaca7e8cc43
@@ -397,7 +397,7 @@ Hierarchy:
                 Id: f73a3d6e-aa9c-46a3-b127-ef0b48267795
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
-                Margin: {Left: 4.0, Right: 2.0}
+                Margin: {Left: 2.0, Right: 2.0}
                 MaximumWidth: 3.4028235E+38
                 MaximumHeight: 3.4028235E+38
                 MaximumDepth: 3.4028235E+38

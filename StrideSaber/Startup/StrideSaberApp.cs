@@ -140,7 +140,6 @@ namespace StrideSaber.Startup
 			}
 		}
 
-		//TODO: Fix cleanup and exception handling
 		private static OptionsBase? ParseCommandLine(IEnumerable<string> args)
 		{
 			//By the way, the logging system doesn't exist as of yet so we can't write to it

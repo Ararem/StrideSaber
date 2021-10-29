@@ -96,10 +96,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 
 		private static Color
 				backgroundColour = new(69, 69, 69, 255),
-				tickColour = new(211, 211, 211, 255),
-				lerpStartColour = new(128, 128, 128, 255);
-
-		private static float startScalar = 0.8f;
+				tickColour = new(211, 211, 211, 255);
 
 		/// <inheritdoc />
 		public override void Update()
@@ -138,17 +135,13 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				Color uniqueTaskColour = Color.FromRgba(task.Id.GetHashCode());
 				uniqueTaskColour.A = 255;
 				//This one is based on the progression of the task
-				//TODO: This is decent for now, but maybe fix the tick lines, and make it HSL not RGB 
-				Color start = uniqueTaskColour, end = uniqueTaskColour;
-				start *= startScalar;
-				start.A = 1;
-				Color progressColour = Color.Lerp(start, end, task.Progress);
-
+				//TODO: This is decent for now, but maybe fix the tick lines
 				//Assign all the colours
 				(indicator as Border)!.BorderColor = uniqueTaskColour; //Unique border for each task
-				slider.TrackBackgroundImage = SpriteFromColour(backgroundColour);
-				slider.TrackForegroundImage = SpriteFromColour(progressColour);
-				slider.TickImage = SpriteFromColour(tickColour);
+				//Background and tick sprites should be consistent so store them, but unique sprites won't be because they will keep changing
+				slider.TrackBackgroundImage = SpriteFromColour(backgroundColour, true);
+				slider.TickImage = SpriteFromColour(tickColour, true);
+				slider.TrackForegroundImage = SpriteFromColour(uniqueTaskColour, false);
 			}
 
 			StringBuilderPool.ReturnPooled(sb);
@@ -163,11 +156,15 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			for (int i = indicatorsPanel.Children.Count - 1; i >= tasks.Length; i--) indicatorsPanel.Children.RemoveAt(i);
 		}
 
-		private static readonly Dictionary<Color, ISpriteProvider> cachedSpriteFromColour = new(); 
+		private static readonly Dictionary<Color, ISpriteProvider> cachedSpriteFromColour = new();
 
-		private ISpriteProvider SpriteFromColour(Color colour)
+		private ISpriteProvider SpriteFromColour(Color colour, bool storeInCache)
 		{
-			return new SpriteFromTexture
+			//Try get it from the cache first, as this is the most performant
+			if (cachedSpriteFromColour.ContainsKey(colour))
+				return cachedSpriteFromColour[colour];
+
+			SpriteFromTexture sprite = new()
 			{
 					Texture =
 							//R8G8B8A8_UNorm_SRgb seems to work without fucking stuff up
@@ -180,6 +177,11 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 									new[] { colour }
 							)
 			};
+
+			if (storeInCache)
+				cachedSpriteFromColour[colour] = sprite;
+
+			return sprite;
 		}
 	}
 }

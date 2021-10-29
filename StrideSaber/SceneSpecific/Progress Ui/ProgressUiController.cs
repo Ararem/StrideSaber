@@ -12,6 +12,7 @@ using Stride.UI.Panels;
 using StrideSaber.Diagnostics;
 using StrideSaber.Startup;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -104,7 +105,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 		public override void Update()
 		{
 			//Get all the current tasks, ordered by ID
-			var tasks = TrackedTask.UnsafeInstances
+			var tasks = TrackedTask.CloneAllInstances()
 			                       .OrderBy(static t => t.Id)
 			                       .ToArray();
 
@@ -127,7 +128,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 
 				//Set the text and slider values for the task
 				sb.Clear();
-				sb.AppendSmart("{Name}:\t{Progress,3:p0}", task);
+				sb.Append($"{task.Name}:\t{task.Progress,3:p0}");
 				indicator.FindVisualChildOfType<TextBlock>().Text = sb.ToString();
 				Slider slider = indicator.FindVisualChildOfType<Slider>();
 				slider.Value = task.Progress;
@@ -143,13 +144,11 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				start.A = 1;
 				Color progressColour = Color.Lerp(start, end, task.Progress);
 
-				if (r.Equals(null))
-					throw new Exception("Test exception");
 				//Assign all the colours
 				(indicator as Border)!.BorderColor = uniqueTaskColour; //Unique border for each task
-				slider.TrackBackgroundImage = new SpriteFromTexture { Texture = TextureFromColour(backgroundColour) };
-				slider.TrackForegroundImage = new SpriteFromTexture { Texture = TextureFromColour(progressColour) };
-				slider.TickImage = new SpriteFromTexture { Texture = TextureFromColour(tickColour) };
+				slider.TrackBackgroundImage = SpriteFromColour(backgroundColour);
+				slider.TrackForegroundImage = SpriteFromColour(progressColour);
+				slider.TickImage = SpriteFromColour(tickColour);
 			}
 
 			StringBuilderPool.ReturnPooled(sb);
@@ -164,17 +163,23 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			for (int i = indicatorsPanel.Children.Count - 1; i >= tasks.Length; i--) indicatorsPanel.Children.RemoveAt(i);
 		}
 
-		private Texture TextureFromColour(Color colour)
+		private static readonly Dictionary<Color, ISpriteProvider> cachedSpriteFromColour = new(); 
+
+		private ISpriteProvider SpriteFromColour(Color colour)
 		{
-			//R8G8B8A8_UNorm_SRgb seems to work without fucking stuff up
-			//Because Stride.Core.Mathematics.Color is 1 byte per channel, RGBA
-			return Texture.New2D(
-					GraphicsDevice,
-					1,
-					1,
-					PixelFormat.R8G8B8A8_UNorm_SRgb,
-					new[] { colour }
-			);
+			return new SpriteFromTexture
+			{
+					Texture =
+							//R8G8B8A8_UNorm_SRgb seems to work without fucking stuff up
+							//Because Stride.Core.Mathematics.Color is 1 byte per channel, RGBA
+							Texture.New2D(
+									GraphicsDevice,
+									1,
+									1,
+									PixelFormat.R8G8B8A8_UNorm_SRgb,
+									new[] { colour }
+							)
+			};
 		}
 	}
 }

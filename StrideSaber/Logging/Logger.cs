@@ -81,7 +81,7 @@ namespace StrideSaber.Logging
 				{
 					template = SimpleTemplate;
 					//No traces needed, my code go vrooooooooooooooooooooooooooooom
-					config = config.Enrich.With(new CallerContextEnricher(PerfMode.FastNoTrace));
+					config = config.Enrich.With(new CallerContextEnricher(PerfMode.FastDemystify));
 				}
 
 				if (cmdOptions.AsyncLog)
@@ -95,6 +95,7 @@ namespace StrideSaber.Logging
 				//Also set up the smart format stuff I like
 				Smart.Default.AddExtensions(new QuotedStringFormatter());
 				Log.Information("Logger initialized");
+				//TODO: Maybe use `Interlocked` for this?
 				initialized = true;
 			}
 		}

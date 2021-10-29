@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using LibEternal.ObjectPools;
-using SmartFormat;
 using Stride.Core.Mathematics;
 using Stride.Core.Serialization;
 using Stride.Engine;
@@ -156,13 +155,16 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			for (int i = indicatorsPanel.Children.Count - 1; i >= tasks.Length; i--) indicatorsPanel.Children.RemoveAt(i);
 		}
 
-		private static readonly Dictionary<Color, ISpriteProvider> cachedSpriteFromColour = new();
+		/// <summary>
+		/// A dictionary cache that maps a <see cref="Color"/> to a pre-generated sprite
+		/// </summary>
+		private static readonly Dictionary<Color, ISpriteProvider> CachedSpriteFromColour = new();
 
 		private ISpriteProvider SpriteFromColour(Color colour, bool storeInCache)
 		{
 			//Try get it from the cache first, as this is the most performant
-			if (cachedSpriteFromColour.ContainsKey(colour))
-				return cachedSpriteFromColour[colour];
+			if (CachedSpriteFromColour.ContainsKey(colour))
+				return CachedSpriteFromColour[colour];
 
 			SpriteFromTexture sprite = new()
 			{
@@ -179,7 +181,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			};
 
 			if (storeInCache)
-				cachedSpriteFromColour[colour] = sprite;
+				CachedSpriteFromColour[colour] = sprite;
 
 			return sprite;
 		}

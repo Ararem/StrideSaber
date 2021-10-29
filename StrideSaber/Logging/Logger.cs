@@ -62,7 +62,6 @@ namespace StrideSaber.Logging
 				LoggerConfiguration config = new LoggerConfiguration()
 				                             .MinimumLevel.Is(cmdOptions.LogLevel)
 				                             .Enrich.FromLogContext()
-				                             .Enrich.With(new CallerContextEnricher())
 				                             .Enrich.With<DemystifiedExceptionsEnricher>()
 				                             .Enrich.With<LogEventNumberEnricher>()
 				                             .Enrich.With<EventLevelIndentEnricher>()
@@ -71,7 +70,19 @@ namespace StrideSaber.Logging
 				                             .Destructure.With<DelegateDestructurer>()
 				                             .Destructure.With<StrideObjectDestructurer>();
 
-				string template = cmdOptions is DebugOptions { DebugTemplate: true } ? DebugTemplate : SimpleTemplate;
+				string template;
+				if (cmdOptions is DebugOptions { DebugTemplate: true })
+				{
+					template = DebugTemplate;
+					//Debug template requires stack traces
+					config = config.Enrich.With(new CallerContextEnricher(PerfMode.SlowWithTrace));
+				}
+				else
+				{
+					template = SimpleTemplate;
+					//No traces needed, my code go vrooooooooooooooooooooooooooooom
+					config = config.Enrich.With(new CallerContextEnricher(PerfMode.FastNoTrace));
+				}
 
 				if (cmdOptions.AsyncLog)
 					Log.Logger = config.WriteTo.Async(writeTo => writeTo.Console(outputTemplate: template, applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate)

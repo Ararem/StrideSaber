@@ -5,6 +5,7 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using SmartFormat;
+using Stride.Core;
 using Stride.Core.Diagnostics;
 using StrideSaber.Diagnostics;
 using StrideSaber.EventManagement;
@@ -66,7 +67,7 @@ namespace StrideSaber.Logging
 				                             .Enrich.With<LogEventNumberEnricher>()
 				                             .Enrich.With<EventLevelIndentEnricher>()
 				                             .Enrich.With<StrideThreadInfoEnricher>()
-				                             .Destructure.AsScalar<TrackedTask>()
+				                             .Destructure.AsScalar<TrackedTask>() //Want custom ToString support
 				                             .Destructure.With<DelegateDestructurer>()
 				                             .Destructure.With<StrideObjectDestructurer>();
 

@@ -46,13 +46,14 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 		{
 			indicatorsPanel = Ui.Page.RootElement.FindVisualChildOfType<StackPanel>("Indicators");
 			library = Content.Load(LibraryReference);
+			//Create some tasks for fun
 			Task.Run(AsyncTaskCreator);
-			//(Game as Game)!.WindowMinimumUpdateRate.SetMaxFrequency(10);
 			SLog.Information("Task creator started");
 		}
 
 		private static Random r = new();
 
+		//Creates tasks for debugging purposes
 		[SuppressMessage("ReSharper", "All")]
 		private static async Task AsyncTaskCreator()
 		{
@@ -60,13 +61,16 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			int i = 0;
 			while (true)
 			{
-				int delay = r.Next(1000, 2000);
+				//Wait a while between each task instantiation
+				int delay = r.Next(0, 100);
 				await Task.Delay(delay);
-				if (TrackedTask.UnsafeInstances.Count < 10)
+				//Ensure not too many tasks
+				if (TrackedTask.UnsafeInstances.Count < 50)
 					_ = new TrackedTask($"Test task {++i}", AsyncTaskTest);
 			}
 		}
 
+		//A task that updates the progress from the current FPS
 		[SuppressMessage("ReSharper", "All")]
 		private static async Task FpsTask(Action<float> updateProgress)
 		{
@@ -81,7 +85,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 		private static async Task AsyncTaskTest(Action<float> updateProgress)
 		{
 			DateTime start = DateTime.Now;
-			DateTime end = start + TimeSpan.FromMilliseconds(r.Next(1000, 15000));
+			DateTime end = start + TimeSpan.FromMilliseconds(r.Next(0, 5000));
 			while (DateTime.Now < end)
 			{
 				await Task.Delay(50);
@@ -97,7 +101,15 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				backgroundColour = new(69, 69, 69, 255),
 				tickColour = new(211, 211, 211, 255);
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Updates the UI from the current tasks and their statuses
+		/// </summary>
+		// PERF: Hot path, needs lots of performance improvements, namely:
+		// 1: Task string formatting handling
+		// 2: Child finding for components - Uses LINQ
+		// 3: Almost nothing is cached, this would be a massive improvement
+		// 4: Colours for sliders - perhaps internally create a list of ~1000 combinations and pull out the closest approximation?
+		// Texture reuse - `tex.SetData(Game.GraphicsContext.CommandList, new[]{colour});` Needs texture to have `GraphicsResourceUsage.Dynamic`
 		public override void Update()
 		{
 			//Get all the current tasks, ordered by ID
@@ -124,7 +136,10 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 
 				//Set the text and slider values for the task
 				sb.Clear();
-				sb.Append($"{task.Name}:\t{task.Progress,3:p0}");
+				//The Builder is ~50% slower than interpolation, but ~40% less memory
+				sb.Append(task.Name)
+				  .Append(":\t")
+				  .Append(task.Progress.ToString("p0").PadLeft(3));
 				indicator.FindVisualChildOfType<TextBlock>().Text = sb.ToString();
 				Slider slider = indicator.FindVisualChildOfType<Slider>();
 				slider.Value = task.Progress;
@@ -138,9 +153,10 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				//Assign all the colours
 				(indicator as Border)!.BorderColor = uniqueTaskColour; //Unique border for each task
 				//Background and tick sprites should be consistent so store them, but unique sprites won't be because they will keep changing
-				slider.TrackBackgroundImage = SpriteFromColour(backgroundColour, true);
-				slider.TickImage = SpriteFromColour(tickColour, true);
-				slider.TrackForegroundImage = SpriteFromColour(uniqueTaskColour, false);
+				//FIXME: Need to dispose of the old value here, this is a memory leak
+				slider.TrackBackgroundImage = SpriteFromColour(backgroundColour);
+				slider.TickImage = SpriteFromColour(tickColour);
+				slider.TrackForegroundImage = SpriteFromColour(uniqueTaskColour);
 			}
 
 			StringBuilderPool.ReturnPooled(sb);
@@ -160,8 +176,34 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 		/// </summary>
 		private static readonly Dictionary<Color, ISpriteProvider> CachedSpriteFromColour = new();
 
-		private ISpriteProvider SpriteFromColour(Color colour, bool storeInCache)
+		internal ISpriteProvider SpriteFromColour(Color colour)
 		{
+			//Rounds `x` to the nearest `n`
+			//Aka Round(14,5) => 15
+			static byte Round(byte x, byte n)
+			{
+				//This rounds it to the closest value of `n`, but it might be out of range
+				float res = (MathF.Round((float)x / n, MidpointRounding.AwayFromZero) * n);
+				//if it's too large, bump it down
+				if (res > byte.MaxValue) res -= n;
+				return (byte)res;
+			}
+
+			/*
+			 * 'Round' the colour so that we don't have to check for as many and store as many colours
+			 * Essentially reducing the bit depth here
+			 * channelUniqueColours is how many unique colours per channel
+			 * So if channelUniqueColours == 32, each channel (R,G,B) has 32 unique levels it can be
+			 * rounding = 256/32 = 8, so each channel is rounded to the nearest 8
+			 * So the total colour count is 32^3=32,768, which is 512 times fewer than full 8-bit per channel
+			 * So very good for our memory usage
+			 */
+			const byte channelUniqueColours = 16;
+			const byte rounding = byte.MaxValue / channelUniqueColours;
+			colour.R = Round(colour.R, rounding);
+			colour.G = Round(colour.G, rounding);
+			colour.B = Round(colour.B, rounding);
+			colour.A = Round(colour.A, rounding);
 			//Try get it from the cache first, as this is the most performant
 			if (CachedSpriteFromColour.ContainsKey(colour))
 				return CachedSpriteFromColour[colour];
@@ -179,9 +221,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 									new[] { colour }
 							)
 			};
-
-			if (storeInCache)
-				CachedSpriteFromColour[colour] = sprite;
+			CachedSpriteFromColour[colour] = sprite;
 
 			return sprite;
 		}

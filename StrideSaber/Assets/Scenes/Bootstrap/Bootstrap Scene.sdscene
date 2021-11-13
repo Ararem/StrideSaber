@@ -81,9 +81,9 @@ Hierarchy:
                         Children: {}
                     e8e558d595975f19a6abd44e82c662cf: !StrideSaber.Startup.BootstrapScript,StrideSaber
                         Id: 1720e66a-6a95-4155-83f4-65fe11552c4b
-                        AutoStart: true
+                        AutoStart: false
                         AutoStartWaitDuration: 0:00:00:05.0000000
                         MainMenuScene: 5481ca0d-e173-467d-bd37-652c0601757e:Scenes/Main Menu/Main Menu Scene
                         ProgressUiScene: 1bf77dc4-8155-43c9-b50f-030b1b12ac00:Scenes/Progress Ui/Progress Ui Scene
                         Ui: ref!! b5751c8d-a8ea-4b8c-9ceb-ae00022d7f69
-                        UpdateInterval: 1
+                        UpdateInterval: 100

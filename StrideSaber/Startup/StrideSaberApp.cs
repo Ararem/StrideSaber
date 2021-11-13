@@ -3,9 +3,6 @@ using CommandLine;
 using CommandLine.Text;
 using JetBrains.Annotations;
 using Serilog;
-using SmartFormat;
-#if DEBUG
-#endif
 using Stride.Core.Diagnostics;
 using Stride.Engine;
 using StrideSaber.EventManagement;
@@ -52,14 +49,15 @@ namespace StrideSaber.Startup
 			CmdOptions = cmdOptions!;
 			//Rename the main thread
 			Thread.CurrentThread.Name = "Main Thread";
+			AppDomain.CurrentDomain.UnhandledException += OnCurrentDomainOnUnhandledException;
 
 			try
 			{
-				if (cmdOptions is DebugOptions { RunTestCommand: true }) TestCommand();
 				HandleRunMode(cmdOptions);
 			}
 			catch (Exception e)
 			{
+				Debugger.Launch();
 				Log.Fatal(e, "Fatal Exception thrown");
 			}
 			finally
@@ -69,60 +67,71 @@ namespace StrideSaber.Startup
 			}
 		}
 
+		private static void OnCurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs eventArgs)
+		{
+			Debugger.Break();
+			Debugger.Launch();
+		}
+
 		private static void TestCommand()
 		{
 			Console.WriteLine("Test");
 			Console.ReadKey();
 		}
 
+		#region Run modes
+
 		private static void HandleRunMode(OptionsBase? optionsBase)
 		{
-			switch (optionsBase)
+			if (optionsBase is DebugOptions debugOptions)
 			{
-				case DefaultOptions options:
+				if(debugOptions.RunTestCommand) TestCommand();
+
+				//Break or launch the debugger if running debug verb
+				if (Debugger.IsAttached)
+					Debugger.Break();
+				else
+					Debugger.Launch();
+			}
+			//Note the lack of the `else` here, this is because I want the 'debug' mode to be the same as normal, just with extras, not an entirely different mode
+			// ReSharper disable once ConvertIfStatementToSwitchStatement
+			if (optionsBase is DefaultOptions defaultOptions)
+			{
+				//Wait to initialize the logger because we don't need to bother with Bench.Net
+				Logger.Init();
+				EventManager.Init();
+
+				using (Game game = CurrentGame = new Game())
 				{
-					//Break or launch the debugger if running debug verb
-					if (options is DebugOptions)
-					{
-						if (Debugger.IsAttached)
-							Debugger.Break();
-						else
-							Debugger.Launch();
-					}
+					//Apply the commandline settings
+					if (defaultOptions.MaxFps is { } maxFps)
+						game.WindowMinimumUpdateRate.SetMaxFrequency(maxFps);
+					else if (defaultOptions.MinimumFrameTime is { } minimumFrameTime)
+						game.WindowMinimumUpdateRate.MinimumElapsedTime = minimumFrameTime;
+					game.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = defaultOptions.VSync;
 
-					//Wait to initialize the logger because we don't need to bother with Bench.Net
-					Logger.Init();
-					EventManager.Init();
+					EventManager.FireEventSafeLogged(new GameLoadEvent(CurrentGame));
 
-					using (Game game = CurrentGame = new Game())
-					{
-						//Apply the commandline settings
-						if (options.MaxFps is { } maxFps)
-							game.WindowMinimumUpdateRate.SetMaxFrequency(maxFps);
-						else if (options.MinimumFrameTime is { } minimumFrameTime)
-							game.WindowMinimumUpdateRate.MinimumElapsedTime = minimumFrameTime;
-						game.GraphicsDeviceManager.SynchronizeWithVerticalRetrace = options.VSync;
-
-						EventManager.FireEventSafeLogged(new GameLoadEvent(CurrentGame));
-
-						//By the way, even though this isn't in the docs, the sender is the `Game` instance, and eventArgs will always be null
-						Game.GameStarted += (sender, _) => EventManager.FireEventSafeLogged(new GameStartedEvent((Game)sender!));
-						//Now we run the game
-						game.Run();
-					}
-
-					break;
+					//By the way, even though this isn't in the docs, the sender is the `Game` instance, and eventArgs will always be null
+					Game.GameStarted += (sender, _) => EventManager.FireEventSafeLogged(new GameStartedEvent((Game)sender!));
+					//Now we run the game
+					game.Run();
 				}
-				case BenchmarkDotNetOptions benchOpt:
-					BenchmarkSwitcher.FromAssembly(typeof(StrideSaberApp).Assembly).Run(benchOpt.Options?.ToArray() ?? Array.Empty<string>());
-					break;
-				//Something messed up, dont do anything and return
-				case null:
-					break;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(optionsBase), optionsBase, $"Invalid option type {optionsBase.GetType()}");
+			}
+			else if (optionsBase is BenchmarkDotNetOptions benchOpt)
+			{
+				BenchmarkSwitcher.FromAssembly(typeof(StrideSaberApp).Assembly).Run(benchOpt.Options?.ToArray() ?? Array.Empty<string>());
+			}
+			else if (optionsBase == null)
+			{
+			}
+			else
+			{
+				throw new ArgumentOutOfRangeException(nameof(optionsBase), optionsBase, $"Invalid option type {optionsBase.GetType()}");
 			}
 		}
+
+		#endregion
 
 		/// <summary>
 		///  Cleans up after the game has finished
@@ -161,8 +170,9 @@ namespace StrideSaber.Startup
 			{
 				case Parsed<object> parsed:
 					OptionsBase options = (OptionsBase)parsed.Value;
-					#if DEBUG || true
-					Console.Out.WriteLineSmart("Successfully got command-line options: {0}", options);
+					#if DEBUG
+					// ReSharper disable once InvokeAsExtensionMethod
+					SmartFormat.SmartExtensions.WriteLineSmart(Console.Out, "Successfully got command-line options: {0}", options);
 					#endif
 					return options;
 				case NotParsed<object> notParsed:

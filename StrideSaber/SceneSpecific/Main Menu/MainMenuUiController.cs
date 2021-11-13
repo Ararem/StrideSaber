@@ -28,8 +28,8 @@ namespace StrideSaber.SceneSpecific.Main_Menu
 			SLog.Verbose("Dev Mode Button is {@DevModeButton}", devModeButton);
 			SLog.Verbose("Test Button is {@TestButton}", testButton);
 
-			testButton.Click += (sender, args) => SLog.Information("TestButton::Click(): {Sender} {@Args}", sender, args);
-			devModeButton.Click += (sender, args) => SLog.Information("DevModeButton::Click(): {Sender} {@Args}", sender, args);
+			testButton.Click += (sender, args) => SLog.Information("TestButton::Click(): {@Sender} {@Args}", sender, args);
+			devModeButton.Click += (sender, args) => SLog.Information("DevModeButton::Click(): {@Sender} {@Args}", sender, args);
 		}
 	}
 }

@@ -58,9 +58,9 @@ namespace StrideSaber.Diagnostics
 		///  What event types messages should be logged for
 		/// </summary>
 		public static TrackedTaskEvent EnabledLogEvents { get; set; } = 0
-		                                                                | Error
-		                                                                | Success
-		                                                                | Created
+			| Error
+			// | Success
+			// | Created
 			// | Disposed
 			// | ProgressUpdated
 			;

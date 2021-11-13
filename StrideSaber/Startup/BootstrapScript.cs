@@ -7,9 +7,11 @@ using Stride.UI;
 using Stride.UI.Controls;
 using StrideSaber.SceneManagement;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using SLog = Serilog.Log;
 
@@ -124,15 +126,45 @@ namespace StrideSaber.Startup
 			await Continue();
 		}
 
+		private static int hasContinued = 0;
 		private async Task Continue()
 		{
-			//TODO: Race conditions and calling multiple times
-			SLog.Information("Continue() called");
+			//Here, we set the HasContinued field to 1, and read it's value
+			//If it's equal to 1 (the 'true' value), we know we've already continued and so there's no point in continuing again, so we can return
+			//By using `Interlocked.Exchange` and setting it, we're guaranteed that only one thread/call will get the false value, even if multiple read it at the same time
+			//By the way we have to use an int not a bool because it's not supported :(
+			if (Interlocked.Exchange(ref hasContinued, 1) == 1)
+			{
+				SLog.Warning("Continue() recalled, ignoring");
+				return;
+			}
+			SLog.Information("Continue() called, continuing");
+
 			//We can't swap scenes as this is the root scene, but we can get rid of the components in this one
+			//Remove the entities in the scene that don't have any camera components
+			//Because the camera needs to be reused for the next scene
+			SLog.Verbose("Marking scene entities for clearing");
+			var allEntities = Entity.Scene.Entities;
+			List<Entity> toRemove = new(allEntities.Count);
+			for(int i=0; i< allEntities.Count; i++)
+			{
+				Entity entity = allEntities[i];
+				//If it has a camera, skip it and don't clear
+				if (entity.Components.Any(static c => c is CameraComponent))
+				{
+					SLog.Verbose("Skipping camera entity {$Entity}", entity);
+				}
+				//Not camera, remove it the faster way
+				else
+				{
+					SLog.Verbose("Marking entity {$Entity}", entity);
+					toRemove.Add(entity);
+				}
+			}
+
+			SLog.Verbose("Clearing {Count} entities: {List}", toRemove.Count, toRemove.Select(e => e.ToString()));
+			foreach (Entity entity in toRemove) allEntities.Remove(entity);
 			await SceneUtils.LoadSceneAsync(Content, SceneSystem, MainMenuScene);
-			//We do need to wait till the new scene is properly loaded because otherwise we get missing component warnings
-			//Because of no camera existing and the like
-			Entity.Scene.Entities.Clear();
 		}
 
 		private async Task ContinueButtonOnClick()

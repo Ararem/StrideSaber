@@ -167,23 +167,11 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			internal readonly Border IndicatorRootElement;
 
 			internal TaskDisplay(ProgressUiController controller)
-			{
-				//These two I know won't be null, but bloody compiler thinks they will :(
-				slider               = null!;
-				textBlock            = null!;
+			{z
 				IndicatorRootElement = controller.library.InstantiateElement<Border>("Progress Indicator");
-
-				//Loop over the children to try and find the slider and TextBlock child elements
-				foreach (UIElement e in IndicatorRootElement.VisualChildren)
-					switch (e)
-					{
-						case Slider s:
-							slider = s;
-							break;
-						case TextBlock t:
-							textBlock = t;
-							break;
-					}
+				//I don't like the use of LINQ on a possible hot-path, but because of the way things are nested I have no alternative
+				slider    = IndicatorRootElement.FindVisualChildOfType<Slider>();
+				textBlock = IndicatorRootElement.FindVisualChildOfType<TextBlock>();
 
 				//Create and assign our textures for the slider
 				foreground = NewTex(controller.GraphicsDevice);

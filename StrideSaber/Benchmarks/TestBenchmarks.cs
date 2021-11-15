@@ -1,12 +1,9 @@
 ﻿using BenchmarkDotNet.Attributes;
 using JetBrains.Annotations;
-using LibEternal.Logging.Enrichers;
 using LibEternal.ObjectPools;
-using Serilog;
 using StrideSaber.Diagnostics;
-using StrideSaber.SceneSpecific.Progress_Ui;
-using System.Threading.Tasks;
 
+//ReSharper disable all
 namespace StrideSaber.Benchmarks
 {
 	/// <summary>

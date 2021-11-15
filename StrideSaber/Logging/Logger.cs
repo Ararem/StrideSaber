@@ -5,7 +5,6 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using SmartFormat;
-using Stride.Core;
 using Stride.Core.Diagnostics;
 using StrideSaber.Diagnostics;
 using StrideSaber.EventManagement;

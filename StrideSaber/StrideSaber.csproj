@@ -8,6 +8,7 @@
 		<LangVersion>default</LangVersion>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

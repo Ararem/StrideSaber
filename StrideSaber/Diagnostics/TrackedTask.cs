@@ -4,11 +4,14 @@ using Serilog;
 using SmartFormat;
 using SmartFormat.Core.Parsing;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using static StrideSaber.Diagnostics.TrackedTaskEvent;
+
+// #define INCREMENT_ID
 
 namespace StrideSaber.Diagnostics
 {
@@ -29,14 +32,7 @@ namespace StrideSaber.Diagnostics
 		/// <remarks>This value should be considered mutable and may change while being accessed, so should not be accessed directly</remarks>
 		private static readonly ConcurrentHashSet<TrackedTask> Instances = new();
 
-		// /// <summary>
-		// /// The cached awaiter for this instance
-		// /// </summary>
-		// private readonly TrackedTaskAwaiter awaiter;
-
 		private bool isDisposed = false;
-
-		private float progress;
 
 		/// <summary>
 		///  Constructs a new <see cref="TrackedTask"/>, with a specified <paramref name="name"/>
@@ -45,9 +41,9 @@ namespace StrideSaber.Diagnostics
 		/// <param name="taskDelegate">The <see cref="TrackedTaskDelegate"/> function to be executed</param>
 		public TrackedTask(string name, TrackedTaskDelegate taskDelegate)
 		{
-			Name = name;
+			Name         = name;
 			TaskDelegate = taskDelegate;
-			Id = GetNextId();
+			Id           = GetNextId();
 
 			RaiseEvent(Created);
 			AddThis();
@@ -58,7 +54,7 @@ namespace StrideSaber.Diagnostics
 		///  What event types messages should be logged for
 		/// </summary>
 		public static TrackedTaskEvent EnabledLogEvents { get; set; } = 0
-			| Error
+																		| Error
 			// | Success
 			// | Created
 			// | Disposed
@@ -66,16 +62,8 @@ namespace StrideSaber.Diagnostics
 			;
 
 		/// <inheritdoc cref="Instances"/>
-		public static IReadOnlyCollection<TrackedTask> UnsafeInstances
-		{
-			get
-			{
-				lock (GlobalLock)
-				{
-					return Instances;
-				}
-			}
-		}
+		// ReSharper disable once InconsistentlySynchronizedField
+		public static IReadOnlyCollection<TrackedTask> UnsafeInstances => Instances;
 
 		/// <summary>
 		///  Gets the id of this instance
@@ -90,27 +78,7 @@ namespace StrideSaber.Diagnostics
 		///  should
 		/// </remarks>
 		[ValueRange(0, 1)]
-		public float Progress
-		{
-			get
-			{
-				//Nifty way to return the progress while clamping it at the same time
-				return progress = progress switch
-				{
-						< 0 => 0,
-						> 1 => 1,
-						_   => progress
-				};
-			}
-			private set
-			{
-				//Due to some issues with floating point approximation, I've decided to ignore throwing and just internally clamp
-				value = Math.Clamp(value, 0, 1);
-				// if (value is < 0 or >1)
-				// throw new ArgumentOutOfRangeException(nameof(value), value, "The given value must be in the range of [0..1] (inclusive)");
-				progress = value;
-			}
-		}
+		public float Progress { get; private set; }
 
 		/// <summary>
 		///  The name of this <see cref="TrackedTask"/> instance
@@ -127,19 +95,66 @@ namespace StrideSaber.Diagnostics
 		/// </summary>
 		public TrackedTaskDelegate TaskDelegate { get; }
 
+		#region Instance collection methods
+
+			/// <summary>
+			/// Copies the instances list to an <see cref="ArrayPool{T}"/> array, and then returns the segment of that array that contains items
+			/// </summary>
+			/// <remarks>
+			///	<i><b>IMPORTANT:</b></i>
+			/// The <see cref="ArraySegment{T}.Array"/> contained in the <see cref="ArraySegment{T}"/> MUST BE RETURNED TO THE POOL after being processed, otherwise this method is useless and worse than a simple clone
+			/// </remarks>
+			public static ArraySegment<TrackedTask> ToArrayPoolArray()
+			{
+				lock (GlobalLock)
+				{
+					//Figure out how many we actually have
+					int count = Instances.Count;
+					//Now get an array of at least that size
+					TrackedTask[] array = ArrayPool<TrackedTask>.Shared.Rent(count);
+					//Start at the offset and keep moving while we have items left
+					int i = 0;
+					foreach (TrackedTask task in Instances)
+					{
+						array[i] = task;
+						i++;
+					}
+
+					return new ArraySegment<TrackedTask>(array, 0, count);
+				}
+			}
 		/// <summary>
-		///  A <see cref="IReadOnlyCollection{T}">collection</see> that encompasses all the currently running tracked task instances
+		///  Copies the list of currently running <see cref="TrackedTask"/> instances to an <paramref name="array"/>, starting at the specified offset
+		/// </summary>
+		public static void CopyInstancesTo(TrackedTask[] array, int offset = 0)
+		{
+			lock (GlobalLock)
+			{
+				//Start at the offset and keep moving while we have items left
+				int i = offset;
+				foreach (TrackedTask task in Instances)
+				{
+					array[i] = task;
+					i++;
+				}
+			}
+		}
+
+		/// <summary>
+		///  An array that encompasses all the currently running tracked task instances
 		/// </summary>
 		/// <remarks>
 		///  This collection is guaranteed to not be mutated internally, as it clones the <see cref="UnsafeInstances"/> collection
 		/// </remarks>
-		public static IReadOnlyCollection<TrackedTask> CloneAllInstances()
+		public static TrackedTask[] CloneAllInstances()
 		{
 			lock (GlobalLock)
 			{
 				return Instances.ToArray();
 			}
 		}
+
+		#endregion
 
 		#if INCREMENT_ID
 		/// <summary>
@@ -186,6 +201,9 @@ namespace StrideSaber.Diagnostics
 		}
 		#endif
 
+		/// <summary>
+		/// The method that is used to run the actual work item, called by <see cref="System.Threading.Tasks.Task.Run(Func{System.Threading.Tasks.Task})"/>
+		/// </summary>
 		private async Task TaskRunInternal()
 		{
 			UpdateThisInstanceProgress(0);
@@ -315,8 +333,8 @@ namespace StrideSaber.Diagnostics
 		{
 			return format switch
 			{
-					null         => ToString(DefaultToStringFormat, formatProvider),
-					"NoProgress" => ToString(NoProgressToStringFormat, formatProvider),
+					null         => ToString(DefaultToStringFormat,                    formatProvider),
+					"NoProgress" => ToString(NoProgressToStringFormat,                 formatProvider),
 					_            => ToString(Smart.Default.Parser.ParseFormat(format), formatProvider)
 			};
 		}

@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using LibEternal.ObjectPools;
-using Stride.Core.Extensions;
 using Stride.Core.Mathematics;
 using Stride.Core.Serialization;
 using Stride.Engine;
@@ -14,7 +13,6 @@ using StrideSaber.Startup;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading.Tasks;
 using SLog = Serilog.Log;
 
@@ -32,7 +30,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 		public UIComponent Ui = null!;
 
 		/// <summary>
-		/// 
+		/// The reference to the UI library used to create task display components
 		/// </summary>
 		public UrlReference<UILibrary> LibraryReference = null!;
 
@@ -45,7 +43,9 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 		public override void Start()
 		{
 			indicatorsPanel = Ui.Page.RootElement.FindVisualChildOfType<StackPanel>("Indicators");
-			library         = Content.Load(LibraryReference);
+			//Have to clear the indicators panel because i filled it in the editor for testing
+			indicatorsPanel.Children.Clear();
+			library = Content.Load(LibraryReference);
 			//Create some tasks for fun
 			Task.Run(AsyncTaskCreator);
 			SLog.Information("Task creator started");
@@ -57,15 +57,16 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 		[SuppressMessage("ReSharper", "All")]
 		private static async Task AsyncTaskCreator()
 		{
-			_ = new TrackedTask("Fps", FpsTask) { Id = Guid.Empty };
+			_ = new TrackedTask("Fps",        FpsTask) { Id       = Guid.Empty };
+			_ = new TrackedTask("Task Count", TaskCountTask) { Id = Guid.Empty };
 			int i = 0;
 			while (true)
 			{
 				//Wait a while between each task instantiation
-				int delay = r.Next(0, 100);
+				int delay = r.Next(1, 10);
 				await Task.Delay(delay);
 				//Ensure not too many tasks
-				if (TrackedTask.UnsafeInstances.Count < 50)
+				if (TrackedTask.UnsafeInstances.Count < 500)
 					_ = new TrackedTask($"Test task {++i}", AsyncTaskTest);
 			}
 		}
@@ -82,10 +83,20 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 		}
 
 		[SuppressMessage("ReSharper", "All")]
+		private static async Task TaskCountTask(Action<float> updateProgress)
+		{
+			while (true)
+			{
+				updateProgress(TrackedTask.UnsafeInstances.Count / 100f);
+				await Task.Delay(100);
+			}
+		}
+
+		[SuppressMessage("ReSharper", "All")]
 		private static async Task AsyncTaskTest(Action<float> updateProgress)
 		{
 			DateTime start = DateTime.Now;
-			DateTime end   = start + TimeSpan.FromMilliseconds(r.Next(0, 5000));
+			DateTime end   = start + TimeSpan.FromMilliseconds(r.Next(1000, 20000));
 			while (DateTime.Now < end)
 			{
 				await Task.Delay(50);
@@ -102,10 +113,16 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				tickColour       = new(211, 211, 211, 255);
 
 		/// <summary>
-		/// The tasks that are currently being shown right now
+		/// The task displays that are currently being shown right now
 		/// </summary>
 		private readonly Queue<TaskDisplay> shownTaskDisplays = new();
 
+		/// <summary>
+		/// Cached display of task displays.
+		/// </summary>
+		/// <remarks>
+		///	This stores instances so that they don't need to be re-allocated/created each time we want to add a new task (each instance is relatively large).
+		/// </remarks>
 		private readonly Queue<TaskDisplay> cachedTaskDisplays = new();
 
 		/// <summary>
@@ -113,37 +130,33 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 		/// </summary>
 		public override void Update()
 		{
-			//Get all the current tasks, ordered by ID
-			var tasks = TrackedTask.CloneAllInstances()
-									.OrderBy(static t => t.Id)
-									.ToArray();
-
 			//First off, move all the current displays into the cache
-			while (shownTaskDisplays.TryDequeue(out var display))
-			{
-				//Remove it from the visual tree so we don't see it
-				indicatorsPanel.Children.SwapRemove(display.IndicatorRootElement);
-				cachedTaskDisplays.Enqueue(display);
-			}
+			while (shownTaskDisplays.TryDequeue(out var display)) cachedTaskDisplays.Enqueue(display);
+			//Optimisation: Instead of looping over all the displays and removing them individually, just clear the list
+			//Could cause issues if other child UI elements are present, but there shouldn't be any so assume it's fine
+			indicatorsPanel.Children.Clear();
 
-			for (int i = 0; i < tasks.Length; i++)
+			foreach (TrackedTask task in TrackedTask.ToArrayPoolArray())
 			{
-				TrackedTask task = tasks[i];
 				//Try pull out an existing display, else create a new one
 				#pragma warning disable 8600
 				if (!cachedTaskDisplays.TryDequeue(out TaskDisplay display))
 					display = new TaskDisplay(this);
 				#pragma warning restore 8600
 
-
 				//Update the display from the current task
 				display.Update(task, Game.GraphicsContext);
 
 				//We have an updated task display element, add it to the panel so that it gets drawn
 				indicatorsPanel.Children.Add(display.IndicatorRootElement);
+				//Also add it to the Queue so we can track it
+				shownTaskDisplays.Enqueue(display);
 			}
 		}
 
+		/// <summary>
+		/// A object that stores references for a task display so that objects can be reused.
+		/// </summary>
 		private class TaskDisplay
 		{
 			/// <summary>
@@ -167,7 +180,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			internal readonly Border IndicatorRootElement;
 
 			internal TaskDisplay(ProgressUiController controller)
-			{z
+			{
 				IndicatorRootElement = controller.library.InstantiateElement<Border>("Progress Indicator");
 				//I don't like the use of LINQ on a possible hot-path, but because of the way things are nested I have no alternative
 				slider    = IndicatorRootElement.FindVisualChildOfType<Slider>();
@@ -197,12 +210,6 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				}
 			}
 
-			// PERF: Hot path, needs lots of performance improvements, namely:
-			// 1: Task string formatting handling
-			// 2: Child finding for components - Uses LINQ
-			// 3: Almost nothing is cached, this would be a massive improvement
-			// 4: Colours for sliders - perhaps internally create a list of ~1000 combinations and pull out the closest approximation?
-			// Texture reuse - `tex.SetData(Game.GraphicsContext.CommandList, new[]{colour});` Needs texture to have `GraphicsResourceUsage.Dynamic`
 			internal void Update(TrackedTask task, GraphicsContext graphicsContext)
 			{
 				//Set the text and slider values for the task
@@ -223,9 +230,23 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				IndicatorRootElement.BorderColor = uniqueTaskColour;
 				//Thankfully we have the textures cached so we don't need to re-fetch them
 				//And now since they're 1x1 textures we can simply overwrite their colours
-				background.SetData(graphicsContext.CommandList, new[] { backgroundColour });
-				foreground.SetData(graphicsContext.CommandList, new[] { uniqueTaskColour });
-				tick.SetData(graphicsContext.CommandList, new[] { tickColour });
+				SetTexDataUnsafe(background, graphicsContext.CommandList, backgroundColour);
+				SetTexDataUnsafe(foreground, graphicsContext.CommandList, uniqueTaskColour);
+				SetTexDataUnsafe(tick,       graphicsContext.CommandList, tickColour);
+			}
+
+			/*
+			 * The reason I'm doing this unsafe and using pointers is because when I was testing with large amounts of tasks,
+			 * this was allocating large amounts of memory (>50mb) from just the colour array alone in under a minute
+			 */
+			private static unsafe void SetTexDataUnsafe(Texture tex, CommandList commandList, Color colour)
+			{
+				//Stack allocate so we can use pointers and avoid memory allocations
+				Span<Color> colourSpan = stackalloc Color[1] { colour };
+				fixed (Color* ptr = colourSpan)
+				{
+					tex.SetData(commandList, new DataPointer(ptr, sizeof(Color)));
+				}
 			}
 		}
 	}

@@ -226,7 +226,6 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				Color uniqueTaskColour = Color.FromRgba(task.Id.GetHashCode());
 				uniqueTaskColour.A = 255; //Ensure we can see the task so set the alpha to full
 				//TODO: This is decent for now, but maybe fix the tick lines (contrasting to fg and bg)
-				//FIXME: Do we meed to dispose of the old value here? Was a memory leak but i did change this a lot
 				IndicatorRootElement.BorderColor = uniqueTaskColour;
 				//Thankfully we have the textures cached so we don't need to re-fetch them
 				//And now since they're 1x1 textures we can simply overwrite their colours
@@ -247,6 +246,16 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				{
 					tex.SetData(commandList, new DataPointer(ptr, sizeof(Color)));
 				}
+			}
+
+			~TaskDisplay()
+			{
+				SLog.Verbose("TaskDisplay::Finalizer()");
+				//Dispose of the textures when this object is destroyed
+				background.Dispose();
+				tick.Dispose();
+				foreground.Dispose();
+				slider.TrackBackgroundImage = slider.TrackForegroundImage = slider.TickImage = null;
 			}
 		}
 	}

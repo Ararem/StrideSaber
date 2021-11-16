@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using LibEternal.ObjectPools;
+using SharpDX.MediaFoundation;
 using Stride.Core.Mathematics;
 using Stride.Core.Serialization;
 using Stride.Engine;
@@ -13,6 +14,7 @@ using StrideSaber.Startup;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using SLog = Serilog.Log;
 
@@ -78,6 +80,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			while (true)
 			{
 				updateProgress(StrideSaberApp.CurrentGame.UpdateTime.FramePerSecond / 100);
+				SLog.Verbose("Fps: {Fps}", StrideSaberApp.CurrentGame.UpdateTime.FramePerSecond);
 				await Task.Delay(100);
 			}
 		}
@@ -113,44 +116,47 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				tickColour       = new(211, 211, 211, 255);
 
 		/// <summary>
-		/// The task displays that are currently being shown right now
+		/// The task displays that we have instantiated
 		/// </summary>
-		private readonly Queue<TaskDisplay> shownTaskDisplays = new();
-
-		/// <summary>
-		/// Cached display of task displays.
-		/// </summary>
-		/// <remarks>
-		///	This stores instances so that they don't need to be re-allocated/created each time we want to add a new task (each instance is relatively large).
-		/// </remarks>
-		private readonly Queue<TaskDisplay> cachedTaskDisplays = new();
+		private readonly List<TaskDisplay> taskDisplays = new();
 
 		/// <summary>
 		/// Updates the UI from the current tasks and their statuses
 		/// </summary>
 		public override void Update()
 		{
-			//First off, move all the current displays into the cache
-			while (shownTaskDisplays.TryDequeue(out var display)) cachedTaskDisplays.Enqueue(display);
-			//Optimisation: Instead of looping over all the displays and removing them individually, just clear the list
-			//Could cause issues if other child UI elements are present, but there shouldn't be any so assume it's fine
-			indicatorsPanel.Children.Clear();
-
-			foreach (TrackedTask task in TrackedTask.ToArrayPoolArray())
+			var trackedTasks = TrackedTask.ToArrayPoolArray();
+			//Ensure that we have enough displays to accomodate the tasks
+			if (taskDisplays.Capacity < trackedTasks.Count)
 			{
-				//Try pull out an existing display, else create a new one
-				#pragma warning disable 8600
-				if (!cachedTaskDisplays.TryDequeue(out TaskDisplay display))
-					display = new TaskDisplay(this);
-				#pragma warning restore 8600
+				int oldSize = taskDisplays.Capacity;
+				//Set it's size to the minimum size required, plus 50%, plus 10
+				//Adding 50% means we get a decent balance between (not increasing by +1 a million times) and (not allocating space for 1,000,000 when we have 500,001)
+				int newSize = (int)MathF.Ceiling(trackedTasks.Count * 1.5f) + 10;
+				int delta   = newSize - oldSize;
+				SLog.Verbose("Resizing tasks displays list: {OldSize} => {NewSize} (+{Delta})", oldSize, newSize, delta);
+				taskDisplays.Capacity = newSize;
+				//Create however many we need
+				for (int i = 0; i < delta; i++)
+				{
+					TaskDisplay display = new(this);
+					taskDisplays.Add(display);
+					indicatorsPanel.Children.Add(display.IndicatorRootElement);
+				}
+			}
+
+			//Go through all the task displays and hide them (just in case we have more than 
+			foreach (var display in taskDisplays) display.IndicatorRootElement.Visibility = Visibility.Collapsed;
+
+			for (int i = 0; i < trackedTasks.Count; i++)
+			{
+				TrackedTask task    = trackedTasks[i];
+				TaskDisplay display = taskDisplays[i];
 
 				//Update the display from the current task
 				display.Update(task, Game.GraphicsContext);
-
-				//We have an updated task display element, add it to the panel so that it gets drawn
-				indicatorsPanel.Children.Add(display.IndicatorRootElement);
-				//Also add it to the Queue so we can track it
-				shownTaskDisplays.Enqueue(display);
+				//Show the task display element
+				display.IndicatorRootElement.Visibility = Visibility.Visible;
 			}
 		}
 

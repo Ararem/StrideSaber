@@ -26,6 +26,9 @@ Hierarchy:
                         ResolutionStretch: FixedHeightAdaptableWidth
                     976dd9e876e61ac41ab157cdf77d64a0: !StrideSaber.Hacks.AutoAspectRatioComponent,StrideSaber
                         Id: 9b1d07b6-7675-474c-813c-ce6a5c52de3c
+                    62ddc204ef7b0feeb2539b03218319ee*: !StrideSaber.SceneSpecific.Main_Menu.MainMenuUiController,StrideSaber
+                        Id: c6c8b52f-c153-424d-a88b-9529d8d108be
+                        Ui: ref!! 403441a9-3ba2-41fa-8de0-4dcc68e2050e
             Base:
                 BasePartAsset: 4e4cb7df-17e2-46b2-955b-7613548fbcfd:Shared/Prefabs/Ui
                 BasePartId: 8a1d01ad-1c34-4e97-ada6-61b07205e3a2

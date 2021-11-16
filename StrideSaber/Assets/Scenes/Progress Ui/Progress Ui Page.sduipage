@@ -216,7 +216,7 @@ Hierarchy:
                 TextColor: {R: 240, G: 240, B: 240, A: 255}
                 TextAlignment: Center
             Base:
-                BasePartAsset: b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base
+                BasePartAsset: b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base UI Library
                 BasePartId: cb025c57-891e-4da4-9570-ca28bc98bd8c
                 InstanceId: 38006c96-b99c-44cf-a5a3-643097efca6b
         -   UIElement: !Slider

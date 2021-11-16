@@ -2,6 +2,9 @@
 using Stride.Engine;
 using Stride.UI;
 using Stride.UI.Controls;
+using Stride.UI.Events;
+using System.Threading;
+using System.Threading.Tasks;
 using SLog = Serilog.Log;
 
 namespace StrideSaber.SceneSpecific.Main_Menu
@@ -28,8 +31,16 @@ namespace StrideSaber.SceneSpecific.Main_Menu
 			SLog.Verbose("Dev Mode Button is {@DevModeButton}", devModeButton);
 			SLog.Verbose("Test Button is {@TestButton}", testButton);
 
-			testButton.Click += (sender, args) => SLog.Information("TestButton::Click(): {@Sender} {@Args}", sender, args);
+			testButton.Click    += TestButton_OnClick;
 			devModeButton.Click += (sender, args) => SLog.Information("DevModeButton::Click(): {@Sender} {@Args}", sender, args);
+		}
+
+		private async void TestButton_OnClick(object sender, RoutedEventArgs args)
+		{
+			SLog.Information("TestButton::Click(): {@Sender} {@Args}", sender, args);
+			testButton.Visibility = Visibility.Collapsed;
+			await Task.Delay(2000);
+			testButton.Visibility = Visibility.Visible;
 		}
 	}
 }

@@ -45,7 +45,7 @@ Hierarchy:
                 MouseOverImage: !SpriteFromSheet
                     Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
             Base:
-                BasePartAsset: b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base
+                BasePartAsset: b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base UI Library
                 BasePartId: 5cb8f869-3c33-4cc2-892d-aa6a1b5b102d
                 InstanceId: 0dbae0ee-6666-42f0-a33c-f63f5cd95451
         -   UIElement: !TextBlock
@@ -64,7 +64,7 @@ Hierarchy:
                 TextColor*: {R: 255, G: 0, B: 0, A: 255}
                 TextAlignment: Center
             Base:
-                BasePartAsset: b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base
+                BasePartAsset: b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base UI Library
                 BasePartId: cb025c57-891e-4da4-9570-ca28bc98bd8c
                 InstanceId: 6b4c34b3-43c7-4750-ab96-b014b8aac48b
         -   UIElement: !TextBlock
@@ -83,7 +83,7 @@ Hierarchy:
                 TextSize: 64.0
                 TextColor: {R: 240, G: 240, B: 240, A: 255}
             Base:
-                BasePartAsset: b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base
+                BasePartAsset: b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base UI Library
                 BasePartId: 69b03aab-a1d0-4067-bf9b-85c57e1162a7
                 InstanceId: 0dbae0ee-6666-42f0-a33c-f63f5cd95451
         -   UIElement: !TextBlock
@@ -102,7 +102,7 @@ Hierarchy:
                 TextSize: 64.0
                 TextColor: {R: 240, G: 240, B: 240, A: 255}
             Base:
-                BasePartAsset: b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base
+                BasePartAsset: b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base UI Library
                 BasePartId: 69b03aab-a1d0-4067-bf9b-85c57e1162a7
                 InstanceId: c3e05e52-ee9b-4ca3-9e5a-4b8b7b410493
         -   UIElement: !Button
@@ -127,7 +127,7 @@ Hierarchy:
                 MouseOverImage: !SpriteFromSheet
                     Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
             Base:
-                BasePartAsset: b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base
+                BasePartAsset: b1aa678b-de2f-4be1-b8de-d94e761a1838:Shared/UI/Base UI Library
                 BasePartId: 5cb8f869-3c33-4cc2-892d-aa6a1b5b102d
                 InstanceId: c3e05e52-ee9b-4ca3-9e5a-4b8b7b410493
         -   UIElement: !Grid

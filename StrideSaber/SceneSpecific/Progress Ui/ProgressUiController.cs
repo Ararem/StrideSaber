@@ -145,7 +145,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 				}
 			}
 
-			//Go through all the task displays and hide them (just in case we have more than 
+			//Go through all the task displays and hide them (just in case we have more than we need)
 			foreach (var display in taskDisplays) display.IndicatorRootElement.Visibility = Visibility.Collapsed;
 
 			for (int i = 0; i < trackedTasks.Count; i++)
@@ -220,11 +220,12 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			{
 				//Set the text and slider values for the task
 				//Using a StringBuilder is ~50% slower than interpolation, but ~40% less memory
-				textBlock.Text = StringBuilderPool.BorrowInline(static (sb, task) =>
-								sb.Append(task.Name)
-								.Append(":\t")
-								.Append(task.Progress.ToString("p0").PadLeft(3))
-						, task);
+				textBlock.Text = $"{task.Name}:\t{task.Progress,3:p0}";
+				// textBlock.Text = StringBuilderPool.BorrowInline(static (sb, task) =>
+				// 				sb.Append(task.Name)
+				// 				.Append(":\t")
+				// 				.Append(task.Progress.ToString("p0").PadLeft(3))
+				// 		, task);
 				slider.Value = task.Progress;
 
 				//Try and give the task a nice little colour too
@@ -246,7 +247,7 @@ namespace StrideSaber.SceneSpecific.Progress_Ui
 			 */
 			private static unsafe void SetTexDataUnsafe(Texture tex, CommandList commandList, Color colour)
 			{
-				//Stack allocate so we can use pointers and avoid memory allocations
+				//Stack allocate so we can use pointers and avoid heap memory allocations
 				Span<Color> colourSpan = stackalloc Color[1] { colour };
 				fixed (Color* ptr = colourSpan)
 				{

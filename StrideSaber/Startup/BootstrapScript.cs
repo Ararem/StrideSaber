@@ -92,8 +92,7 @@ namespace StrideSaber.Startup
 			if (!AutoStart)
 			{
 				SLog.Verbose("Auto start disabled, waiting for user interaction");
-				countdownText.IsEnabled = false;
-				countdownSlider.IsEnabled = false;
+				countdownText.Visibility = countdownSlider.Visibility = Visibility.Hidden;
 				return;
 			}
 
